@@ -1,0 +1,14 @@
+#pragma once
+
+enum class TokenType {
+	UNDEFINED,
+	NUMBER,
+	IDENTIFIER,
+	EQUALS,
+	OPEN_PAREN,
+	CLOSE_PAREN,
+	BINARY_OPERATOR,
+	END_OF_FILE,
+	LET,
+};
+
