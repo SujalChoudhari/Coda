@@ -9,6 +9,7 @@ enum class TokenType {
 	CLOSE_PAREN,
 	BINARY_OPERATOR,
 	END_OF_FILE,
+
 	LET,
 };
 

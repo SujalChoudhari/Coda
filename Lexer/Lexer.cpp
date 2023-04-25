@@ -1,5 +1,6 @@
-#include "Lexer.h"
 #include <string>
+#include "../Tokens/Keywords.h"
+#include "Lexer.h"
 Lexer::Lexer()
 {
 }
@@ -39,14 +40,21 @@ std::vector<Token> Lexer::tokenise(std::string sourceCode)
 					identifier.push_back(src[i]);
 					i++;
 				}
-				mTokens.emplace_back(TokenType::IDENTIFIER, identifier);
+				auto iden = KEYWORD.find(identifier);
+				if (iden == KEYWORD.end())
+				{
+					mTokens.emplace_back(TokenType::IDENTIFIER, identifier);
+				}
+				else {
+					mTokens.emplace_back(KEYWORD[identifier], identifier);
+				}
 			}
 
 		}
 
 	}
 
-	mTokens.emplace_back(TokenType::END_OF_FILE, "\0");
+	mTokens.emplace_back(TokenType::END_OF_FILE, "\\0");
 
 	return mTokens;
 }

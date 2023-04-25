@@ -7,11 +7,11 @@ int main() {
 
 	Lexer lexer = Lexer();
 
-	std::string code = "let 1 + 2 ) 3";
+	std::string code = "let x = 32 * (4 / 4)";
 
 	std::vector<Token> tokens = lexer.tokenise(code);
 	for (Token t : tokens) {
-		std::cout << t.value << std::endl;
+		std::cout << "(" <<  t.value  << ":" <<(int) t.type << ")" << std::endl;
 	}
 	return 0;
 }

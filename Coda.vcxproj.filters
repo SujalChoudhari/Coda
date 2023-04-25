@@ -35,5 +35,14 @@
     <ClInclude Include="Tokens\Token.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Tokens\Keywords.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AST\Statement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AST\NodeType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -71,20 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)\bin\$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)$(Configuration)\bin\intermediate\$(Platform)</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)\bin\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\bin\intermediate\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)$(Configuration)\bin\$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)$(Configuration)\bin\intermediate\$(Platform)</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)\bin\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\bin\intermediate\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)\bin\$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)$(Configuration)\bin\intermediate\$(Platform)</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)\bin\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\bin\intermediate\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)$(Configuration)\bin\$(Platform)</OutDir>
-    <IntDir>$(SolutionDir)$(Configuration)\bin\intermediate\$(Platform)</IntDir>
+    <OutDir>$(SolutionDir)$(Configuration)\bin\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)$(Configuration)\bin\intermediate\$(Platform)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -148,7 +148,10 @@
     <ClCompile Include="Tokens\Token.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AST\NodeType.h" />
+    <ClInclude Include="AST\Statement.h" />
     <ClInclude Include="Lexer\Lexer.h" />
+    <ClInclude Include="Tokens\Keywords.h" />
     <ClInclude Include="Tokens\Token.h" />
     <ClInclude Include="Tokens\TokenType.h" />
   </ItemGroup>
