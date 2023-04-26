@@ -24,6 +24,9 @@
     <ClCompile Include="Tokens\Token.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Parser\Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tokens\TokenType.h">
@@ -38,11 +41,17 @@
     <ClInclude Include="Tokens\Keywords.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AST\Statement.h">
+    <ClInclude Include="AST\Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AST\NodeType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Parser\Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

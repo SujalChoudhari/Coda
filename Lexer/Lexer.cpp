@@ -5,22 +5,22 @@ Lexer::Lexer()
 {
 }
 
-std::vector<Token> Lexer::tokenise(std::string sourceCode)
+void Lexer::tokenise(std::string sourceCode, std::vector<Token>* outTokens)
 {
 	const char* src = sourceCode.c_str();
 
 	for (int i = 0; i < sourceCode.size(); i++) {
 		if (src[i] == '(')
-			mTokens.emplace_back(TokenType::OPEN_PAREN, "(");
+			outTokens->emplace_back(TokenType::OPEN_PAREN, "(");
 		else if (src[i] == ')')
-			mTokens.emplace_back(TokenType::CLOSE_PAREN, ")");
+			outTokens->emplace_back(TokenType::CLOSE_PAREN, ")");
 		else if (src[i] == '+' || src[i] == '-' || src[i] == '*' || src[i] == '/')
 		{
 			std::string s(1,src[i]);
-			mTokens.emplace_back(TokenType::BINARY_OPERATOR, s);
+			outTokens->emplace_back(TokenType::BINARY_OPERATOR, s);
 		}
 		else if (src[i] == '=')
-			mTokens.emplace_back(TokenType::EQUALS, "=");
+			outTokens->emplace_back(TokenType::EQUALS, "=");
 		else {
 			// multisrc[i] token handler
 			// build numbers
@@ -31,7 +31,7 @@ std::vector<Token> Lexer::tokenise(std::string sourceCode)
 					i++;
 				}
 
-				mTokens.emplace_back(TokenType::NUMBER, num);
+				outTokens->emplace_back(TokenType::NUMBER, num);
 			}
 			//build identifier
 			else if (isalpha(src[i])) {
@@ -43,10 +43,10 @@ std::vector<Token> Lexer::tokenise(std::string sourceCode)
 				auto iden = KEYWORD.find(identifier);
 				if (iden == KEYWORD.end())
 				{
-					mTokens.emplace_back(TokenType::IDENTIFIER, identifier);
+					outTokens->emplace_back(TokenType::IDENTIFIER, identifier);
 				}
 				else {
-					mTokens.emplace_back(KEYWORD[identifier], identifier);
+					outTokens->emplace_back(KEYWORD[identifier], identifier);
 				}
 			}
 
@@ -54,7 +54,6 @@ std::vector<Token> Lexer::tokenise(std::string sourceCode)
 
 	}
 
-	mTokens.emplace_back(TokenType::END_OF_FILE, "\\0");
+	outTokens->emplace_back(TokenType::END_OF_FILE, "\\0");
 
-	return mTokens;
 }

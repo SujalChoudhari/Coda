@@ -145,15 +145,20 @@
   <ItemGroup>
     <ClCompile Include="Lexer\Lexer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Parser\Parser.cpp" />
     <ClCompile Include="Tokens\Token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST\NodeType.h" />
-    <ClInclude Include="AST\Statement.h" />
+    <ClInclude Include="AST\Node.h" />
     <ClInclude Include="Lexer\Lexer.h" />
+    <ClInclude Include="Parser\Parser.h" />
     <ClInclude Include="Tokens\Keywords.h" />
     <ClInclude Include="Tokens\Token.h" />
     <ClInclude Include="Tokens\TokenType.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

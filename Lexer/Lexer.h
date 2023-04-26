@@ -7,7 +7,7 @@
 class Lexer {
 public:
 	Lexer();
-	std::vector<Token> tokenise(std::string sourceCode);
+	void tokenise(std::string sourceCode, std::vector<Token>* outTokens);
 
 private:
 	std::vector<Token> mTokens = {};
