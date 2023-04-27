@@ -1,21 +1,39 @@
 #include <iostream>
 
-#include "Lexer/Lexer.h"
-#include "Tokens/Token.h"
-#include "Tokens/TokenType.h"
-#include "AST/Node.h"
+#include "Frontend/Lexer/Lexer.h"
+#include "Frontend/Tokens/Token.h"
+#include "Frontend/Tokens/TokenType.h"
+#include "Frontend/AST/Node.h"
+#include "Frontend/Parser/Parser.h"
+
+
+int repl() {
+	Lexer lexer = Lexer();
+	Parser parser = Parser();
+	std::string source;
+	std::unique_ptr<Node> program;
+	std::vector<Token> tokens;
+	while (true)
+	{
+		program = std::make_unique<Node>();
+		tokens = std::vector<Token>();
+		std::cout << ">> ";
+		std::getline(std::cin, source);
+
+		if (source == ":q")
+			break;
+
+		lexer.tokenise(source, &tokens);
+		parser.parse(tokens, program.get());
+
+		std::cout << *program.get() << std::endl;
+
+	}
+
+	return 0;
+}
 
 int main() {
 
-	Lexer lexer = Lexer();
-
-	std::string code = "let x = 32 * (4 / 4)";
-
-	std::vector<Token> tokens;
-	lexer.tokenise(code,&tokens);
-	std::cout << sizeof Node <<std::endl;
-	for (Token t : tokens) {
-		std::cout << "(" <<  t.value  << ":" <<(int) t.type << ")" << std::endl;
-	}
-	return 0;
+	return repl();
 }

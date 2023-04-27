@@ -4,7 +4,8 @@ enum class NodeType {
 	PROGRAM,
 	NUMERIC_LITERAL,
 	IDENTIFIER,
-	BINARY_EXPRESSION
+	BINARY_EXPRESSION,
+	INVALID
 };
 
 class Statement {

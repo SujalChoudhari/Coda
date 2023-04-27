@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <iostream>
 #include "TokenType.h"
 struct Token {
 public:
@@ -10,5 +11,8 @@ public:
 public:
 	std::string value;
 	TokenType type;
+
+	friend std::ostream& operator<<(std::ostream& os, const Token& head);
+
 };
 

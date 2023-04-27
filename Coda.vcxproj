@@ -143,14 +143,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Lexer\Lexer.cpp" />
+    <ClCompile Include="Frontend\AST\Node.cpp" />
+    <ClCompile Include="Frontend\Lexer\Lexer.cpp" />
+    <ClCompile Include="Frontend\Parser\Parser.cpp" />
+    <ClCompile Include="Frontend\Tokens\Token.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Parser\Parser.cpp" />
-    <ClCompile Include="Tokens\Token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST\NodeType.h" />
     <ClInclude Include="AST\Node.h" />
+    <ClInclude Include="Frontend\AST\Node.h" />
+    <ClInclude Include="Frontend\AST\NodeType.h" />
+    <ClInclude Include="Frontend\Lexer\Lexer.h" />
+    <ClInclude Include="Frontend\Parser\Parser.h" />
+    <ClInclude Include="Frontend\Tokens\Keywords.h" />
+    <ClInclude Include="Frontend\Tokens\Token.h" />
+    <ClInclude Include="Frontend\Tokens\TokenType.h" />
     <ClInclude Include="Lexer\Lexer.h" />
     <ClInclude Include="Parser\Parser.h" />
     <ClInclude Include="Tokens\Keywords.h" />
