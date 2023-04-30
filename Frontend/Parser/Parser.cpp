@@ -21,67 +21,73 @@ void Parser::parse(std::vector<Token> tokens, Node* outProgram)
 	advance();
 	while (mCurrentIndex < mTokens->size()
 		&& mCurrentToken->type != TokenType::END_OF_FILE) {
-		Node* s = new Node();
-		parseStatement(s);
-		outProgram->body.emplace_back(*s);
+		Node s = parseStatement();
+		outProgram->body.emplace_back(s);
 		advance();
 	}
 }
 
 
 
-void Parser::parseStatement(Node* outStatement)
+Node Parser::parseStatement()
 {
-	parseExpression(outStatement);
+	return parseExpression();
 }
 
-void Parser::parseExpression(Node* outExpression)
+Node Parser::parseExpression()
 {
-	parseAdditiveExpression(outExpression);
+	return parseAdditiveExpression();
 }
 
-void Parser::parsePrimaryExpression(Node* outExpression)
+Node Parser::parsePrimaryExpression()
 {
+	Node expression;
+
 	switch (mCurrentToken->type) {
-
 	case TokenType::IDENTIFIER:
-		outExpression->type = NodeType::IDENTIFIER;
-		outExpression->value = mCurrentToken->value;
+		expression.type = NodeType::IDENTIFIER;
+		expression.value = mCurrentToken->value;
 		break;
 	case TokenType::NUMBER:
-		outExpression->type = NodeType::NUMERIC_LITERAL;
-		outExpression->value = mCurrentToken->value;
+		expression.type = NodeType::NUMERIC_LITERAL;
+		expression.value = mCurrentToken->value;
 		break;
-
 	default:
-		outExpression->type = NodeType::INVALID;
+		expression.type = NodeType::INVALID;
 		break;
 	}
+
+	advance();
+
+	return expression;
 }
 
-void Parser::parseAdditiveExpression(Node* outExpression)
+
+Node Parser::parseAdditiveExpression()
 {
-	std::unique_ptr<Node>left = std::make_unique<Node>();
-	parsePrimaryExpression(left.get());
+	Node left = parsePrimaryExpression();
 
 	while (mCurrentToken->value == "+" || mCurrentToken->value == "-") {
+		Token operatorToken = *mCurrentToken;
 		advance();
-		std::string value = mCurrentToken->value;
 
-		std::unique_ptr<Node>right = std::make_unique<Node>();
-		parsePrimaryExpression(right.get());
-		left->type = NodeType::BINARY_EXPRESSION;
-		left->value = value;
-		left->right = std::move(right);
-		left->left = std::make_unique<Node>(*left.get());
-		// Broken Code
+		Node right = parsePrimaryExpression();
+
+		Node binaryExpression;
+		binaryExpression.type = NodeType::BINARY_EXPRESSION;
+		binaryExpression.value = operatorToken.value;
+		binaryExpression.left = std::make_shared<Node>(left);
+		binaryExpression.right = std::make_shared<Node>(right);
+
+		left = binaryExpression;
 	}
 
-	outExpression = left.get();
+	return left;
 }
 
-void Parser::parseMultiplacativeExpression(Node* outExpression)
+
+Node Parser::parseMultiplacativeExpression()
 {
-	parsePrimaryExpression(outExpression);
+	return parsePrimaryExpression();
 }
 

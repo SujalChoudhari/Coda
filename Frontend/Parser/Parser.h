@@ -11,13 +11,13 @@ public:
 
 private: // in the order of prescidence
 	void advance();
-	void parseStatement(Node* outStatement);
-	void parseExpression(Node* outExpression);
+	Node parseStatement();
+	Node parseExpression();
 
-	void parsePrimaryExpression(Node* outExpression);
+	Node parsePrimaryExpression();
 	//void parseUnaryExpression(Node* outExpression);
-	void parseMultiplacativeExpression(Node* outExpression);
-	void parseAdditiveExpression(Node* outExpression);
+	Node parseMultiplacativeExpression();
+	Node parseAdditiveExpression();
 
 private:
 	std::vector<Token>* mTokens;

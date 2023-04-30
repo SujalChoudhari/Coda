@@ -13,22 +13,16 @@ int repl() {
 	std::string source;
 	std::unique_ptr<Node> program;
 	std::vector<Token> tokens;
-	while (true)
-	{
-		program = std::make_unique<Node>();
-		tokens = std::vector<Token>();
-		std::cout << ">> ";
-		std::getline(std::cin, source);
+	program = std::make_unique<Node>();
+	tokens = std::vector<Token>();
 
-		if (source == ":q")
-			break;
+	std::cout << ">> ";
+	std::getline(std::cin, source);
 
-		lexer.tokenise(source, &tokens);
-		parser.parse(tokens, program.get());
+	lexer.tokenise(source, &tokens);
+	parser.parse(tokens, program.get());
 
-		std::cout << *program.get() << std::endl;
-
-	}
+	std::cout << *program.get() << std::endl;
 
 	return 0;
 }

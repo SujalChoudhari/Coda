@@ -1,51 +1,43 @@
 #include "Node.h"
-
 std::ostream& operator<<(std::ostream& os, const Node& node)
 {
+    static const int INDENTATION_SIZE = 2;
     static int depth = 0;
-    os << std::string(depth, ' ');
-    os << "{";
+    os << std::string(depth, ' ') << "{";
+
     if (!node.value.empty()) {
-        os << "\n";
-        depth += 2;
-        os << std::string(depth, ' ');
-        os << "value:";
-        os << node.value;
-        depth -= 2;
+        os << "\n" << std::string(depth + INDENTATION_SIZE, ' ')
+            << "value: " << node.value << ",";
     }
+
     if (node.left) {
-        os << "\n";
-        depth += 2;
-        os << std::string(depth, ' ');
-        os << "left:";
-        os << *node.left;
-        depth -= 2;
+        depth += INDENTATION_SIZE;
+        os << "\n" << std::string(depth, ' ')
+            << "left: " << *node.left << ",";
+        depth -= INDENTATION_SIZE;
     }
+
     if (node.right) {
-        os << "\n";
-        depth += 2;
-        os << std::string(depth, ' ');
-        os << "right:";
-        os << *node.right;
-        depth -= 2;
+        depth += INDENTATION_SIZE;
+        os << "\n" << std::string(depth, ' ')
+            << "right: " << *node.right << ",";
+        depth -= INDENTATION_SIZE;
     }
+
     if (!node.body.empty()) {
-        os << "\n";
-        depth += 2;
-        os << std::string(depth, ' ');
-        os << "[";
-        os << "\n";
-        for (int i = 0; i < node.body.size(); i++) {
-            os << node.body.at(i);
-            if (i != node.body.size() - 1) {
-                os << ",";
-            }
-            os << "\n";
+        os << "\n" << std::string(depth + INDENTATION_SIZE, ' ')
+            << "[";
+
+        depth += INDENTATION_SIZE;
+        for (const Node& child : node.body) {
+            os << "\n" << std::string(depth, ' ') << child << ",";
         }
-        os << std::string(depth, ' ');
-        os << "]";
-        depth -= 2;
+        depth -= INDENTATION_SIZE;
+
+        os << "\n" << std::string(depth + INDENTATION_SIZE, ' ')
+            << "]";
     }
+
     os << "}";
     return os;
 }

@@ -7,14 +7,14 @@
 class Node {
 public:
     NodeType type;
-    std::unique_ptr<Node> left;
+    std::shared_ptr<Node> left;
     std::string value;
-    std::unique_ptr<Node> right;
+    std::shared_ptr<Node> right;
     std::vector<Node> body; // only when Type is Program
 
 public:
     
-    Node(NodeType type = NodeType::PROGRAM, std::string value = "", std::unique_ptr<Node> left = nullptr, std::unique_ptr<Node> right = nullptr)
+    Node(NodeType type = NodeType::PROGRAM, std::string value = "", std::shared_ptr<Node> left = nullptr, std::shared_ptr<Node> right = nullptr)
         : type(type), value(value), left(std::move(left)), right(std::move(right)) {}
     Node(const Node& other);
 
