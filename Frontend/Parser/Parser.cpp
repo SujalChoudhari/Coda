@@ -39,35 +39,34 @@ Node Parser::parseExpression()
 	return parseAdditiveExpression();
 }
 
-Node Parser::parsePrimaryExpression()
+Node Parser::parseAdditiveExpression()
 {
-	Node expression;
+	Node left = parseMultiplacativeExpression();
 
-	switch (mCurrentToken->type) {
-	case TokenType::IDENTIFIER:
-		expression.type = NodeType::IDENTIFIER;
-		expression.value = mCurrentToken->value;
-		break;
-	case TokenType::NUMBER:
-		expression.type = NodeType::NUMERIC_LITERAL;
-		expression.value = mCurrentToken->value;
-		break;
-	default:
-		expression.type = NodeType::INVALID;
-		break;
+	while (mCurrentToken->value == "+" || mCurrentToken->value == "-") {
+		Token operatorToken = *mCurrentToken;
+		advance();
+
+		Node right = parseMultiplacativeExpression();
+
+		Node binaryExpression;
+		binaryExpression.type = NodeType::BINARY_EXPRESSION;
+		binaryExpression.value = operatorToken.value;
+		binaryExpression.left = std::make_shared<Node>(left);
+		binaryExpression.right = std::make_shared<Node>(right);
+
+		left = binaryExpression;
 	}
 
-	advance();
-
-	return expression;
+	return left;
 }
 
 
-Node Parser::parseAdditiveExpression()
+Node Parser::parseMultiplacativeExpression()
 {
 	Node left = parsePrimaryExpression();
 
-	while (mCurrentToken->value == "+" || mCurrentToken->value == "-") {
+	while (mCurrentToken->value == "/" || mCurrentToken->value == "*" || mCurrentToken->value == "%") {
 		Token operatorToken = *mCurrentToken;
 		advance();
 
@@ -86,8 +85,30 @@ Node Parser::parseAdditiveExpression()
 }
 
 
-Node Parser::parseMultiplacativeExpression()
+Node Parser::parsePrimaryExpression()
 {
-	return parsePrimaryExpression();
+	Node expression;
+
+	switch (mCurrentToken->type) {
+	case TokenType::IDENTIFIER:
+		expression.type = NodeType::IDENTIFIER;
+		expression.value = mCurrentToken->value;
+		break;
+	case TokenType::NUMBER:
+		expression.type = NodeType::NUMERIC_LITERAL;
+		expression.value = mCurrentToken->value;
+		break;
+	case TokenType::OPEN_PAREN:
+		// TODO: Implimentation
+		break;
+	default:
+		expression.type = NodeType::INVALID;
+		break;
+	}
+
+	advance();
+
+	return expression;
 }
+
 

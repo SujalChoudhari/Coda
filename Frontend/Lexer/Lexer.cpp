@@ -9,12 +9,12 @@ void Lexer::tokenise(std::string sourceCode, std::vector<Token>* outTokens)
 {
 	const char* src = sourceCode.c_str();
 
-	for (int i = 0; i < sourceCode.size(); i++) {
+	for (unsigned int i = 0; i < sourceCode.size(); i++) {
 		if (src[i] == '(')
 			outTokens->emplace_back(TokenType::OPEN_PAREN, "(");
 		else if (src[i] == ')')
 			outTokens->emplace_back(TokenType::CLOSE_PAREN, ")");
-		else if (src[i] == '+' || src[i] == '-' || src[i] == '*' || src[i] == '/')
+		else if (src[i] == '+' || src[i] == '-' || src[i] == '*' || src[i] == '/' || src[i] == '*')
 		{
 			std::string s(1,src[i]);
 			outTokens->emplace_back(TokenType::BINARY_OPERATOR, s);
