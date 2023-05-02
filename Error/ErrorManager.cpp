@@ -1,28 +1,29 @@
 #include "ErrorManager.h"
 
+using namespace Coda::Error;
 
-int ErrorManager::mErrorCount = 0;
-int ErrorManager::mLexerErrorCount = 0;
-int ErrorManager::mParserErrorCount = 0;
+int Manager::mErrorCount = 0;
+int Manager::mLexerErrorCount = 0;
+int Manager::mParserErrorCount = 0;
 
-void ErrorManager::raiseLexerError()
+void Manager::raiseLexerError()
 {
 	mLexerErrorCount++;
 	raiseError();
 }
 
-void ErrorManager::raiseParserError()
+void Manager::raiseParserError()
 {
 	mParserErrorCount++;
 	raiseError();
 }
 
-void ErrorManager::raiseError()
+void Manager::raiseError()
 {
 	mErrorCount++;
 }
 
-bool ErrorManager::isSafe()
+bool Manager::isSafe()
 {
 	return (mErrorCount == 0);
 }

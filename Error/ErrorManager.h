@@ -1,14 +1,21 @@
 #pragma once
-class ErrorManager {
-public:
-	static void raiseLexerError();
-	static void raiseParserError();
-	static void raiseError();
-	static bool isSafe();
 
-private:
-	static int mErrorCount;
-	static int mLexerErrorCount;
-	static int mParserErrorCount;
+namespace Coda {
+	namespace Error {
 
-};
+		class Manager {
+		public:
+			static void raiseLexerError();
+			static void raiseParserError();
+			static void raiseError();
+			static bool isSafe();
+
+		private:
+			static int mErrorCount;
+			static int mLexerErrorCount;
+			static int mParserErrorCount;
+
+		};
+
+	}
+}

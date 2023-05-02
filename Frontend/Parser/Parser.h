@@ -4,24 +4,28 @@
 #include "../Tokens/Token.h"
 #include "../Tokens/TokenType.h"
 #include "../Lexer/Lexer.h"
-class Parser
-{
-public:
-	Parser();
-	Program parse(std::vector<Token> tokens);
 
-private: // in the order of prescidence
-	void advance();
-	Node parseStatement();
-	Node parseExpression();
+namespace Coda {
+	namespace FrontEnd {
+		class Parser
+		{
+		public:
+			Parser();
+			Program parse(std::vector<Token> tokens);
 
-	Node parsePrimaryExpression();
-	Node parseMultiplacativeExpression();
-	Node parseAdditiveExpression();
+		private: // in the order of prescidence
+			void advance();
+			Node parseStatement();
+			Node parseExpression();
 
-private:
-	std::vector<Token>* mTokens;
-	Token* mCurrentToken;
-	int mCurrentIndex = -1;
-};
+			Node parsePrimaryExpression();
+			Node parseMultiplacativeExpression();
+			Node parseAdditiveExpression();
 
+		private:
+			std::vector<Token>* mTokens;
+			Token* mCurrentToken;
+			int mCurrentIndex = -1;
+		};
+	}
+}

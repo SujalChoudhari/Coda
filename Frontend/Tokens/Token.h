@@ -4,19 +4,24 @@
 #include "TokenType.h"
 #include "../../Error/Position.h"
 
-class Token {
-public:
-	std::string value;
-	TokenType type;
-	Position startPosition;
-	Position endPosition;
-	friend std::ostream& operator<<(std::ostream& os, const Token& head);
+using namespace Coda::Error;
 
-public:
-	Token(TokenType type, std::string value, Position startPosition, Position endPosition)
-		:type(type),value(value),startPosition(startPosition),endPosition(endPosition) {}
+namespace Coda {
+	namespace FrontEnd {
+		class Token {
+		public:
+			std::string value;
+			TokenType type;
+			Position startPosition;
+			Position endPosition;
+			friend std::ostream& operator<<(std::ostream& os, const Token& head);
 
-	Token(TokenType type, std::string value, Position startPosition)
-		:type(type), value(value), startPosition(startPosition), endPosition(startPosition) {}
-};
+		public:
+			Token(TokenType type, std::string value, Position startPosition, Position endPosition)
+				:type(type), value(value), startPosition(startPosition), endPosition(endPosition) {}
 
+			Token(TokenType type, std::string value, Position startPosition)
+				:type(type), value(value), startPosition(startPosition), endPosition(startPosition) {}
+		};
+	}
+}

@@ -4,8 +4,13 @@
 #include <string>
 #include "TokenType.h"
 
-std::map<std::string, TokenType>KEYWORD = {
-	{"let",TokenType::LET},
-	{"none",TokenType::NONE},
-	{"undefined",TokenType::UNDEFINED}
-};
+namespace Coda {
+	namespace FrontEnd {
+		std::map<std::string, TokenType>KEYWORD = {
+			{"let",TokenType::LET},
+			{"none",TokenType::NONE},
+			{"undefined",TokenType::UNDEFINED}
+		};
+
+	}
+}

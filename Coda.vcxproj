@@ -167,6 +167,9 @@
     <ClInclude Include="Frontend\Tokens\TokenType.h" />
     <ClInclude Include="Lexer\Lexer.h" />
     <ClInclude Include="Parser\Parser.h" />
+    <ClInclude Include="Runtime\Interpreter.h" />
+    <ClInclude Include="Runtime\Type.h" />
+    <ClInclude Include="Runtime\Value.h" />
     <ClInclude Include="Tokens\Keywords.h" />
     <ClInclude Include="Tokens\Token.h" />
     <ClInclude Include="Tokens\TokenType.h" />

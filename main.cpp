@@ -8,10 +8,11 @@
 #include "Frontend/Parser/Parser.h"
 #include "Error/ErrorManager.h"
 
+using namespace Coda;
+using namespace FrontEnd;
 
 int repl() {
 	while (1) {
-
 
 		std::string source;
 		std::cout << ">> ";
@@ -21,7 +22,7 @@ int repl() {
 		Lexer lexer = Lexer();
 		std::vector<Token> tokens = lexer.tokenise(source);
 
-		if (!ErrorManager::isSafe())
+		if (!Manager::isSafe())
 			continue;
 		Parser parser = Parser();
 		Program program = parser.parse(tokens);
