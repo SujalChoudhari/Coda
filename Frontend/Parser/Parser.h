@@ -1,5 +1,6 @@
 #pragma once
-#include "../AST/Node.h"
+#include "../Node/Node.h"
+#include "../Node/Program.h"
 #include "../Tokens/Token.h"
 #include "../Tokens/TokenType.h"
 #include "../Lexer/Lexer.h"
@@ -7,7 +8,7 @@ class Parser
 {
 public:
 	Parser();
-	void parse(std::vector<Token> tokens, Node* outProgram);
+	Program parse(std::vector<Token> tokens);
 
 private: // in the order of prescidence
 	void advance();
@@ -15,7 +16,6 @@ private: // in the order of prescidence
 	Node parseExpression();
 
 	Node parsePrimaryExpression();
-	//void parseUnaryExpression(Node* outExpression);
 	Node parseMultiplacativeExpression();
 	Node parseAdditiveExpression();
 

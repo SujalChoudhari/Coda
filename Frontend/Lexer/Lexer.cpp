@@ -1,59 +1,113 @@
 #include <string>
+#include <vector>
+#include <iostream>
 #include "../Tokens/Keywords.h"
+#include "../../Error/Error.h"
 #include "Lexer.h"
+
+
 Lexer::Lexer()
 {
+	mTokens = std::vector<Token>();
+	mSourceCode = "";
+	mCurrentIndex = -1;
+	mCurrentPosition = Position(0, 1);
 }
 
-void Lexer::tokenise(std::string sourceCode, std::vector<Token>* outTokens)
+void Lexer::advance()
 {
-	const char* src = sourceCode.c_str();
+	mCurrentIndex++;
+	if (mCurrentIndex < mSourceCode.size()) {
+		mCurrentChar = mSourceCode[mCurrentIndex];
+	}
+	else {
+		mCurrentChar = '\0';
+	}
+	mCurrentPosition.character++;
+}
 
-	for (unsigned int i = 0; i < sourceCode.size(); i++) {
-		if (src[i] == '(')
-			outTokens->emplace_back(TokenType::OPEN_PAREN, "(");
-		else if (src[i] == ')')
-			outTokens->emplace_back(TokenType::CLOSE_PAREN, ")");
-		else if (src[i] == '+' || src[i] == '-' || src[i] == '*' || src[i] == '/' || src[i] == '*')
+
+std::vector<Token> Lexer::tokenise(std::string sourceCode)
+{
+	mSourceCode = sourceCode;
+	advance();
+
+	while (mCurrentChar != '\0') {
+		if (mCurrentChar == '\n') {
+			mCurrentPosition.line++;
+			mCurrentPosition.character = 1;
+		}
+		else if (isspace(mCurrentChar)) {
+			advance();
+		}
+		else if (mCurrentChar == '(')
 		{
-			std::string s(1,src[i]);
-			outTokens->emplace_back(TokenType::BINARY_OPERATOR, s);
+			mTokens.emplace_back(TokenType::OPEN_PAREN, "(", mCurrentPosition);
+			advance();
 		}
-		else if (src[i] == '=')
-			outTokens->emplace_back(TokenType::EQUALS, "=");
+		else if (mCurrentChar == ')')
+		{
+			mTokens.emplace_back(TokenType::CLOSE_PAREN, ")", mCurrentPosition);
+			advance();
+		}
+		else if (mCurrentChar == '+'
+			|| mCurrentChar == '-'
+			|| mCurrentChar == '*'
+			|| mCurrentChar == '/'
+			|| mCurrentChar == '%')
+		{
+			std::string s(1, mCurrentChar);
+			mTokens.emplace_back(TokenType::BINARY_OPERATOR, s, mCurrentPosition);
+			advance();
+		}
+		else if (mCurrentChar == '=') {
+			mTokens.emplace_back(TokenType::EQUALS, "=", mCurrentPosition);
+			advance();
+		}
+		else if (isdigit(mCurrentChar)) {
+			buildNumbers();
+		}
+		else if (isalpha(mCurrentChar)) {
+			buildIdentifiers();
+		}
 		else {
-			// multisrc[i] token handler
-			// build numbers
-			if (isdigit(src[i])) {
-				std::string num = "";
-				while (isdigit(src[i]) && i < sourceCode.size()) {
-					num.push_back(src[i]);
-					i++;
-				}
-
-				outTokens->emplace_back(TokenType::NUMBER, num);
-			}
-			//build identifier
-			else if (isalpha(src[i])) {
-				std::string identifier = "";
-				while (isalpha(src[i]) && i < sourceCode.size()) {
-					identifier.push_back(src[i]);
-					i++;
-				}
-				auto iden = KEYWORD.find(identifier);
-				if (iden == KEYWORD.end())
-				{
-					outTokens->emplace_back(TokenType::IDENTIFIER, identifier);
-				}
-				else {
-					outTokens->emplace_back(KEYWORD[identifier], identifier);
-				}
-			}
-
+			LexerError::raiseIllegalCharacterError(mCurrentChar, mCurrentPosition);
+			advance();
 		}
-
 	}
 
-	outTokens->emplace_back(TokenType::END_OF_FILE, "\\0");
+	mTokens.emplace_back(TokenType::END_OF_FILE, "\\0", mCurrentPosition);
 
+	return mTokens;
 }
+
+void Lexer::buildNumbers()
+{
+	Position start = mCurrentPosition;
+	std::string num = "";
+	while (mCurrentChar != '\0' && isdigit(mCurrentChar)) {
+		num.push_back(mCurrentChar);
+		advance();
+	}
+
+	mTokens.emplace_back(TokenType::NUMBER, num, start, mCurrentPosition);
+}
+
+void Lexer::buildIdentifiers()
+{
+	Position start = mCurrentPosition;
+	std::string identifier = "";
+	while (mCurrentChar != '\0' && isalpha(mCurrentChar)) {
+		identifier.push_back(mCurrentChar);
+		advance();
+	}
+	auto iden = KEYWORD.find(identifier);
+	if (iden == KEYWORD.end())
+	{
+		mTokens.emplace_back(TokenType::IDENTIFIER, identifier, start, mCurrentPosition);
+	}
+	else {
+		mTokens.emplace_back(KEYWORD[identifier], identifier, start, mCurrentPosition);
+	}
+}
+

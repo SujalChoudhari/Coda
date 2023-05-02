@@ -3,27 +3,31 @@
 #include "Frontend/Lexer/Lexer.h"
 #include "Frontend/Tokens/Token.h"
 #include "Frontend/Tokens/TokenType.h"
-#include "Frontend/AST/Node.h"
+#include "Frontend/Node/Node.h"
+#include "Frontend/Node/Program.h"
 #include "Frontend/Parser/Parser.h"
+#include "Error/ErrorManager.h"
 
 
 int repl() {
-	Lexer lexer = Lexer();
-	Parser parser = Parser();
-	std::string source;
-	std::unique_ptr<Node> program;
-	std::vector<Token> tokens;
-	program = std::make_unique<Node>();
-	tokens = std::vector<Token>();
+	while (1) {
 
-	std::cout << ">> ";
-	std::getline(std::cin, source);
 
-	lexer.tokenise(source, &tokens);
-	parser.parse(tokens, program.get());
+		std::string source;
+		std::cout << ">> ";
+		std::getline(std::cin, source);
+		if (source == ":q" || source == "exit" || source == "quit") break;
 
-	std::cout << *program.get() << std::endl;
+		Lexer lexer = Lexer();
+		std::vector<Token> tokens = lexer.tokenise(source);
 
+		if (!ErrorManager::isSafe())
+			continue;
+		Parser parser = Parser();
+		Program program = parser.parse(tokens);
+
+		std::cout << program << std::endl;
+	}
 	return 0;
 }
 

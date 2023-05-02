@@ -1,5 +1,6 @@
 #include "Parser.h"
-#include "../AST/Node.h"
+#include "../Node/Node.h"
+#include "../../Error/Error.h"
 Parser::Parser()
 {
 	mCurrentIndex = -1;
@@ -15,16 +16,18 @@ void Parser::advance()
 		mCurrentToken = &mTokens->at(mCurrentIndex);
 }
 
-void Parser::parse(std::vector<Token> tokens, Node* outProgram)
+Program Parser::parse(std::vector<Token> tokens)
 {
+	Program program = Program();
 	mTokens = &tokens;
 	advance();
 	while (mCurrentIndex < mTokens->size()
 		&& mCurrentToken->type != TokenType::END_OF_FILE) {
 		Node s = parseStatement();
-		outProgram->body.emplace_back(s);
+		program.body.emplace_back(s);
 		advance();
 	}
+	return program;
 }
 
 
@@ -103,9 +106,10 @@ Node Parser::parsePrimaryExpression()
 		break;
 	default:
 		expression.type = NodeType::INVALID;
+		ParserError::raiseExpectedTokenError("<any>", mCurrentToken->value, mCurrentToken->startPosition);
 		break;
 	}
-
+	
 	advance();
 
 	return expression;

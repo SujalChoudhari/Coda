@@ -10,7 +10,6 @@ public:
     std::shared_ptr<Node> left;
     std::string value;
     std::shared_ptr<Node> right;
-    std::vector<Node> body; // only when Type is Program
 
 public:
     
@@ -20,5 +19,4 @@ public:
 
     friend std::ostream& operator<<(std::ostream& os, const Node& node);
 };
-
 

@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Frontend\Parser\Parser.cpp">
@@ -27,7 +27,13 @@
     <ClCompile Include="Frontend\Tokens\Token.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Frontend\AST\Node.cpp">
+    <ClCompile Include="Frontend\Node\Node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Error\Error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Error\ErrorManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,10 +65,10 @@
     <ClInclude Include="Frontend\Lexer\Lexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Frontend\AST\Node.h">
+    <ClInclude Include="Frontend\Node\Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Frontend\AST\NodeType.h">
+    <ClInclude Include="Frontend\Node\NodeType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Frontend\Tokens\Keywords.h">
@@ -74,11 +80,31 @@
     <ClInclude Include="Frontend\Tokens\TokenType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Error\Position.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frontend\Node\Program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Error\Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Error\ErrorManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" />
-    <None Include=".gitattributes" />
-    <None Include=".gitignore" />
-    <None Include="CppProperties.json" />
+    <None Include=".gitattributes">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include=".gitignore">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="CppProperties.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="README.md">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

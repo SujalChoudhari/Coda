@@ -143,18 +143,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Frontend\AST\Node.cpp" />
+    <ClCompile Include="Error\Error.cpp" />
+    <ClCompile Include="Error\ErrorManager.cpp" />
+    <ClCompile Include="Frontend\Node\Node.cpp" />
     <ClCompile Include="Frontend\Lexer\Lexer.cpp" />
     <ClCompile Include="Frontend\Parser\Parser.cpp" />
     <ClCompile Include="Frontend\Tokens\Token.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST\NodeType.h" />
     <ClInclude Include="AST\Node.h" />
-    <ClInclude Include="Frontend\AST\Node.h" />
-    <ClInclude Include="Frontend\AST\NodeType.h" />
+    <ClInclude Include="Error\Error.h" />
+    <ClInclude Include="Error\ErrorManager.h" />
+    <ClInclude Include="Error\Position.h" />
+    <ClInclude Include="Frontend\Node\Node.h" />
+    <ClInclude Include="Frontend\Node\NodeType.h" />
     <ClInclude Include="Frontend\Lexer\Lexer.h" />
+    <ClInclude Include="Frontend\Node\Program.h" />
     <ClInclude Include="Frontend\Parser\Parser.h" />
     <ClInclude Include="Frontend\Tokens\Keywords.h" />
     <ClInclude Include="Frontend\Tokens\Token.h" />
