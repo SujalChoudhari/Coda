@@ -4,27 +4,26 @@ std::ostream& operator<<(std::ostream& os, const Node& node)
 {
 	static const int INDENTATION_SIZE = 2;
 	static int depth = 0;
-	os << std::string(depth, ' ') << "{";
-
+	os << std::string(depth, ' ') << "{ ";
 	if (!node.value.empty()) {
 		os << "\n" << std::string(depth + INDENTATION_SIZE, ' ')
-			<< "value: " << node.value << ",";
+			<< "value: " << node.value;
 	}
 
 	if (node.left) {
 		depth += INDENTATION_SIZE;
-		os << "\n" << std::string(depth, ' ')
-			<< "left: " << *node.left << ",";
+		os << "," << "\n" << std::string(depth, ' ')
+			<< "left: " << *node.left;
 		depth -= INDENTATION_SIZE;
 	}
 
 	if (node.right) {
 		depth += INDENTATION_SIZE;
-		os << "\n" << std::string(depth, ' ')
+		os << "," << "\n" << std::string(depth, ' ')
 			<< "right: " << *node.right << ",";
 		depth -= INDENTATION_SIZE;
 	}
-	os << "}";
+	os << "\n" << std::string(depth, ' ') << "}";
 	return os;
 }
 

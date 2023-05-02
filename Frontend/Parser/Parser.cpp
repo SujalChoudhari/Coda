@@ -98,6 +98,11 @@ Node Parser::parsePrimaryExpression()
 		expression.type = NodeType::IDENTIFIER;
 		expression.value = mCurrentToken->value;
 	}
+	else if (*type == TokenType::NONE) {
+		advance();
+		expression.type = NodeType::NONE_LITERAL;
+		expression.value = "none";
+	}
 	else if (*type == TokenType::NUMBER) {
 		expression.type = NodeType::NUMERIC_LITERAL;
 		expression.value = mCurrentToken->value;
