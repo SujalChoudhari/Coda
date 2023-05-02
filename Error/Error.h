@@ -8,6 +8,7 @@ namespace LexerError {
 }
 
 namespace ParserError {
-	void raiseExpectedTokenError(const std::string expected, const std::string got, const Position& pos);
+	void raiseUnexpectedTokenError(const std::string expected, const std::string got, const Position& pos);
+	void raiseInvalidTokenFoundError(const std::string found, const Position& pos);
 }
 

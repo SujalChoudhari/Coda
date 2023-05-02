@@ -7,10 +7,6 @@ std::ostream& operator<<(std::ostream& os, const Position& head) {
 	return os;
 }
 
-
-
-
-
 void LexerError::raiseIllegalCharacterError(const char character, const Position& pos)
 {
 	ErrorManager::raiseLexerError();
@@ -21,7 +17,7 @@ void LexerError::raiseIllegalCharacterError(const char character, const Position
 
 }
 
-void ParserError::raiseExpectedTokenError(
+void ParserError::raiseUnexpectedTokenError(
 	const std::string expected,
 	const std::string got,
 	const Position& pos)
@@ -34,5 +30,15 @@ void ParserError::raiseExpectedTokenError(
 		<< "' instead, at "
 		<< pos
 		<< std::endl;
+}
+
+void ParserError::raiseInvalidTokenFoundError(const std::string found, const Position& pos)
+{
+	ErrorManager::raiseParserError();
+	std::cout << "[PARSER]: Invalid Token found. Token '"
+		<< found
+		<< "' was found at, "
+		<< pos << std::endl;
+
 }
 

@@ -91,25 +91,37 @@ Node Parser::parseMultiplacativeExpression()
 Node Parser::parsePrimaryExpression()
 {
 	Node expression;
+	TokenType* type = &mCurrentToken->type;
 
-	switch (mCurrentToken->type) {
-	case TokenType::IDENTIFIER:
+	if (*type == TokenType::IDENTIFIER) {
+
 		expression.type = NodeType::IDENTIFIER;
 		expression.value = mCurrentToken->value;
-		break;
-	case TokenType::NUMBER:
+	}
+	else if (*type == TokenType::NUMBER) {
 		expression.type = NodeType::NUMERIC_LITERAL;
 		expression.value = mCurrentToken->value;
-		break;
-	case TokenType::OPEN_PAREN:
-		// TODO: Implimentation
-		break;
-	default:
-		expression.type = NodeType::INVALID;
-		ParserError::raiseExpectedTokenError("<any>", mCurrentToken->value, mCurrentToken->startPosition);
-		break;
 	}
-	
+	else if (*type == TokenType::OPEN_PAREN) {
+
+		advance(); // skip the paren
+		expression = parseExpression();
+		if (mCurrentToken->type != TokenType::CLOSE_PAREN) {
+			ParserError::raiseUnexpectedTokenError(")", mCurrentToken->value, mCurrentToken->startPosition);
+			exit(1);
+		}
+		else {
+			advance(); // eat the closing paren
+		}
+		return expression;
+
+	}
+	else {
+		expression.type = NodeType::INVALID;
+		ParserError::raiseInvalidTokenFoundError(mCurrentToken->value, mCurrentToken->startPosition);
+		exit(1);
+	}
+
 	advance();
 
 	return expression;

@@ -24,6 +24,5 @@ void ErrorManager::raiseError()
 
 bool ErrorManager::isSafe()
 {
-	if (mErrorCount == 0) return true;
-	else return false;
+	return (mErrorCount == 0);
 }
