@@ -7,6 +7,7 @@ namespace Coda {
 		public:
 			static void raiseLexerError();
 			static void raiseParserError();
+			static void raiseRuntimeError();
 			static void raiseError();
 			static bool isSafe();
 
@@ -14,6 +15,7 @@ namespace Coda {
 			static int mErrorCount;
 			static int mLexerErrorCount;
 			static int mParserErrorCount;
+			static int mRuntimeErrorCount;
 
 		};
 

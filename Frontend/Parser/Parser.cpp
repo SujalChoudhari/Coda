@@ -47,6 +47,7 @@ namespace Coda {
 
 		Node Parser::parseAdditiveExpression()
 		{
+			Error::Position currPos = mCurrentToken->startPosition;
 			Node left = parseMultiplacativeExpression();
 
 			while (mCurrentToken->value == "+" || mCurrentToken->value == "-") {
@@ -61,6 +62,13 @@ namespace Coda {
 				binaryExpression.left = std::make_shared<Node>(left);
 				binaryExpression.right = std::make_shared<Node>(right);
 
+				// Set position property for binaryExpression.left and binaryExpression.right
+				binaryExpression.left->position = left.position;
+				binaryExpression.right->position = right.position;
+
+				// Set position property for binaryExpression
+				binaryExpression.position = currPos;
+
 				left = binaryExpression;
 			}
 
@@ -70,6 +78,7 @@ namespace Coda {
 
 		Node Parser::parseMultiplacativeExpression()
 		{
+			Error::Position currPos = mCurrentToken->startPosition;
 			Node left = parsePrimaryExpression();
 
 			while (
@@ -87,6 +96,13 @@ namespace Coda {
 				binaryExpression.left = std::make_shared<Node>(left);
 				binaryExpression.right = std::make_shared<Node>(right);
 
+				// Set position property for binaryExpression.left and binaryExpression.right
+				binaryExpression.left->position = left.position;
+				binaryExpression.right->position = right.position;
+
+				// Set position property for binaryExpression
+				binaryExpression.position = currPos;
+
 				left = binaryExpression;
 			}
 
@@ -98,10 +114,10 @@ namespace Coda {
 		Node Parser::parsePrimaryExpression()
 		{
 			Node expression;
+			
 			TokenType* type = &mCurrentToken->type;
 
 			if (*type == TokenType::IDENTIFIER) {
-
 				expression.type = NodeType::IDENTIFIER;
 				expression.value = mCurrentToken->value;
 			}
@@ -115,7 +131,6 @@ namespace Coda {
 				expression.value = mCurrentToken->value;
 			}
 			else if (*type == TokenType::OPEN_PAREN) {
-
 				advance(); // skip the paren
 				expression = parseExpression();
 				if (mCurrentToken->type != TokenType::CLOSE_PAREN) {
@@ -128,20 +143,20 @@ namespace Coda {
 				else {
 					advance(); // eat the closing paren
 				}
-				return expression;
-
 			}
 			else {
 				expression.type = NodeType::INVALID;
 				Coda::Error::Parser::raiseInvalidTokenFoundError(
-					mCurrentToken->value, 
+					mCurrentToken->value,
 					mCurrentToken->startPosition);
 				exit(1);
 			}
-
+			// Set position property for expression
+			
 			advance();
 
 			return expression;
+
 		}
 
 

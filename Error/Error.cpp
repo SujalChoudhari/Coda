@@ -43,5 +43,16 @@ namespace Coda {
 
 		}
 
+		void Runtime::raiseUnrecognisedASTNodeError(const std::string got, const Position& pos)
+		{
+			Manager::raiseRuntimeError();
+			std::cout << "[RUNTIME]: Unrecognised AST Node received. Token '"
+				<< got
+				<< "' was found at,"
+				<< pos << std::endl;
+		}
+
 	}
 }
+
+

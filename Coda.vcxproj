@@ -144,18 +144,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Error\Error.cpp" />
-    <ClCompile Include="Error\ErrorManager.cpp" />
+    <ClCompile Include="Error\Manager.cpp" />
     <ClCompile Include="Frontend\Node\Node.cpp" />
     <ClCompile Include="Frontend\Lexer\Lexer.cpp" />
     <ClCompile Include="Frontend\Parser\Parser.cpp" />
     <ClCompile Include="Frontend\Tokens\Token.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Runtime\Interpreter.cpp" />
+    <ClCompile Include="Runtime\Value.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST\NodeType.h" />
     <ClInclude Include="AST\Node.h" />
     <ClInclude Include="Error\Error.h" />
-    <ClInclude Include="Error\ErrorManager.h" />
+    <ClInclude Include="Error\Manager.h" />
     <ClInclude Include="Error\Position.h" />
     <ClInclude Include="Frontend\Node\Node.h" />
     <ClInclude Include="Frontend\Node\NodeType.h" />

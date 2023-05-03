@@ -33,7 +33,13 @@
     <ClCompile Include="Error\Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\ErrorManager.cpp">
+    <ClCompile Include="Error\Manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Runtime\Interpreter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Runtime\Value.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,7 +95,7 @@
     <ClInclude Include="Error\Error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Error\ErrorManager.h">
+    <ClInclude Include="Error\Manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Runtime\Interpreter.h">

@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Position.h"
-#include "ErrorManager.h"
+#include "Manager.h"
 
 namespace Coda {
 	namespace Error {
@@ -15,6 +15,13 @@ namespace Coda {
 				const std::string got,
 				const Position& pos);
 			void raiseInvalidTokenFoundError(const std::string found, const Position& pos);
+		}
+
+		namespace Runtime {
+			void raiseUnrecognisedASTNodeError(
+				const std::string got,
+				const Position& pos
+			);
 		}
 	}
 
