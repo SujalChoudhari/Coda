@@ -52,6 +52,13 @@ namespace Coda {
 				<< pos << std::endl;
 		}
 
+		void Runtime::raiseDivisionByZeroError(const Position& pos)
+		{
+			Manager::raiseRuntimeError();
+			std::cout << "[RUNTIME]: Division by Zero, at"
+				<< pos << std::endl;
+		}
+
 	}
 }
 

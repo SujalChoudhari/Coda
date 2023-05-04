@@ -61,7 +61,7 @@ namespace Coda {
 				right = std::make_unique<Node>(*other.right);
 			}
 
-			position = other.position;
+			startPosition = other.startPosition;
 
 		}
 

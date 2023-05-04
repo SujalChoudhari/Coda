@@ -22,6 +22,7 @@ namespace Coda {
 				const std::string got,
 				const Position& pos
 			);
+			void raiseDivisionByZeroError(const Position& pos);
 		}
 	}
 

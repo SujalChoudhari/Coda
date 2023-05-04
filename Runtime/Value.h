@@ -12,15 +12,16 @@ namespace Coda {
 		public:
 			Type type;
 			std::string value;
-			Error::Position position;
+			Error::Position startPosition;
+			Error::Position endPosition;
 
 		public:
 			Value()
 				:type(Type::NONE), value("none") {}
-			Value(Type type, Error::Position pos)
-				:type(type), value("none"), position(pos) {}
-			Value(Type type, std::string value, Error::Position pos)
-				:type(type), value(value), position(pos) {}
+			Value(Type type, Error::Position start, Error::Position end)
+				:type(type), value("none"), startPosition(start), endPosition(end) {}
+			Value(Type type, std::string value, Error::Position start, Error::Position end)
+				:type(type), value(value), startPosition(start), endPosition(end) {}
 
 			friend std::ostream& operator<< (std::ostream& os, const Value& value);
 		};

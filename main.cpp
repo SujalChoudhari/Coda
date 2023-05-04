@@ -17,6 +17,7 @@ using namespace FrontEnd;
 
 int repl() {
 	while (1) {
+		Error::Manager::reset();
 
 		std::string source;
 		std::cout << ">> ";
@@ -28,6 +29,7 @@ int repl() {
 
 		if (!Error::Manager::isSafe())
 			continue;
+
 		Parser parser = Parser();
 		Program program = parser.parse(tokens);
 
@@ -35,7 +37,7 @@ int repl() {
 			continue;
 
 		Runtime::Interpreter inter = Runtime::Interpreter();
-		Runtime::Value out = inter.evaluate(program.body.at(0));
+		Runtime::Value out = inter.evaluateProgram(program);
 
 		std::cout << out << std::endl;
 	}

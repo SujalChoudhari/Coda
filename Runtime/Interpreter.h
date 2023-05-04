@@ -4,6 +4,7 @@
 #include "Type.h"
 #include "../Frontend/Node/NodeType.h"
 #include "../Frontend/Node/Node.h"
+#include "../Frontend/Node/Program.h"
 
 namespace Coda {
 	namespace Runtime {
@@ -11,7 +12,13 @@ namespace Coda {
 		class Interpreter {
 
 		public:
-			Runtime::Value evaluate(FrontEnd::Node astNode);
+			Value evaluate(FrontEnd::Node astNode);
+			Value evaluateProgram(FrontEnd::Program program);
+
+		private:
+			Value evaluateBinaryExpression(FrontEnd::Node binop);
+			Value evaluateNumericBinaryExpression(Value left,std::string functor, Value right);
+
 		};
 
 	}

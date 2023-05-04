@@ -34,3 +34,11 @@ bool Manager::isSafe()
 {
 	return (mErrorCount == 0);
 }
+
+void Coda::Error::Manager::reset()
+{
+	mErrorCount = 0;
+	mRuntimeErrorCount = 0;
+	mParserErrorCount = 0;
+	mLexerErrorCount = 0;
+}

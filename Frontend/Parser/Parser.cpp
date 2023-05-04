@@ -21,6 +21,7 @@ namespace Coda {
 
 		Program Parser::parse(std::vector<Token> tokens)
 		{
+			if (!Error::Manager::isSafe()) return Program();
 			Program program = Program();
 			mTokens = &tokens;
 			advance();
@@ -37,16 +38,19 @@ namespace Coda {
 
 		Node Parser::parseStatement()
 		{
+			if (!Error::Manager::isSafe()) return Node();
 			return parseExpression();
 		}
 
 		Node Parser::parseExpression()
 		{
+			if (!Error::Manager::isSafe()) return Node();
 			return parseAdditiveExpression();
 		}
 
 		Node Parser::parseAdditiveExpression()
 		{
+			if (!Error::Manager::isSafe()) return Node();
 			Error::Position currPos = mCurrentToken->startPosition;
 			Node left = parseMultiplacativeExpression();
 
@@ -63,11 +67,11 @@ namespace Coda {
 				binaryExpression.right = std::make_shared<Node>(right);
 
 				// Set position property for binaryExpression.left and binaryExpression.right
-				binaryExpression.left->position = left.position;
-				binaryExpression.right->position = right.position;
+				binaryExpression.left->startPosition = left.startPosition;
+				binaryExpression.right->startPosition = right.startPosition;
 
 				// Set position property for binaryExpression
-				binaryExpression.position = currPos;
+				binaryExpression.startPosition = currPos;
 
 				left = binaryExpression;
 			}
@@ -78,6 +82,8 @@ namespace Coda {
 
 		Node Parser::parseMultiplacativeExpression()
 		{
+			if (!Error::Manager::isSafe()) return Node();
+
 			Error::Position currPos = mCurrentToken->startPosition;
 			Node left = parsePrimaryExpression();
 
@@ -97,11 +103,11 @@ namespace Coda {
 				binaryExpression.right = std::make_shared<Node>(right);
 
 				// Set position property for binaryExpression.left and binaryExpression.right
-				binaryExpression.left->position = left.position;
-				binaryExpression.right->position = right.position;
+				binaryExpression.left->startPosition = left.startPosition;
+				binaryExpression.right->startPosition = right.startPosition;
 
 				// Set position property for binaryExpression
-				binaryExpression.position = currPos;
+				binaryExpression.startPosition = currPos;
 
 				left = binaryExpression;
 			}
@@ -114,8 +120,9 @@ namespace Coda {
 		Node Parser::parsePrimaryExpression()
 		{
 			Node expression;
-			
 			TokenType* type = &mCurrentToken->type;
+
+			if (!Error::Manager::isSafe()) return expression;
 
 			if (*type == TokenType::IDENTIFIER) {
 				expression.type = NodeType::IDENTIFIER;
@@ -138,7 +145,6 @@ namespace Coda {
 						")",
 						mCurrentToken->value,
 						mCurrentToken->startPosition);
-					exit(1);
 				}
 				else {
 					advance(); // eat the closing paren
@@ -149,10 +155,9 @@ namespace Coda {
 				Coda::Error::Parser::raiseInvalidTokenFoundError(
 					mCurrentToken->value,
 					mCurrentToken->startPosition);
-				exit(1);
 			}
 			// Set position property for expression
-			
+
 			advance();
 
 			return expression;

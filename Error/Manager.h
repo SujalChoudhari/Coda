@@ -10,6 +10,7 @@ namespace Coda {
 			static void raiseRuntimeError();
 			static void raiseError();
 			static bool isSafe();
+			static void reset();
 
 		private:
 			static int mErrorCount;
