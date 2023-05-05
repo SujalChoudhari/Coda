@@ -30,16 +30,22 @@
     <ClCompile Include="Frontend\Node\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Error\Error.cpp">
+    <ClCompile Include="Error\Raiser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Error\Manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Runtime\Interpreter.cpp">
+    <ClCompile Include="Runtime\Interpreter\Interpreter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Runtime\Value.cpp">
+    <ClCompile Include="Runtime\Environment\Environment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Runtime\RuntimeValue\Value.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Frontend\Tokens\Constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,19 +62,7 @@
     <ClInclude Include="Tokens\Keywords.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AST\Node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AST\NodeType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Parser\Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Frontend\Parser\Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Frontend\Lexer\Lexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Frontend\Node\Node.h">
@@ -80,31 +74,52 @@
     <ClInclude Include="Frontend\Tokens\Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Frontend\Tokens\Token.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Frontend\Tokens\TokenType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Error\Position.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Frontend\Node\Program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Error\Error.h">
+    <ClInclude Include="Error\Raiser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Error\Manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Runtime\Interpreter.h">
+    <ClInclude Include="Runtime\Interpreter\Interpreter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Runtime\Type.h">
+    <ClInclude Include="Runtime\Environment\Environment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Runtime\Value.h">
+    <ClInclude Include="Runtime\RuntimeValue\Type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runtime\RuntimeValue\Value.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frontend\Parser\Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frontend\Lexer\Lexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frontend\Tokens\Token.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frontend\Tokens\TokenType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Error\Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frontend\Frontend.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runtime\Runtime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Coda.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

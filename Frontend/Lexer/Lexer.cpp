@@ -6,7 +6,7 @@
 #include "Lexer.h"
 
 namespace Coda {
-	namespace FrontEnd {
+	namespace Frontend {
 		Lexer::Lexer()
 		{
 			mTokens = std::vector<Token>();
@@ -70,7 +70,7 @@ namespace Coda {
 					mTokens.emplace_back(TokenType::EQUALS, "=", mCurrentPosition);
 					advance();
 				}
-				else if (isSupportedDigit(mCurrentChar)) {
+				else if (FIRST_VALID_DIGITS.find(mCurrentChar) != std::string::npos) {
 					buildNumbers();
 				}
 				else if (isalpha(mCurrentChar)) {

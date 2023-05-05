@@ -2,7 +2,7 @@
 #include <vector>
 #include "Node.h"
 namespace Coda {
-	namespace FrontEnd {
+	namespace Frontend {
 		class Program {
 		public:
 			std::vector<Node> body = std::vector<Node>();

@@ -76,6 +76,14 @@ namespace Coda {
 				<< pos << std::endl;
 		}
 
+		void Runtime::raiseSymbolDoesnotExist(std::string symbol)
+		{
+			Manager::raiseRuntimeError();
+			std::cout << "[RUNTIME]: Symbol '"
+				<< symbol
+				<< "' does not exist. " << std::endl;
+		}
+
 
 
 	}

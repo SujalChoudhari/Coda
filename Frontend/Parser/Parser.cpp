@@ -3,7 +3,7 @@
 #include "../../Error/Error.h"
 
 namespace Coda {
-	namespace FrontEnd {
+	namespace Frontend {
 		Parser::Parser()
 		{
 			mCurrentIndex = -1;
@@ -17,6 +17,9 @@ namespace Coda {
 			if (mCurrentIndex < mTokens->size()
 				&& mTokens->at(mCurrentIndex).type != TokenType::END_OF_FILE)
 				mCurrentToken = &mTokens->at(mCurrentIndex);
+			else {
+				mCurrentToken = &mTokens->at(0);
+			}
 		}
 
 		Program Parser::parse(std::vector<Token> tokens)
@@ -128,16 +131,7 @@ namespace Coda {
 				expression.type = NodeType::IDENTIFIER;
 				expression.value = mCurrentToken->value;
 			}
-			else if (*type == TokenType::NONE) {
-				advance();
-				expression.type = NodeType::NONE_LITERAL;
-				expression.value = "none";
-			}
-			else if (*type == TokenType::UNDEFINED) {
-				advance();
-				expression.type = NodeType::UNDEFINED_LITERAL;
-				expression.value = "undefined";
-			}
+			
 			else if (*type == TokenType::BYTE) {
 				expression.type = NodeType::BYTE_LITERAL;
 				expression.value = mCurrentToken->value;
@@ -167,9 +161,6 @@ namespace Coda {
 						mCurrentToken->value,
 						mCurrentToken->startPosition);
 				}
-				else {
-					advance(); // eat the closing paren
-				}
 			}
 			else {
 				expression.type = NodeType::INVALID;
@@ -177,7 +168,6 @@ namespace Coda {
 					mCurrentToken->value,
 					mCurrentToken->startPosition);
 			}
-			// Set position property for expression
 			expression.startPosition = mCurrentToken->startPosition;
 			expression.endPosition = mCurrentToken->endPosition;
 			advance();

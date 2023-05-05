@@ -2,7 +2,7 @@
 #include <string>
 #include <ostream>
 #include "Type.h"
-#include "../Error/Position.h"
+#include "../../Error/Position.h"
 
 namespace Coda {
 	namespace Runtime {

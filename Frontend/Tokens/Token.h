@@ -7,7 +7,7 @@
 using namespace Coda::Error;
 
 namespace Coda {
-	namespace FrontEnd {
+	namespace Frontend {
 		class Token {
 		public:
 			std::string value;

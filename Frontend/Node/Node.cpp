@@ -2,7 +2,7 @@
 #include "Program.h"
 
 namespace Coda {
-	namespace FrontEnd {
+	namespace Frontend {
 
 		std::ostream& operator<<(std::ostream& os, const Node& node)
 		{

@@ -6,7 +6,7 @@
 #include "../Lexer/Lexer.h"
 
 namespace Coda {
-	namespace FrontEnd {
+	namespace Frontend {
 		class Parser
 		{
 		public:

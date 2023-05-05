@@ -1,10 +1,8 @@
 #pragma once
 namespace Coda {
-	namespace FrontEnd {
+	namespace Frontend {
 		enum class TokenType {
 			// Literal Types
-			NONE,
-			UNDEFINED,
 			INT,
 			FLOAT,
 			DOUBLE,

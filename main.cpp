@@ -1,43 +1,41 @@
 #include <iostream>
 
-#include "Frontend/Lexer/Lexer.h"
-#include "Frontend/Tokens/Token.h"
-#include "Frontend/Tokens/TokenType.h"
-#include "Frontend/Node/Node.h"
-#include "Frontend/Node/Program.h"
-#include "Frontend/Parser/Parser.h"
-
-#include "Error/Manager.h"
-
-#include "Runtime/Interpreter.h"
-#include "Runtime/Value.h"
-
-using namespace Coda;
-using namespace FrontEnd;
+#include "Coda.h"
 
 int repl() {
+
+	Coda::Runtime::Environment env = Coda::Runtime::Environment();
+
+	env.declareOrAssignVariable("none", Coda::Runtime::Value(Coda::Runtime::Type::NONE, "none", Position(), Position()));
+	env.declareOrAssignVariable("undefined", Coda::Runtime::Value(Coda::Runtime::Type::UNDEFINED, "undefined", Position(), Position()));
+	env.declareOrAssignVariable("true", Coda::Runtime::Value(Coda::Runtime::Type::BOOL, "1", Position(), Position()));
+	env.declareOrAssignVariable("false", Coda::Runtime::Value(Coda::Runtime::Type::BOOL, "0", Position(), Position()));
+
 	while (1) {
-		Error::Manager::reset();
+		Coda:: Error::Manager::reset();
 
 		std::string source;
 		std::cout << ">> ";
 		std::getline(std::cin, source);
 		if (source == ":q" || source == "exit" || source == "quit") break;
 
-		Lexer lexer = Lexer();
-		std::vector<Token> tokens = lexer.tokenise(source);
 
-		if (!Error::Manager::isSafe())
+		if (source.empty()) continue;
+
+		Coda::Frontend::Lexer lexer = Coda::Frontend::Lexer();
+		std::vector<Coda::Frontend::Token> tokens = lexer.tokenise(source);
+
+		if (!Coda::Error::Manager::isSafe())
 			continue;
 
-		Parser parser = Parser();
-		Program program = parser.parse(tokens);
+		Coda::Frontend::Parser parser = Coda::Frontend::Parser();
+		Coda::Frontend::Program program = parser.parse(tokens);
 
-		if (!Error::Manager::isSafe())
+		if (!Coda::Error::Manager::isSafe())
 			continue;
 
-		Runtime::Interpreter inter = Runtime::Interpreter();
-		Runtime::Value out = inter.evaluateProgram(program);
+		Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
+		Coda::Runtime::Value out = inter.evaluateProgram(program, env);
 
 		std::cout << out << std::endl;
 	}

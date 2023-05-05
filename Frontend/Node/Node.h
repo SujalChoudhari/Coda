@@ -6,7 +6,7 @@
 #include "../../Error/Position.h"
 
 namespace Coda {
-	namespace FrontEnd {
+	namespace Frontend {
 		class Node {
 		public:
 			NodeType type;

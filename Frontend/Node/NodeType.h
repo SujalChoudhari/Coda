@@ -1,12 +1,10 @@
 #pragma once
 namespace Coda {
-	namespace FrontEnd {
+	namespace Frontend {
 		enum class NodeType {
 			INVALID,
 			PROGRAM,
 
-			NONE_LITERAL,
-			UNDEFINED_LITERAL,
 			BYTE_LITERAL,
 			INTEGER_LITERAL,
 			LONG_INT_LITERAL,

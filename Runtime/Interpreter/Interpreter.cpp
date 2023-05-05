@@ -1,52 +1,46 @@
 #include "Interpreter.h"
 #include <string>
-#include "../Error/Error.h"
+#include "../../Error/Error.h"
 namespace Coda {
 	namespace Runtime {
-		Value Interpreter::evaluate(FrontEnd::Node astNode)
+		Value Interpreter::evaluate(Frontend::Node astNode, Environment& env)
 		{
 			if (!Error::Manager::isSafe()) return Value();
 
-			Value value = Value(); // Defaults to NONE
+			Value value = Value();
 			value.startPosition = astNode.startPosition;
 
-			if (astNode.type == FrontEnd::NodeType::BYTE_LITERAL) {
+			if (astNode.type == Frontend::NodeType::IDENTIFIER) {
+				return evaluateIdentifier(astNode, env);
+			}
+
+			else if (astNode.type == Frontend::NodeType::BYTE_LITERAL) {
 				value.type = Type::BYTE;
 				value.value = astNode.value;
 			}
 
-			else if (astNode.type == FrontEnd::NodeType::INTEGER_LITERAL) {
+			else if (astNode.type == Frontend::NodeType::INTEGER_LITERAL) {
 				value.type = Type::INT;
 				value.value = astNode.value;
 			}
 
-			else if (astNode.type == FrontEnd::NodeType::LONG_INT_LITERAL) {
+			else if (astNode.type == Frontend::NodeType::LONG_INT_LITERAL) {
 				value.type = Type::LONG;
 				value.value = astNode.value;
 			}
 
-			else if (astNode.type == FrontEnd::NodeType::FLOATING_POINT_LITERAL) {
+			else if (astNode.type == Frontend::NodeType::FLOATING_POINT_LITERAL) {
 				value.type = Type::FLOAT;
 				value.value = astNode.value;
 			}
 
-			else if (astNode.type == FrontEnd::NodeType::DOUBLE_LITERAL) {
+			else if (astNode.type == Frontend::NodeType::DOUBLE_LITERAL) {
 				value.type = Type::DOUBLE;
 				value.value = astNode.value;
 			}
 
-			else if (astNode.type == FrontEnd::NodeType::NONE_LITERAL) {
-				value.type = Type::NONE;
-				value.value = astNode.value;
-			}
-
-			else if (astNode.type == FrontEnd::NodeType::UNDEFINED_LITERAL) {
-				value.type = Type::UNDEFINED;
-				value.value = astNode.value;
-			}
-
-			else if (astNode.type == FrontEnd::NodeType::BINARY_EXPRESSION) {
-				return evaluateBinaryExpression(astNode);
+			else if (astNode.type == Frontend::NodeType::BINARY_EXPRESSION) {
+				return evaluateBinaryExpression(astNode, env);
 			}
 
 			else {
@@ -56,21 +50,24 @@ namespace Coda {
 			return value;
 		}
 
-		Value Interpreter::evaluateBinaryExpression(FrontEnd::Node binop)
+		Value Interpreter::evaluateBinaryExpression(Frontend::Node binop, Environment& env)
 		{
-			if (!Error::Manager::isSafe()) return Value();
+			if (!Error::Manager::isSafe()) 
+				return Value();
 
-			Value lhs = evaluate(*binop.left.get());
-			Value rhs = evaluate(*binop.right.get());
-
+			Value lhs = evaluate(*binop.left.get(), env);
+			Value rhs = evaluate(*binop.right.get(), env);
+			
 			if (
 				(lhs.type == Type::INT
+					|| lhs.type == Type::BOOL
 					|| lhs.type == Type::BYTE
 					|| lhs.type == Type::LONG
 					|| lhs.type == Type::FLOAT
 					|| lhs.type == Type::DOUBLE)
 				&&
 				(rhs.type == Type::INT
+					|| rhs.type == Type::BOOL
 					|| rhs.type == Type::BYTE
 					|| rhs.type == Type::LONG
 					|| rhs.type == Type::FLOAT
@@ -78,9 +75,20 @@ namespace Coda {
 			{
 				return evaluateNumericBinaryExpression(lhs, binop.value, rhs);
 			}
-			else {
-				return Value(Type::NONE, lhs.startPosition, rhs.endPosition);
+
+			else if (lhs.type == Type::UNDEFINED || rhs.type == Type::UNDEFINED) {
+				return Value(Type::UNDEFINED, "undefined", lhs.startPosition, rhs.endPosition);
 			}
+
+			else if (lhs.type != Type::NONE && rhs.type == Type::NONE) {
+				return Value(lhs);
+			}
+
+			else if (lhs.type == Type::NONE && rhs.type != Type::NONE) {
+				return Value(rhs);
+			}
+
+			else return Value();
 		}
 
 		Value Interpreter::evaluateNumericBinaryExpression(Value left, std::string functor, Value right) {
@@ -100,7 +108,10 @@ namespace Coda {
 
 			Value result = Value(suggestedType, left.startPosition, right.endPosition);
 
-			if (suggestedType == Type::BYTE) {
+			if (suggestedType == Type::BOOL) {
+				handleArithmeticOperation<bool>(left, functor, right, result);
+			}
+			else if (suggestedType == Type::BYTE) {
 				handleArithmeticOperation<unsigned char>(left, functor, right, result);
 			}
 			else if (suggestedType == Type::INT) {
@@ -122,29 +133,34 @@ namespace Coda {
 			return result;
 		}
 
+		Value Interpreter::evaluateIdentifier(Frontend::Node astNode, Environment& env)
+		{
+			return env.lookupSymbol(astNode.value);
+		}
+
 		Value Interpreter::handleModulusOperation(Value left, Value right)
 		{
 			if (!Error::Manager::isSafe()) return Value();
-			if (left.type == Type::INT && right.type == Type::INT) {
+			if (left.type == Type::INT
+				&& right.type == Type::INT
+				&& std::stoi(right.value) != 0) {
 				return Value(Type::INT,
 					std::to_string(std::stoi(left.value) % std::stoi(right.value)),
 					left.startPosition,
 					right.endPosition);
 			}
 			else {
-				Error::Runtime::raiseTypeError("One or both operands of '%' operator are non-integer", left.startPosition);
+				return Value(Type::UNDEFINED, "undefined", left.startPosition, right.endPosition);
 			}
 		}
 
 
-		Value Interpreter::evaluateProgram(FrontEnd::Program program)
+		Value Interpreter::evaluateProgram(Frontend::Program program, Environment& env)
 		{
 			if (!Error::Manager::isSafe()) return Value();
-
 			Value lastEvaluated = Value();
-
-			for (FrontEnd::Node statement : program.body) {
-				lastEvaluated = evaluate(statement);
+			for (Frontend::Node statement : program.body) {
+				lastEvaluated = evaluate(statement, env);
 			}
 
 			return lastEvaluated;
