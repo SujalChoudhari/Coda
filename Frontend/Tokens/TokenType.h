@@ -5,7 +5,11 @@ namespace Coda {
 			// Literal Types
 			NONE,
 			UNDEFINED,
-			NUMBER,
+			INT,
+			FLOAT,
+			DOUBLE,
+			BYTE,
+			LONG,
 			IDENTIFIER,
 
 			// Keywords

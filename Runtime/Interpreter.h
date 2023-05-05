@@ -19,6 +19,13 @@ namespace Coda {
 			Value evaluateBinaryExpression(FrontEnd::Node binop);
 			Value evaluateNumericBinaryExpression(Value left,std::string functor, Value right);
 
+			template <typename T>
+			void handleArithmeticOperation(Value left, std::string functor, Value right, Value& result);
+			Value handleModulusOperation(Value left, Value right);
+
+			template <typename T>
+			T getValue(std::string str);
+
 		};
 
 	}

@@ -4,7 +4,13 @@ namespace Coda {	namespace Runtime {
 
 	enum class Type {
 		NONE,
-		NUMBER
+		UNDEFINED,
+
+		BYTE,
+		INT,
+		LONG,
+		FLOAT,
+		DOUBLE
 	};
 
 }}

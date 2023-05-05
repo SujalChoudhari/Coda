@@ -133,8 +133,29 @@ namespace Coda {
 				expression.type = NodeType::NONE_LITERAL;
 				expression.value = "none";
 			}
-			else if (*type == TokenType::NUMBER) {
-				expression.type = NodeType::NUMERIC_LITERAL;
+			else if (*type == TokenType::UNDEFINED) {
+				advance();
+				expression.type = NodeType::UNDEFINED_LITERAL;
+				expression.value = "undefined";
+			}
+			else if (*type == TokenType::BYTE) {
+				expression.type = NodeType::BYTE_LITERAL;
+				expression.value = mCurrentToken->value;
+			}
+			else if (*type == TokenType::INT) {
+				expression.type = NodeType::INTEGER_LITERAL;
+				expression.value = mCurrentToken->value;
+			}
+			else if (*type == TokenType::LONG) {
+				expression.type = NodeType::LONG_INT_LITERAL;
+				expression.value = mCurrentToken->value;
+			}
+			else if (*type == TokenType::FLOAT) {
+				expression.type = NodeType::FLOATING_POINT_LITERAL;
+				expression.value = mCurrentToken->value;
+			}
+			else if (*type == TokenType::DOUBLE) {
+				expression.type = NodeType::DOUBLE_LITERAL;
 				expression.value = mCurrentToken->value;
 			}
 			else if (*type == TokenType::OPEN_PAREN) {
@@ -157,9 +178,9 @@ namespace Coda {
 					mCurrentToken->startPosition);
 			}
 			// Set position property for expression
-
+			expression.startPosition = mCurrentToken->startPosition;
+			expression.endPosition = mCurrentToken->endPosition;
 			advance();
-
 			return expression;
 
 		}

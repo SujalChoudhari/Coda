@@ -7,6 +7,7 @@ namespace Coda {
 	namespace Error {
 		namespace Lexer {
 			void raiseIllegalCharacterError(const char character, const Position& pos);
+			void raiseUnexpectedCharacterError(const char character, const Position& pos);
 		}
 
 		namespace Parser {
@@ -23,6 +24,7 @@ namespace Coda {
 				const Position& pos
 			);
 			void raiseDivisionByZeroError(const Position& pos);
+			void raiseTypeError(std::string message, const Position& pos);
 		}
 	}
 

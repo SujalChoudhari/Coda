@@ -24,6 +24,8 @@ namespace Coda {
 			void advance();
 			void buildNumbers();
 			void buildIdentifiers();
+
+			bool isSupportedDigit(char ch);
 		};
 	}
 }

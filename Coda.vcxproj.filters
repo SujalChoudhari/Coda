@@ -77,7 +77,7 @@
     <ClInclude Include="Frontend\Node\NodeType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Frontend\Tokens\Keywords.h">
+    <ClInclude Include="Frontend\Tokens\Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Frontend\Tokens\Token.h">

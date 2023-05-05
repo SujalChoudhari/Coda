@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "../Tokens/Keywords.h"
+#include "../Tokens/Constants.h"
 #include "../../Error/Error.h"
 #include "Lexer.h"
 
@@ -25,6 +25,11 @@ namespace Coda {
 				mCurrentChar = '\0';
 			}
 			mCurrentPosition.character++;
+		}
+
+		bool Lexer::isSupportedDigit(char c)
+		{
+			return DIGITS_EXTRA.find(c) != std::string::npos;
 		}
 
 
@@ -65,7 +70,7 @@ namespace Coda {
 					mTokens.emplace_back(TokenType::EQUALS, "=", mCurrentPosition);
 					advance();
 				}
-				else if (isdigit(mCurrentChar)) {
+				else if (isSupportedDigit(mCurrentChar)) {
 					buildNumbers();
 				}
 				else if (isalpha(mCurrentChar)) {
@@ -82,16 +87,66 @@ namespace Coda {
 			return mTokens;
 		}
 
-		void Lexer::buildNumbers()
-		{
+		void Lexer::buildNumbers() {
 			Position start = mCurrentPosition;
 			std::string num = "";
-			while (mCurrentChar != '\0' && isdigit(mCurrentChar)) {
-				num.push_back(mCurrentChar);
+			bool dot = false;
+			bool sci = false;
+			bool signedSci = false;
+			TokenType type = TokenType::INT;
+
+			while (mCurrentChar != '\0' && (isSupportedDigit(mCurrentChar) || mCurrentChar == '.' || mCurrentChar == 'e' || mCurrentChar == 'E' || (sci && (mCurrentChar == '-' || mCurrentChar == '+')))) {
+				if (mCurrentChar == '.') {
+					if (dot) {
+						Error::Lexer::raiseUnexpectedCharacterError('.', mCurrentPosition);
+						advance();
+						continue;
+					}
+					else {
+						dot = true;
+						type = TokenType::DOUBLE;
+						num.push_back(mCurrentChar);
+					}
+				}
+				else if (mCurrentChar == 'e' || mCurrentChar == 'E') {
+					if (sci) {
+						Error::Lexer::raiseUnexpectedCharacterError(mCurrentChar, mCurrentPosition);
+						advance();
+						continue;
+					}
+					else {
+						sci = true;
+						type = TokenType::DOUBLE;
+						num.push_back(mCurrentChar);
+					}
+				}
+				else if (sci && (mCurrentChar == '-' || mCurrentChar == '+')) {
+					if (signedSci) {
+						Error::Lexer::raiseUnexpectedCharacterError(mCurrentChar, mCurrentPosition);
+						advance();
+						continue;
+					}
+					else {
+						signedSci = true;
+						num.push_back(mCurrentChar);
+					}
+				}
+				else {
+					auto it = DIGIT_EXTENTIONS.find(mCurrentChar);
+					if (it != DIGIT_EXTENTIONS.end()) {
+						type = it->second;
+					}
+					else if (isdigit(mCurrentChar)) {
+						num.push_back(mCurrentChar);
+					}
+					else {
+						break;
+					}
+				}
 				advance();
 			}
 
-			mTokens.emplace_back(TokenType::NUMBER, num, start, mCurrentPosition);
+			mTokens.emplace_back(type, num, start, mCurrentPosition);
 		}
 
 		void Lexer::buildIdentifiers()

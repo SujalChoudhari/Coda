@@ -18,6 +18,14 @@ namespace Coda {
 
 		}
 
+		void Lexer::raiseUnexpectedCharacterError(const char character, const Position& pos)
+		{
+			std::cout << "[LEXER]: Unexpected Character found. Character '"
+				<< character
+				<< "' was found at, "
+				<< pos << std::endl;
+		}
+
 		void Parser::raiseUnexpectedTokenError(
 			const std::string expected,
 			const std::string got,
@@ -58,6 +66,17 @@ namespace Coda {
 			std::cout << "[RUNTIME]: Division by Zero, at"
 				<< pos << std::endl;
 		}
+
+		void Runtime::raiseTypeError(std::string message, const Position& pos)
+		{
+			Manager::raiseRuntimeError();
+			std::cout << "[RUNTIME]: "
+				<< message
+				<< ", at "
+				<< pos << std::endl;
+		}
+
+
 
 	}
 }

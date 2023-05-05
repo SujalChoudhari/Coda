@@ -164,7 +164,7 @@
     <ClInclude Include="Frontend\Lexer\Lexer.h" />
     <ClInclude Include="Frontend\Node\Program.h" />
     <ClInclude Include="Frontend\Parser\Parser.h" />
-    <ClInclude Include="Frontend\Tokens\Keywords.h" />
+    <ClInclude Include="Frontend\Tokens\Constants.h" />
     <ClInclude Include="Frontend\Tokens\Token.h" />
     <ClInclude Include="Frontend\Tokens\TokenType.h" />
     <ClInclude Include="Lexer\Lexer.h" />
