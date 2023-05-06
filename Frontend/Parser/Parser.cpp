@@ -42,7 +42,17 @@ namespace Coda {
 		Node Parser::parseStatement()
 		{
 			if (!Error::Manager::isSafe()) return Node();
-			return parseExpression();
+
+			switch (mCurrentToken->type)
+			{
+			case TokenType::LET:
+				return parseDeclaration(false);
+			case TokenType::CONST:
+				return parseDeclaration(true);
+			default:
+				return parseExpression();
+			}
+
 		}
 
 		Node Parser::parseExpression()
@@ -71,16 +81,86 @@ namespace Coda {
 
 				// Set position property for binaryExpression.left and binaryExpression.right
 				binaryExpression.left->startPosition = left.startPosition;
+				binaryExpression.left->endPosition = left.endPosition;
 				binaryExpression.right->startPosition = right.startPosition;
+				binaryExpression.right->endPosition= right.endPosition;
 
 				// Set position property for binaryExpression
 				binaryExpression.startPosition = currPos;
+				binaryExpression.endPosition = mCurrentToken->endPosition;
 
 				left = binaryExpression;
 			}
 
 			return left;
 		}
+
+		Node Parser::parseDeclaration(bool isConstant)
+		{
+			advance();
+
+			Node declaration = Node(isConstant ? NodeType::CONSTANT_DECLARATION : NodeType::VARIABLE_DECLARATION);
+			declaration.startPosition = mCurrentToken->startPosition;
+			std::string identifier;
+			std::string type;
+
+			if (mCurrentToken->type != TokenType::TYPE)
+			{
+				type = "int";
+			}
+			else
+			{
+				type = mCurrentToken->value;
+				advance();
+			}
+
+
+			if (mCurrentToken->type != TokenType::IDENTIFIER)
+				Error::Parser::raise("Expected a <indetifier> at ", mCurrentToken->endPosition);
+
+			if (!Error::Manager::isSafe())
+				return Node();
+			identifier = mCurrentToken->value;
+
+			advance();
+
+			if (mCurrentToken->type == TokenType::EQUALS)
+			{
+				if (!Error::Manager::isSafe())
+					return Node();
+
+
+				declaration.value = type;
+				declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
+
+				advance();
+				declaration.right = std::make_shared<Node>(parseExpression());
+
+				if (mCurrentToken->type != TokenType::SEMICOLON)
+					Error::Parser::raise("Expected a semicolon, at ", mCurrentToken->endPosition);
+
+			}
+			else if (mCurrentToken->type == TokenType::SEMICOLON)
+			{
+				if (isConstant) {
+					Error::Runtime::raise("Expected an '=' in a 'const' defination at, ", mCurrentToken->endPosition);
+					return declaration;
+				}
+
+				declaration.type = NodeType::VARIABLE_DECLARATION;
+				declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
+				declaration.right = std::make_shared<Node>(NodeType::INTEGER_LITERAL, "0");
+				declaration.value = type;
+			}
+			else
+			{
+				Error::Parser::raise("Expected an '=' or ';' token at, ", mCurrentToken->endPosition);
+			}
+			declaration.endPosition = mCurrentToken->endPosition;
+			advance();
+			return declaration;
+		}
+
 
 
 		Node Parser::parseMultiplacativeExpression()
@@ -107,10 +187,13 @@ namespace Coda {
 
 				// Set position property for binaryExpression.left and binaryExpression.right
 				binaryExpression.left->startPosition = left.startPosition;
+				binaryExpression.left->endPosition = left.endPosition;
 				binaryExpression.right->startPosition = right.startPosition;
+				binaryExpression.right->endPosition = right.endPosition;
 
 				// Set position property for binaryExpression
 				binaryExpression.startPosition = currPos;
+				binaryExpression.endPosition = mCurrentToken->endPosition;
 
 				left = binaryExpression;
 			}
@@ -123,6 +206,7 @@ namespace Coda {
 		Node Parser::parsePrimaryExpression()
 		{
 			Node expression;
+			expression.startPosition = mCurrentToken->startPosition;
 			TokenType* type = &mCurrentToken->type;
 
 			if (!Error::Manager::isSafe()) return expression;
@@ -131,7 +215,7 @@ namespace Coda {
 				expression.type = NodeType::IDENTIFIER;
 				expression.value = mCurrentToken->value;
 			}
-			
+
 			else if (*type == TokenType::BYTE) {
 				expression.type = NodeType::BYTE_LITERAL;
 				expression.value = mCurrentToken->value;
@@ -156,19 +240,19 @@ namespace Coda {
 				advance(); // skip the paren
 				expression = parseExpression();
 				if (mCurrentToken->type != TokenType::CLOSE_PAREN) {
-					Coda::Error::Parser::raiseUnexpectedTokenError(
-						")",
-						mCurrentToken->value,
+					Coda::Error::Parser::raise(
+						" Unexpected Token found '" +
+						mCurrentToken->value + "' was found instead of ')' at, ",
 						mCurrentToken->startPosition);
 				}
 			}
 			else {
 				expression.type = NodeType::INVALID;
-				Coda::Error::Parser::raiseInvalidTokenFoundError(
-					mCurrentToken->value,
+				Coda::Error::Parser::raise("Invalid Token '" +
+					mCurrentToken->value + "' was found at, ",
 					mCurrentToken->startPosition);
 			}
-			expression.startPosition = mCurrentToken->startPosition;
+			
 			expression.endPosition = mCurrentToken->endPosition;
 			advance();
 			return expression;

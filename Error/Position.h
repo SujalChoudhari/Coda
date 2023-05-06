@@ -7,15 +7,19 @@ namespace Coda {
 		public:
 			unsigned int character;
 			unsigned int line;
+			std::string lineText;
 
 		public:
 			Position()
-				:character(1), line(1) {}
+				:character(1), line(1), lineText("") {}
+
 			Position(unsigned int index, unsigned int line)
-				:character(index), line(line) {}
+				:character(index), line(line), lineText("") {}
+			Position(unsigned int index, unsigned int line, std::string lineText)
+				:character(index), line(line), lineText(lineText) {}
 
 
-			friend std::ostream& operator<<(std::ostream& os, const Position& head);
+			friend std::ostream& operator<<(std::ostream& os, const Position& pos);
 
 		};
 	}

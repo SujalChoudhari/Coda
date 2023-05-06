@@ -4,7 +4,15 @@
 namespace Coda {
 	namespace Frontend {
 		std::map<std::string, TokenType> KEYWORD = {
-			{"let",TokenType::LET}
+			{"bool",TokenType::TYPE},
+			{"byte",TokenType::TYPE},
+			{"int",TokenType::TYPE},
+			{"long", TokenType::TYPE},
+			{"float",TokenType::TYPE},
+			{"double",TokenType::TYPE},
+
+			{"let",TokenType::LET},
+			{"const",TokenType::CONST},
 		};
 
 		std::string DIGITS = "0123456789";

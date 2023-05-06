@@ -3,18 +3,23 @@ namespace Coda {
 	namespace Frontend {
 		enum class TokenType {
 			// Literal Types
+			BOOL,
+			BYTE,
 			INT,
 			FLOAT,
 			DOUBLE,
-			BYTE,
 			LONG,
 			IDENTIFIER,
 
 			// Keywords
 			LET,
+			CONST,
+
+			TYPE,
 
 			// Operators
 			EQUALS,
+			SEMICOLON,
 			BINARY_OPERATOR,
 			OPEN_PAREN,
 			CLOSE_PAREN,

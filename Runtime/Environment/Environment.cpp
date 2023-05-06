@@ -12,22 +12,31 @@ namespace Coda {
 		}
 
 
-		Value Environment::declareOrAssignVariable(std::string name, Value value)
+		Value Environment::declareOrAssignVariable(std::string name, Value value, bool isConstant)
 		{
 
 			auto it = symbols.find(name);
-			if (it != symbols.end()) {
+			if (it != symbols.end()) { // aready exists, assign
+				if (isConstant)
+				{
+					Error::Runtime::raise("Reassignment of constant is not allowed, at ", value.endPosition);
+					return value;
+				}
 				symbols.insert_or_assign(name, value);
 			}
-			else {
+			else { // doesn't exist, create
 				Environment* env = resolve(name);
 
 				if (!Error::Manager::isSafe()) return Value();
 
 				if (env != nullptr)
-					env->symbols.insert_or_assign(name, value);
+				{
+					env->symbols.insert({ name, value });
+					env->constants.insert(name);
+				}
 				else {
-					symbols.insert_or_assign(name, value);
+					symbols.insert({ name, value });
+					constants.insert(name);
 				}
 			}
 			return value;
@@ -38,7 +47,7 @@ namespace Coda {
 			if (env != nullptr)
 				return env->symbols[name];
 			else
-				Error::Runtime::raiseSymbolDoesnotExist(name);
+				Error::Runtime::raise("Symbol '" + name + "' does not exist");
 			return Value();
 
 		}

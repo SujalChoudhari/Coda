@@ -9,6 +9,8 @@ namespace Coda {
 
 			Value value = Value();
 			value.startPosition = astNode.startPosition;
+			value.endPosition = astNode.endPosition;
+
 
 			if (astNode.type == Frontend::NodeType::IDENTIFIER) {
 				return evaluateIdentifier(astNode, env);
@@ -43,21 +45,28 @@ namespace Coda {
 				return evaluateBinaryExpression(astNode, env);
 			}
 
-			else {
-				Error::Runtime::raiseUnrecognisedASTNodeError(astNode.value, astNode.startPosition);
+			else if (astNode.type == Frontend::NodeType::VARIABLE_DECLARATION) {
+				return evaluateDeclaration(astNode, env);
 			}
 
+			else if (astNode.type == Frontend::NodeType::CONSTANT_DECLARATION) {
+				return evaluateDeclaration(astNode, env, true);
+			}
+
+			else {
+				Error::Runtime::raise("Unrecognised ASTNode '" + astNode.value + "'");
+			}
 			return value;
 		}
 
 		Value Interpreter::evaluateBinaryExpression(Frontend::Node binop, Environment& env)
 		{
-			if (!Error::Manager::isSafe()) 
+			if (!Error::Manager::isSafe())
 				return Value();
 
 			Value lhs = evaluate(*binop.left.get(), env);
 			Value rhs = evaluate(*binop.right.get(), env);
-			
+
 			if (
 				(lhs.type == Type::INT
 					|| lhs.type == Type::BOOL
@@ -81,11 +90,11 @@ namespace Coda {
 			}
 
 			else if (lhs.type != Type::NONE && rhs.type == Type::NONE) {
-				return Value(lhs);
+				return lhs;
 			}
 
 			else if (lhs.type == Type::NONE && rhs.type != Type::NONE) {
-				return Value(rhs);
+				return rhs;
 			}
 
 			else return Value();
@@ -138,6 +147,11 @@ namespace Coda {
 			return env.lookupSymbol(astNode.value);
 		}
 
+		Value Interpreter::evaluateDeclaration(Frontend::Node astNode, Environment& env, bool isConstant)
+		{
+			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env),isConstant);
+		}
+
 		Value Interpreter::handleModulusOperation(Value left, Value right)
 		{
 			if (!Error::Manager::isSafe()) return Value();
@@ -186,7 +200,7 @@ namespace Coda {
 			}
 			else if (functor == "/") {
 				if (typeRight == 0) {
-					Error::Runtime::raiseDivisionByZeroError(right.startPosition);
+					Error::Runtime::raise("Division by Zero at, ", right.startPosition);
 					return;
 				}
 				result.value = std::to_string(typeLeft / typeRight);

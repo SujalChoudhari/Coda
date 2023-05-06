@@ -22,6 +22,8 @@ namespace Coda {
 			Node parseMultiplacativeExpression();
 			Node parseAdditiveExpression();
 
+			Node parseDeclaration(bool isConstant);
+
 		private:
 			std::vector<Token>* mTokens;
 			Token* mCurrentToken;

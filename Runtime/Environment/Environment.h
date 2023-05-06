@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <set>
 #include <string>
 #include "../RuntimeValue/Value.h"
 
@@ -10,7 +11,7 @@ namespace Coda {
 			Environment();
 			Environment(Environment* parentEnvironment);
 
-			Value declareOrAssignVariable(std::string name, Value value);
+			Value declareOrAssignVariable(std::string name, Value value,bool isConstant);
 			Value lookupSymbol(std::string varname);
 		private:
 			Environment* resolve(std::string name);
@@ -18,6 +19,8 @@ namespace Coda {
 		private:
 			Environment* parent;
 			std::map<std::string, Value> symbols;
+			std::set<std::string> constants;
+			
 		};
 	}
 }
