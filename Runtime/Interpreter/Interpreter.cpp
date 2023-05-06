@@ -43,8 +43,16 @@ namespace Coda {
 				return evaluateBinaryExpression(astNode, env);
 			}
 
+			else if (astNode.type == Frontend::NodeType::VARIABLE_DECLARATION) {
+				
+			}
+
+			else if (astNode.type == Frontend::NodeType::CONSTANT_DECLARATION) {
+
+			}
+
 			else {
-				Error::Runtime::raiseUnrecognisedASTNodeError(astNode.value, astNode.startPosition);
+				Error::Runtime::raise( "Unrecognised ASTNode '" +astNode.value + "'");
 			}
 
 			return value;
@@ -186,7 +194,7 @@ namespace Coda {
 			}
 			else if (functor == "/") {
 				if (typeRight == 0) {
-					Error::Runtime::raiseDivisionByZeroError(right.startPosition);
+					Error::Runtime::raise("Division by Zero at, ", right.startPosition);
 					return;
 				}
 				result.value = std::to_string(typeLeft / typeRight);

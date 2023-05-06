@@ -3,27 +3,8 @@
 using namespace Coda::Error;
 
 int Manager::mErrorCount = 0;
-int Manager::mLexerErrorCount = 0;
-int Manager::mParserErrorCount = 0;
-int Manager::mRuntimeErrorCount = 0;
 
-void Manager::raiseLexerError()
-{
-	mLexerErrorCount++;
-	raiseError();
-}
 
-void Manager::raiseParserError()
-{
-	mParserErrorCount++;
-	raiseError();
-}
-
-void Coda::Error::Manager::raiseRuntimeError()
-{
-	mRuntimeErrorCount++;
-	raiseError();
-}
 
 void Manager::raiseError()
 {
@@ -38,7 +19,4 @@ bool Manager::isSafe()
 void Coda::Error::Manager::reset()
 {
 	mErrorCount = 0;
-	mRuntimeErrorCount = 0;
-	mParserErrorCount = 0;
-	mLexerErrorCount = 0;
 }

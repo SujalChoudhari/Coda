@@ -38,7 +38,7 @@ namespace Coda {
 			if (env != nullptr)
 				return env->symbols[name];
 			else
-				Error::Runtime::raiseSymbolDoesnotExist(name);
+				Error::Runtime::raise("Symbol '" + name + "' does not exist");
 			return Value();
 
 		}

@@ -70,6 +70,10 @@ namespace Coda {
 					mTokens.emplace_back(TokenType::EQUALS, "=", mCurrentPosition);
 					advance();
 				}
+				else if (mCurrentChar == ';') {
+					mTokens.emplace_back(TokenType::SEMICOLON, ";", mCurrentPosition);
+					advance();
+				}
 				else if (FIRST_VALID_DIGITS.find(mCurrentChar) != std::string::npos) {
 					buildNumbers();
 				}
@@ -77,7 +81,7 @@ namespace Coda {
 					buildIdentifiers();
 				}
 				else {
-					Coda::Error::Lexer::raiseIllegalCharacterError(mCurrentChar, mCurrentPosition);
+					Coda::Error::Lexer::raise("Illegal Character '" +std::to_string(mCurrentChar) + "' found at",mCurrentPosition);
 					advance();
 				}
 			}
@@ -98,7 +102,7 @@ namespace Coda {
 			while (mCurrentChar != '\0' && (isSupportedDigit(mCurrentChar) || mCurrentChar == '.' || mCurrentChar == 'e' || mCurrentChar == 'E' || (sci && (mCurrentChar == '-' || mCurrentChar == '+')))) {
 				if (mCurrentChar == '.') {
 					if (dot) {
-						Error::Lexer::raiseUnexpectedCharacterError('.', mCurrentPosition);
+						Error::Lexer::raise("Unexpected Character '" + std::to_string(mCurrentChar) + "' found at", mCurrentPosition);
 						advance();
 						continue;
 					}
@@ -110,7 +114,8 @@ namespace Coda {
 				}
 				else if (mCurrentChar == 'e' || mCurrentChar == 'E') {
 					if (sci) {
-						Error::Lexer::raiseUnexpectedCharacterError(mCurrentChar, mCurrentPosition);
+						Error::Lexer::raise("Unexpected Character '" + std::to_string(mCurrentChar) + "' found at", mCurrentPosition);
+
 						advance();
 						continue;
 					}
@@ -122,7 +127,7 @@ namespace Coda {
 				}
 				else if (sci && (mCurrentChar == '-' || mCurrentChar == '+')) {
 					if (signedSci) {
-						Error::Lexer::raiseUnexpectedCharacterError(mCurrentChar, mCurrentPosition);
+						Error::Lexer::raise("Unexpected Character '" + std::to_string(mCurrentChar) + "' found at", mCurrentPosition);
 						advance();
 						continue;
 					}

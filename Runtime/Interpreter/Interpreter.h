@@ -21,6 +21,10 @@ namespace Coda {
 			Value evaluateNumericBinaryExpression(Value left,std::string functor, Value right);
 			Value evaluateIdentifier(Frontend::Node astNode, Environment& env);
 
+			// TODO: Implement these functions
+			Value evaluateVariableDeclaration(Frontend::Node astNode, Environment& env);
+			Value evaluateConstantDeclaration(Frontend::Node astNode, Environment& env);
+
 			template <typename T>
 			void handleArithmeticOperation(Value left, std::string functor, Value right, Value& result);
 			Value handleModulusOperation(Value left, Value right);

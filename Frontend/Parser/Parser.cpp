@@ -42,7 +42,17 @@ namespace Coda {
 		Node Parser::parseStatement()
 		{
 			if (!Error::Manager::isSafe()) return Node();
-			return parseExpression();
+
+			switch (mCurrentToken->type)
+			{
+			case TokenType::LET:
+				return parseVariableDeclaration();
+			case TokenType::CONST:
+				return parseConstantDeclaration();
+			default:
+				return parseExpression();
+			}
+
 		}
 
 		Node Parser::parseExpression()
@@ -80,6 +90,108 @@ namespace Coda {
 			}
 
 			return left;
+		}
+
+		Node Parser::parseVariableDeclaration()
+		{
+			// let int i = 0;
+			// let int i;
+
+
+			///		DECLARATION
+			///		left:IDNETIFIER		
+			///		right:EXPR
+			///		value:type
+
+			advance();
+
+			std::string identifier;
+			std::string type;
+
+			if (mCurrentToken->type != TokenType::TYPE)
+				Error::Parser::raise("Expected a <type> after 'let' keyword at, ", mCurrentToken->startPosition);
+
+			if (!Error::Manager::isSafe()) return Node();
+			type = mCurrentToken->value;
+
+			advance();
+			if (mCurrentToken->type != TokenType::IDENTIFIER)
+				Error::Parser::raise("Expected a <indetifier> at ", mCurrentToken->startPosition);
+
+			if (!Error::Manager::isSafe()) return Node();
+			identifier = mCurrentToken->value;
+
+			advance();
+			if (mCurrentToken->type == TokenType::SEMICOLON) {
+				Node declaration = Node(NodeType::VARIABLE_DECLARATION);
+				declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
+				declaration.right = std::make_shared<Node>(NodeType::INTEGER_LITERAL, "0");
+				declaration.value = type;
+				advance();
+				return declaration;
+			}
+
+			if (mCurrentToken->type != TokenType::EQUALS)
+				Error::Parser::raise("Expected an '=' token at ", mCurrentToken->startPosition);
+
+
+			if (!Error::Manager::isSafe()) return Node();
+
+			Node declaration = Node(NodeType::VARIABLE_DECLARATION);
+			declaration.value = type;
+			advance();
+			declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
+			declaration.right = std::make_shared<Node>(parseExpression());
+
+			if (mCurrentToken->type != TokenType::SEMICOLON)
+				Error::Parser::raise("Expected a semicolon, at ", mCurrentToken->startPosition);
+
+			advance();
+			return declaration;
+
+		}
+
+		Node Parser::parseConstantDeclaration()
+		{
+			// const int i = 0;
+
+
+			advance();
+
+			std::string type;
+			std::string identifier;
+
+			if (mCurrentToken->type != TokenType::TYPE)
+				Error::Parser::raise("Expected a <type> after 'const' keyword at, ", mCurrentToken->startPosition);
+
+			if (!Error::Manager::isSafe()) return Node();
+			type = mCurrentToken->value;
+
+			advance();
+			if (mCurrentToken->type != TokenType::IDENTIFIER)
+				Error::Parser::raise("Expected a <indetifier> after 'const <type>'  declaration at ", mCurrentToken->startPosition);
+
+			if (!Error::Manager::isSafe()) return Node();
+			identifier = mCurrentToken->value;
+
+			advance();
+
+			if (mCurrentToken->type != TokenType::EQUALS)
+				Error::Parser::raise("Expected an '=' token at ", mCurrentToken->startPosition);
+
+
+			if (!Error::Manager::isSafe()) return Node();
+
+			Node declaration = Node(NodeType::CONSTANT_DECLARATION);
+			declaration.value = type;
+			declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
+			advance();
+			declaration.right = std::make_shared<Node>(parseExpression());
+
+			if (mCurrentToken->type != TokenType::SEMICOLON)
+				Error::Parser::raise("Expected a semicolon, at ", mCurrentToken->startPosition);
+			advance();
+			return declaration;
 		}
 
 
@@ -131,7 +243,7 @@ namespace Coda {
 				expression.type = NodeType::IDENTIFIER;
 				expression.value = mCurrentToken->value;
 			}
-			
+
 			else if (*type == TokenType::BYTE) {
 				expression.type = NodeType::BYTE_LITERAL;
 				expression.value = mCurrentToken->value;
@@ -156,16 +268,16 @@ namespace Coda {
 				advance(); // skip the paren
 				expression = parseExpression();
 				if (mCurrentToken->type != TokenType::CLOSE_PAREN) {
-					Coda::Error::Parser::raiseUnexpectedTokenError(
-						")",
-						mCurrentToken->value,
+					Coda::Error::Parser::raise(
+						" Unexpected Token found '" +
+						mCurrentToken->value + "' was found instead of ')' at, ",
 						mCurrentToken->startPosition);
 				}
 			}
 			else {
 				expression.type = NodeType::INVALID;
-				Coda::Error::Parser::raiseInvalidTokenFoundError(
-					mCurrentToken->value,
+				Coda::Error::Parser::raise("Invalid Token '" +
+					mCurrentToken->value + "' was found at, ",
 					mCurrentToken->startPosition);
 			}
 			expression.startPosition = mCurrentToken->startPosition;
