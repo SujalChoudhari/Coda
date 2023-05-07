@@ -161,6 +161,68 @@ namespace Coda {
 			return declaration;
 		}
 
+		Node Parser::parseVariableDeclaration()
+		{
+			// let int i = 0;
+			// let int i;
+
+
+			///		DECLARATION
+			///		left:IDNETIFIER		
+			///		right:EXPR
+			///		value:type
+
+			advance();
+
+			std::string identifier;
+			std::string type;
+
+			if (mCurrentToken->type != TokenType::TYPE)
+				Error::Parser::raise("Expected a <type> after 'let' keyword at, ", mCurrentToken->startPosition);
+
+			if (!Error::Manager::isSafe()) return Node();
+			type = mCurrentToken->value;
+
+			advance();
+			if (mCurrentToken->type != TokenType::IDENTIFIER)
+				Error::Parser::raise("Expected a <indetifier> at ", mCurrentToken->startPosition);
+
+			if (!Error::Manager::isSafe()) return Node();
+			identifier = mCurrentToken->value;
+
+			advance();
+			if (mCurrentToken->type == TokenType::SEMICOLON) {
+				Node declaration = Node(NodeType::VARIABLE_DECLARATION);
+				declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
+				declaration.right = std::make_shared<Node>(NodeType::INTEGER_LITERAL, "0");
+				declaration.value = type;
+				advance();
+				return declaration;
+			}
+
+			if (mCurrentToken->type != TokenType::EQUALS)
+				Error::Parser::raise("Expected an '=' token at ", mCurrentToken->startPosition);
+
+
+			if (!Error::Manager::isSafe()) return Node();
+
+			Node declaration = Node(NodeType::VARIABLE_DECLARATION);
+			declaration.value = type;
+			advance();
+			declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
+			declaration.right = std::make_shared<Node>(parseExpression());
+
+			if (mCurrentToken->type != TokenType::SEMICOLON)
+				Error::Parser::raise("Expected a semicolon, at ", mCurrentToken->startPosition);
+
+			advance();
+			return declaration;
+
+		}
+
+		Node Parser::parseConstantDeclaration()
+		{
+			// const int i = 0;
 
 
 		Node Parser::parseMultiplacativeExpression()
