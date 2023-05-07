@@ -21,6 +21,7 @@ namespace Coda {
 			Node parsePrimaryExpression();
 			Node parseMultiplacativeExpression();
 			Node parseAdditiveExpression();
+			Node parseAssignmentExpression();
 
 			Node parseDeclaration(bool isConstant);
 

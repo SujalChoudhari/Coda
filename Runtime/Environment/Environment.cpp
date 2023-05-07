@@ -22,6 +22,10 @@ namespace Coda {
 					Error::Runtime::raise("Reassignment of constant is not allowed, at ", value.endPosition);
 					return value;
 				}
+				else if (constants.find(name) != constants.end()) {	// let declaration but constant exists.
+					Error::Runtime::raise("Reassignment of constant is not allowed, at ", value.endPosition);
+					return value;
+				}
 				symbols.insert_or_assign(name, value);
 			}
 			else { // doesn't exist, create
@@ -32,11 +36,14 @@ namespace Coda {
 				if (env != nullptr)
 				{
 					env->symbols.insert({ name, value });
-					env->constants.insert(name);
+
+					if (isConstant)
+						env->constants.insert(name);
 				}
 				else {
 					symbols.insert({ name, value });
-					constants.insert(name);
+					if (isConstant)
+						constants.insert(name);
 				}
 			}
 			return value;

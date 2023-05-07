@@ -22,6 +22,7 @@ namespace Coda {
 				//Other
 			IDENTIFIER,
 			BINARY_EXPRESSION,
+			ASSIGNMENT_EXPRESSION,
 
 		};
 

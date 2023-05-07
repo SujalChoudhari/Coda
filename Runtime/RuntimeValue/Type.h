@@ -8,7 +8,6 @@ namespace Coda {
 			UNDEFINED,
 
 			BOOL,
-
 			BYTE,
 			INT,
 			LONG,

@@ -53,11 +53,25 @@ namespace Coda {
 				return evaluateDeclaration(astNode, env, true);
 			}
 
+			else if (astNode.type == Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
+				return evaluateAssignmentExpression(astNode, env);
+			}
+
 			else {
 				Error::Runtime::raise("Unrecognised ASTNode '" + astNode.value + "'");
 			}
 			return value;
 		}
+
+		Value Interpreter::evaluateAssignmentExpression(Frontend::Node astNode, Environment& env) {
+			if (astNode.type != Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
+				Error::Runtime::raise("Invalid Assignment Operation, at ");
+				return Value();
+			}
+
+			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env));
+		}
+
 
 		Value Interpreter::evaluateBinaryExpression(Frontend::Node binop, Environment& env)
 		{
@@ -149,7 +163,7 @@ namespace Coda {
 
 		Value Interpreter::evaluateDeclaration(Frontend::Node astNode, Environment& env, bool isConstant)
 		{
-			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env),isConstant);
+			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env), isConstant);
 		}
 
 		Value Interpreter::handleModulusOperation(Value left, Value right)

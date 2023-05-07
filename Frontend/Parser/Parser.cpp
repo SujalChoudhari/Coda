@@ -57,13 +57,37 @@ namespace Coda {
 
 		Node Parser::parseExpression()
 		{
-			if (!Error::Manager::isSafe()) return Node();
-			return parseAdditiveExpression();
+			return parseAssignmentExpression();
+		}
+
+		Node Parser::parseAssignmentExpression() {
+			if (!Error::Manager::isSafe())
+				return Node();
+
+			Node left = parseAdditiveExpression(); // will switch it with objects
+
+			if (mCurrentToken->type == TokenType::EQUALS) {
+				advance();
+
+				Node right = parseAssignmentExpression();
+
+				Node expr = Node(NodeType::ASSIGNMENT_EXPRESSION);
+				expr.left = std::make_shared<Node>(left);
+				expr.right = std::make_shared<Node>(right);
+				expr.value = "<assignment>";
+				expr.startPosition = left.startPosition;
+				expr.endPosition = right.endPosition;
+
+				return expr;	
+			}
+
+			return left;
 		}
 
 		Node Parser::parseAdditiveExpression()
 		{
-			if (!Error::Manager::isSafe()) return Node();
+			if (!Error::Manager::isSafe())
+				return Node();
 			Error::Position currPos = mCurrentToken->startPosition;
 			Node left = parseMultiplacativeExpression();
 
@@ -83,7 +107,7 @@ namespace Coda {
 				binaryExpression.left->startPosition = left.startPosition;
 				binaryExpression.left->endPosition = left.endPosition;
 				binaryExpression.right->startPosition = right.startPosition;
-				binaryExpression.right->endPosition= right.endPosition;
+				binaryExpression.right->endPosition = right.endPosition;
 
 				// Set position property for binaryExpression
 				binaryExpression.startPosition = currPos;
@@ -160,69 +184,6 @@ namespace Coda {
 			advance();
 			return declaration;
 		}
-
-		Node Parser::parseVariableDeclaration()
-		{
-			// let int i = 0;
-			// let int i;
-
-
-			///		DECLARATION
-			///		left:IDNETIFIER		
-			///		right:EXPR
-			///		value:type
-
-			advance();
-
-			std::string identifier;
-			std::string type;
-
-			if (mCurrentToken->type != TokenType::TYPE)
-				Error::Parser::raise("Expected a <type> after 'let' keyword at, ", mCurrentToken->startPosition);
-
-			if (!Error::Manager::isSafe()) return Node();
-			type = mCurrentToken->value;
-
-			advance();
-			if (mCurrentToken->type != TokenType::IDENTIFIER)
-				Error::Parser::raise("Expected a <indetifier> at ", mCurrentToken->startPosition);
-
-			if (!Error::Manager::isSafe()) return Node();
-			identifier = mCurrentToken->value;
-
-			advance();
-			if (mCurrentToken->type == TokenType::SEMICOLON) {
-				Node declaration = Node(NodeType::VARIABLE_DECLARATION);
-				declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
-				declaration.right = std::make_shared<Node>(NodeType::INTEGER_LITERAL, "0");
-				declaration.value = type;
-				advance();
-				return declaration;
-			}
-
-			if (mCurrentToken->type != TokenType::EQUALS)
-				Error::Parser::raise("Expected an '=' token at ", mCurrentToken->startPosition);
-
-
-			if (!Error::Manager::isSafe()) return Node();
-
-			Node declaration = Node(NodeType::VARIABLE_DECLARATION);
-			declaration.value = type;
-			advance();
-			declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
-			declaration.right = std::make_shared<Node>(parseExpression());
-
-			if (mCurrentToken->type != TokenType::SEMICOLON)
-				Error::Parser::raise("Expected a semicolon, at ", mCurrentToken->startPosition);
-
-			advance();
-			return declaration;
-
-		}
-
-		Node Parser::parseConstantDeclaration()
-		{
-			// const int i = 0;
 
 
 		Node Parser::parseMultiplacativeExpression()
@@ -314,7 +275,7 @@ namespace Coda {
 					mCurrentToken->value + "' was found at, ",
 					mCurrentToken->startPosition);
 			}
-			
+
 			expression.endPosition = mCurrentToken->endPosition;
 			advance();
 			return expression;

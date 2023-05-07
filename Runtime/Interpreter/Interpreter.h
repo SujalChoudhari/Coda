@@ -21,9 +21,8 @@ namespace Coda {
 			Value evaluateNumericBinaryExpression(Value left,std::string functor, Value right);
 			Value evaluateIdentifier(Frontend::Node astNode, Environment& env);
 
-			// TODO: Implement these functions
+			Value evaluateAssignmentExpression(Frontend::Node astNode, Environment& env);
 			Value evaluateDeclaration(Frontend::Node astNode, Environment& env,bool isConstant=false);
-			
 
 			template <typename T>
 			void handleArithmeticOperation(Value left, std::string functor, Value right, Value& result);

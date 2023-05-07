@@ -7,12 +7,14 @@ namespace Coda {
 				<< " Character: " << pos.character << std::endl;
 			
 
+			if (pos.lineText.empty())
+				return os;
 
 			// Print the line of text
 			os << pos.lineText << std::endl;
 
 			// Print the arrows pointing to the location of the error
-			for (int i = 0; i < pos.character; i++) {
+			for (unsigned int i = 0; i < pos.character; i++) {
 				os << "-";
 			}
 			os << "^";
