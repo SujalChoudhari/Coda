@@ -14,6 +14,8 @@ namespace Coda {
 			FLOAT,
 			DOUBLE,
 
+			OBJECT,
+
 		};
 
 	}

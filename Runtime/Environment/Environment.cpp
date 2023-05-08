@@ -11,6 +11,18 @@ namespace Coda {
 			this->parent = parentEnvironment;
 		}
 
+		Environment Environment::root()
+		{
+			Environment env = Environment();
+
+			env.declareOrAssignVariable("none", Value(Type::NONE, "none", Error::Position(), Error::Position()), true);
+			env.declareOrAssignVariable("undefined", Value(Type::UNDEFINED, "undefined", Error::Position(), Error::Position()), true);
+			env.declareOrAssignVariable("true", Value(Type::BOOL, "1", Error::Position(), Error::Position()), true);
+			env.declareOrAssignVariable("false", Value(Type::BOOL, "0", Error::Position(), Error::Position()), true);
+
+			return env;
+		}
+
 
 		Value Environment::declareOrAssignVariable(std::string name, Value value, bool isConstant)
 		{

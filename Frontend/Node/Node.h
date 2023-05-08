@@ -1,8 +1,10 @@
 #pragma once
+
 #include <iostream>
-#include <string> 
+#include <string>
 #include <vector>
-#include "NodeType.h" 
+#include <map>
+#include "NodeType.h"
 #include "../../Error/Position.h"
 
 namespace Coda {
@@ -15,8 +17,9 @@ namespace Coda {
 			std::shared_ptr<Node> right;
 			Error::Position startPosition;
 			Error::Position endPosition;
-		public:
+			std::map<std::string, std::shared_ptr<Node>> properties;
 
+		public:
 			Node(
 				NodeType type = NodeType::PROGRAM,
 				std::string value = "",
@@ -28,12 +31,14 @@ namespace Coda {
 				value(value),
 				left(std::move(left)),
 				right(std::move(right)),
+				startPosition(start),
 				endPosition(end) {}
 
 			Node(const Node& other);
 
 			friend std::ostream& operator<<(std::ostream& os, const Node& node);
 		};
+
 
 	}
 }

@@ -1,37 +1,37 @@
 #pragma once
 
-#include "../RuntimeValue/Value.h"
-#include "../RuntimeValue/Type.h"
-#include "../../Frontend/Node/NodeType.h"
-#include "../../Frontend/Node/Node.h"
-#include "../../Frontend/Node/Program.h"
 #include "../Environment/Environment.h"
+#include "../RuntimeValue/Type.h"
+#include "../RuntimeValue/Value.h"
+#include "../../Frontend/Node/Node.h"
+#include "../../Frontend/Node/NodeType.h"
+#include "../../Frontend/Node/Program.h"
 
 namespace Coda {
 	namespace Runtime {
 
 		class Interpreter {
-
 		public:
-			Value evaluate(Frontend::Node astNode,Environment& env);
-			Value evaluateProgram(Frontend::Program program, Environment& env);
+			Value evaluate(const Frontend::Node& astNode, Environment& env);
+			Value evaluateProgram(const Frontend::Program& program, Environment& env);
 
 		private:
-			Value evaluateBinaryExpression(Frontend::Node binop, Environment& env);
-			Value evaluateNumericBinaryExpression(Value left,std::string functor, Value right);
-			Value evaluateIdentifier(Frontend::Node astNode, Environment& env);
+			Value evaluateBinaryExpression(const Frontend::Node& binop, Environment& env);
+			Value evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right);
+			Value evaluateIdentifier(const Frontend::Node& astNode, Environment& env);
+			Value evaluateObjectExpression(const Frontend::Node& object, Environment& env);
 
-			Value evaluateAssignmentExpression(Frontend::Node astNode, Environment& env);
-			Value evaluateDeclaration(Frontend::Node astNode, Environment& env,bool isConstant=false);
-
-			template <typename T>
-			void handleArithmeticOperation(Value left, std::string functor, Value right, Value& result);
-			Value handleModulusOperation(Value left, Value right);
+			Value evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env);
+			Value evaluateDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);
 
 			template <typename T>
-			T getValue(std::string str);
+			void handleArithmeticOperation(const Value& left, const std::string& functor, const Value& right, Value& result);
 
+			Value handleModulusOperation(const Value& left, const Value& right);
+
+			template <typename T>
+			T getValue(const std::string& str);
 		};
 
-	}
-}
+	}  // namespace Runtime
+}  // namespace Coda

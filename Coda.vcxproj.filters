@@ -48,6 +48,9 @@
     <ClCompile Include="Frontend\Tokens\Constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\FileReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tokens\TokenType.h">
@@ -122,6 +125,9 @@
     <ClInclude Include="Coda.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\FileReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes">
@@ -136,5 +142,6 @@
     <None Include="README.md">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Test\test.coda" />
   </ItemGroup>
 </Project>

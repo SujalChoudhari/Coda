@@ -5,6 +5,10 @@
 #include "../Tokens/TokenType.h"
 #include "../Lexer/Lexer.h"
 
+#define IF_ERROR_RETURN_NODE if (!Error::Manager::isSafe()) return Node()
+#define IF_ERROR_RETURN_PROGRAM if (!Error::Manager::isSafe()) return Program()
+
+
 namespace Coda {
 	namespace Frontend {
 		class Parser
@@ -15,15 +19,16 @@ namespace Coda {
 
 		private: // in the order of prescidence
 			void advance();
+			Token expect(TokenType type,std::string error);
 			Node parseStatement();
 			Node parseExpression();
-
-			Node parsePrimaryExpression();
-			Node parseMultiplacativeExpression();
-			Node parseAdditiveExpression();
 			Node parseAssignmentExpression();
-
+			Node parseObjectExpression();
+			Node parseAdditiveExpression();
+			Node parseMultiplacativeExpression();
+			Node parsePrimaryExpression();
 			Node parseDeclaration(bool isConstant);
+
 
 		private:
 			std::vector<Token>* mTokens;

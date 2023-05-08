@@ -3,7 +3,7 @@
 #include "../../Error/Error.h"
 namespace Coda {
 	namespace Runtime {
-		Value Interpreter::evaluate(Frontend::Node astNode, Environment& env)
+		Value Interpreter::evaluate(const Frontend::Node& astNode, Environment& env)
 		{
 			if (!Error::Manager::isSafe()) return Value();
 
@@ -41,6 +41,10 @@ namespace Coda {
 				value.value = astNode.value;
 			}
 
+			else if (astNode.type == Frontend::NodeType::OBJECT_LITERAL) {
+				return evaluateObjectExpression(astNode, env);
+			}
+
 			else if (astNode.type == Frontend::NodeType::BINARY_EXPRESSION) {
 				return evaluateBinaryExpression(astNode, env);
 			}
@@ -57,23 +61,26 @@ namespace Coda {
 				return evaluateAssignmentExpression(astNode, env);
 			}
 
+
 			else {
 				Error::Runtime::raise("Unrecognised ASTNode '" + astNode.value + "'");
 			}
 			return value;
 		}
 
-		Value Interpreter::evaluateAssignmentExpression(Frontend::Node astNode, Environment& env) {
-			if (astNode.type != Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
-				Error::Runtime::raise("Invalid Assignment Operation, at ");
-				return Value();
+		Value Interpreter::evaluateProgram(const Frontend::Program& program, Environment& env)
+		{
+			if (!Error::Manager::isSafe()) return Value();
+			Value lastEvaluated = Value();
+			for (Frontend::Node statement : program.body) {
+				lastEvaluated = evaluate(statement, env);
 			}
 
-			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env));
+			return lastEvaluated;
 		}
 
 
-		Value Interpreter::evaluateBinaryExpression(Frontend::Node binop, Environment& env)
+		Value Interpreter::evaluateBinaryExpression(const Frontend::Node& binop, Environment& env)
 		{
 			if (!Error::Manager::isSafe())
 				return Value();
@@ -114,7 +121,7 @@ namespace Coda {
 			else return Value();
 		}
 
-		Value Interpreter::evaluateNumericBinaryExpression(Value left, std::string functor, Value right) {
+		Value Interpreter::evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right) {
 
 			if (!Error::Manager::isSafe()) {
 				return Value();
@@ -156,46 +163,62 @@ namespace Coda {
 			return result;
 		}
 
-		Value Interpreter::evaluateIdentifier(Frontend::Node astNode, Environment& env)
+
+
+		Value Interpreter::evaluateIdentifier(const Frontend::Node& astNode, Environment& env)
 		{
 			return env.lookupSymbol(astNode.value);
 		}
 
-		Value Interpreter::evaluateDeclaration(Frontend::Node astNode, Environment& env, bool isConstant)
+		Value Interpreter::evaluateObjectExpression(const Frontend::Node& astNode, Environment& env)
+		{
+
+			if (!Error::Manager::isSafe()) {
+				return Value();
+			}
+
+			Value object = Value();
+			object.type = Type::OBJECT;
+			object.value = "<object>";
+			object.endPosition = astNode.endPosition;
+			object.startPosition = astNode.startPosition;
+
+			for (const auto& entry : astNode.properties) {	
+				const std::string& key = entry.first;
+				const std::shared_ptr<Frontend::Node>& value = entry.second;
+
+				Value runtimeValue;
+
+				if (value.get()->type == Frontend::NodeType::PROPERTY) {
+					runtimeValue = env.lookupSymbol(key);
+				}
+				else {
+					runtimeValue = evaluate(*value.get(), env);
+				}
+
+				object.properties.emplace(key, std::make_shared<Value>(runtimeValue));
+			}
+			return object;
+		}
+
+		Value Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)
+		{
+			if (astNode.type != Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
+				Error::Runtime::raise("Invalid Assignment Operation, at ");
+				return Value();
+			}
+
+			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env));
+		}
+
+
+		Value Interpreter::evaluateDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant)
 		{
 			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env), isConstant);
 		}
 
-		Value Interpreter::handleModulusOperation(Value left, Value right)
-		{
-			if (!Error::Manager::isSafe()) return Value();
-			if (left.type == Type::INT
-				&& right.type == Type::INT
-				&& std::stoi(right.value) != 0) {
-				return Value(Type::INT,
-					std::to_string(std::stoi(left.value) % std::stoi(right.value)),
-					left.startPosition,
-					right.endPosition);
-			}
-			else {
-				return Value(Type::UNDEFINED, "undefined", left.startPosition, right.endPosition);
-			}
-		}
-
-
-		Value Interpreter::evaluateProgram(Frontend::Program program, Environment& env)
-		{
-			if (!Error::Manager::isSafe()) return Value();
-			Value lastEvaluated = Value();
-			for (Frontend::Node statement : program.body) {
-				lastEvaluated = evaluate(statement, env);
-			}
-
-			return lastEvaluated;
-		}
-
 		template<typename T>
-		inline void Coda::Runtime::Interpreter::handleArithmeticOperation(Value left, std::string functor, Value right, Value& result)
+		inline void Coda::Runtime::Interpreter::handleArithmeticOperation(const Value& left, const std::string& functor, const Value& right, Value& result)
 		{
 
 			if (!Error::Manager::isSafe()) return;
@@ -224,8 +247,25 @@ namespace Coda {
 			}
 		}
 
+		Value Interpreter::handleModulusOperation(const Value& left, const Value& right)
+		{
+			if (!Error::Manager::isSafe()) return Value();
+			if (left.type == Type::INT
+				&& right.type == Type::INT
+				&& std::stoi(right.value) != 0) {
+				return Value(Type::INT,
+					std::to_string(std::stoi(left.value) % std::stoi(right.value)),
+					left.startPosition,
+					right.endPosition);
+			}
+			else {
+				return Value(Type::UNDEFINED, "undefined", left.startPosition, right.endPosition);
+			}
+		}
+
 		template <typename T>
-		T Interpreter::getValue(std::string str) {
+		T Interpreter::getValue(const std::string& str)
+		{
 			if (std::is_same_v<T, unsigned char>) {
 				return static_cast<T>(str[0]);
 			}

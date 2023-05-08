@@ -43,6 +43,7 @@ namespace Coda {
 				if (mCurrentChar == '\n') {
 					mCurrentPosition.line++;
 					mCurrentPosition.character = 1;
+					advance();
 				}
 				else if (isspace(mCurrentChar)) {
 					advance();
@@ -55,6 +56,26 @@ namespace Coda {
 				else if (mCurrentChar == ')')
 				{
 					mTokens.emplace_back(TokenType::CLOSE_PAREN, ")", mCurrentPosition);
+					advance();
+				}
+				else if (mCurrentChar == '[')
+				{
+					mTokens.emplace_back(TokenType::OPEN_BRACKET, "[", mCurrentPosition);
+					advance();
+				}
+				else if (mCurrentChar == ']')
+				{
+					mTokens.emplace_back(TokenType::CLOSE_BRACKET, "]", mCurrentPosition);
+					advance();
+				}
+				else if (mCurrentChar == '{')
+				{
+					mTokens.emplace_back(TokenType::OPEN_BRACE, "{", mCurrentPosition);
+					advance();
+				}
+				else if (mCurrentChar == '}')
+				{
+					mTokens.emplace_back(TokenType::CLOSE_BRACE, "}", mCurrentPosition);
 					advance();
 				}
 				else if (mCurrentChar == '+'
@@ -73,6 +94,14 @@ namespace Coda {
 				}
 				else if (mCurrentChar == ';') {
 					mTokens.emplace_back(TokenType::SEMICOLON, ";", mCurrentPosition);
+					advance();
+				}
+				else if (mCurrentChar == ':') {
+					mTokens.emplace_back(TokenType::COLON, ":", mCurrentPosition);
+					advance();
+				}
+				else if (mCurrentChar == ',') {
+					mTokens.emplace_back(TokenType::COMMA, ",", mCurrentPosition);
 					advance();
 				}
 				else if (FIRST_VALID_DIGITS.find(mCurrentChar) != std::string::npos) {

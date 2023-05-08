@@ -62,8 +62,9 @@ namespace Coda {
 			}
 
 			startPosition = other.startPosition;
+			endPosition = other.endPosition;
+			properties = other.properties;
 
 		}
-
 	}
 }

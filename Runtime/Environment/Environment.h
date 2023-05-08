@@ -10,17 +10,18 @@ namespace Coda {
 		public:
 			Environment();
 			Environment(Environment* parentEnvironment);
+			static Environment root();
 
 			Value declareOrAssignVariable(std::string name, Value value,bool isConstant = false);
 			Value lookupSymbol(std::string varname);
-		private:
-			Environment* resolve(std::string name);
 
 		private:
 			Environment* parent;
 			std::map<std::string, Value> symbols;
 			std::set<std::string> constants;
 			
+		private:
+			Environment* resolve(std::string name);
 		};
 	}
 }

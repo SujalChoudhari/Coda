@@ -17,7 +17,8 @@ namespace Coda {
 			LONG_INT_LITERAL,
 			FLOATING_POINT_LITERAL,
 			DOUBLE_LITERAL,
-				
+			PROPERTY,
+			OBJECT_LITERAL,
 
 				//Other
 			IDENTIFIER,

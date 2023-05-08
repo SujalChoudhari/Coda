@@ -154,6 +154,7 @@
     <ClCompile Include="Runtime\Environment\Environment.cpp" />
     <ClCompile Include="Runtime\Interpreter\Interpreter.cpp" />
     <ClCompile Include="Runtime\RuntimeValue\Value.cpp" />
+    <ClCompile Include="Utils\FileReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Error\Error.h" />
@@ -180,12 +181,14 @@
     <ClInclude Include="Tokens\Keywords.h" />
     <ClInclude Include="Tokens\Token.h" />
     <ClInclude Include="Tokens\TokenType.h" />
+    <ClInclude Include="Utils\FileReader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="CppProperties.json" />
     <None Include="README.md" />
+    <None Include="Test\test.coda" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
