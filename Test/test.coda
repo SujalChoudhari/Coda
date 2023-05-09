@@ -1,10 +1,2 @@
-const bool foo = false;
-let too = {
-	x: 1,
-	y: 4,
-	x:foo,
-	z : {
-		a: 1,
-		b: foo
-	},
-};
+obj.a(b(x,y));
+print(x / 3 * 4);

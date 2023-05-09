@@ -80,9 +80,6 @@
     <ClInclude Include="Error\Position.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Frontend\Node\Program.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Error\Raiser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -126,6 +123,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utils\FileReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frontend\Node\Program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

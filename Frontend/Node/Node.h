@@ -7,6 +7,8 @@
 #include "NodeType.h"
 #include "../../Error/Position.h"
 
+#define agrs properties
+
 namespace Coda {
 	namespace Frontend {
 		class Node {
@@ -17,8 +19,9 @@ namespace Coda {
 			std::shared_ptr<Node> right;
 			Error::Position startPosition;
 			Error::Position endPosition;
-			std::map<std::string, std::shared_ptr<Node>> properties;
 
+			std::map<std::string, std::shared_ptr<Node>> properties;
+			
 		public:
 			Node(
 				NodeType type = NodeType::PROGRAM,

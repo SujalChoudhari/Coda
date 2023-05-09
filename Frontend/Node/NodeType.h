@@ -2,10 +2,11 @@
 namespace Coda {
 	namespace Frontend {
 		enum class NodeType {
-			
+
 			// Statements
 			INVALID,
 			PROGRAM,
+			ARGUMENT_LIST,
 
 			VARIABLE_DECLARATION,
 			CONSTANT_DECLARATION,
@@ -24,6 +25,8 @@ namespace Coda {
 			IDENTIFIER,
 			BINARY_EXPRESSION,
 			ASSIGNMENT_EXPRESSION,
+			MEMBER_EXPRESSION,
+			CALL_EXPRESSION
 
 		};
 

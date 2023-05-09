@@ -34,6 +34,7 @@ namespace Coda {
 				Error::Parser::raise(error, mCurrentToken->endPosition);
 				return Token(TokenType::INVALID, "<invalid>", mCurrentToken->endPosition);
 			}
+			advance();
 			return *mCurrentToken;
 		}
 
@@ -47,7 +48,6 @@ namespace Coda {
 				&& mCurrentToken->type != TokenType::END_OF_FILE) {
 				Node s = parseStatement();
 				program.body.emplace_back(s);
-				advance();
 				IF_ERROR_RETURN_PROGRAM;
 			}
 			return program;
@@ -119,8 +119,6 @@ namespace Coda {
 				Token key = expect(TokenType::IDENTIFIER, "Expected an Identifier in object literal");
 				IF_ERROR_RETURN_NODE;
 
-				advance();
-
 				if (mCurrentToken->type == TokenType::COMMA) {
 					advance();
 					obj.properties.emplace(key.value, std::make_shared<Node>(NodeType::PROPERTY));
@@ -135,14 +133,12 @@ namespace Coda {
 				expect(TokenType::COLON, "Expected a ':' in object literal");
 				IF_ERROR_RETURN_NODE;
 
-				advance();
 				Node value = parseExpression();
 
 				obj.properties.insert_or_assign(key.value, std::make_shared<Node>(value));
 
 				if (mCurrentToken->type != TokenType::CLOSE_BRACE) {
 					expect(TokenType::COMMA, "Expected a ',' or '}' in object literal");
-					advance();
 					IF_ERROR_RETURN_NODE;
 				}
 
@@ -153,7 +149,6 @@ namespace Coda {
 			IF_ERROR_RETURN_NODE;
 
 			obj.value = "<object>";
-			advance();
 			return obj;
 		}
 
@@ -218,7 +213,6 @@ namespace Coda {
 			IF_ERROR_RETURN_NODE;
 			identifier = mCurrentToken->value;
 
-			advance();
 
 			if (mCurrentToken->type == TokenType::EQUALS)
 			{
@@ -230,7 +224,8 @@ namespace Coda {
 				advance();
 				declaration.right = std::make_shared<Node>(parseExpression());
 
-
+				expect(TokenType::SEMICOLON, "Expected a ';' at the end of ");
+				IF_ERROR_RETURN_NODE;
 			}
 			else
 			{
@@ -246,7 +241,6 @@ namespace Coda {
 			}
 
 			declaration.endPosition = mCurrentToken->endPosition;
-			advance();
 			return declaration;
 		}
 
@@ -257,7 +251,7 @@ namespace Coda {
 
 
 			Error::Position currPos = mCurrentToken->startPosition;
-			Node left = parsePrimaryExpression();
+			Node left = parseCallMemberExpression();
 
 			while (
 				mCurrentToken->value == "/"
@@ -266,7 +260,7 @@ namespace Coda {
 				Token operatorToken = *mCurrentToken;
 				advance();
 
-				Node right = parsePrimaryExpression();
+				Node right = parseCallMemberExpression();
 
 				Node binaryExpression;
 				binaryExpression.type = NodeType::BINARY_EXPRESSION;
@@ -290,6 +284,109 @@ namespace Coda {
 			return left;
 		}
 
+		Node Parser::parseCallMemberExpression()
+		{
+			IF_ERROR_RETURN_NODE;
+			Node member = parseMemberExpression();
+			if (mCurrentToken->type == TokenType::OPEN_PAREN) {
+				return parseCallExpression(member);
+			}
+			return member;
+		}
+
+		Node Parser::parseCallExpression(const Node& caller)
+		{
+			IF_ERROR_RETURN_NODE;
+			Node callExpression = Node(NodeType::CALL_EXPRESSION);
+			callExpression.left = std::make_shared<Node>(caller);
+			callExpression.properties = parseArguments().properties;
+
+			// Check for additional calls
+			while (mCurrentToken->type == TokenType::OPEN_PAREN) {
+				// Expect a closing parenthesis after each argument list
+				expect(TokenType::CLOSE_PAREN, "Expected a ')' at, ");
+				IF_ERROR_RETURN_NODE;
+				callExpression = parseCallExpression(callExpression);
+			}
+
+			return callExpression;
+		}
+
+
+		Node Parser::parseArguments()
+		{
+			IF_ERROR_RETURN_NODE;
+			expect(TokenType::OPEN_PAREN, "Expected an '(' at, ");
+			IF_ERROR_RETURN_NODE;
+
+			Node argList = parseArgumentList();
+			if (mCurrentToken->type == TokenType::CLOSE_PAREN) {
+				advance(); // Consume the closing parenthesis
+				return argList;
+			}
+			else {
+				Error::Parser::raise("Expected a ')' at, ", mCurrentToken->startPosition);
+				return Node(); // Return an empty Node to indicate the error
+			}
+		}
+
+
+		Node Parser::parseArgumentList()
+		{
+			IF_ERROR_RETURN_NODE;
+			Node args = Node(NodeType::ARGUMENT_LIST, "<args>");
+			args.properties.insert({ "0",std::make_shared<Node>(parseExpression()) });
+			int index = 1;
+			while (mCurrentToken->type != TokenType::END_OF_FILE && mCurrentToken->type == TokenType::COMMA) {
+				advance();
+				args.properties.insert({ std::to_string(index),std::make_shared<Node>(parseAssignmentExpression()) });
+				index++;
+				IF_ERROR_RETURN_NODE;
+			}
+			return args;
+		}
+
+		Node Parser::parseMemberExpression()
+		{
+			IF_ERROR_RETURN_NODE;
+			Node object = parsePrimaryExpression();
+			Node returnObject = Node(NodeType::MEMBER_EXPRESSION, "<member-exp>");
+			returnObject.left = std::make_shared<Node>(object);
+			returnObject.value = object.value;
+
+			while (mCurrentToken->type == TokenType::DOT || mCurrentToken->type == TokenType::OPEN_BRACKET) {
+				Token functor = *mCurrentToken;
+				advance();
+
+				Node property;
+				if (functor.type == TokenType::DOT) {
+					object.value = "<call>";
+					property = parsePrimaryExpression();
+					IF_ERROR_RETURN_NODE;
+					if (property.type != NodeType::IDENTIFIER) {
+						Error::Parser::raise("Cannot use '.' Dot operator without right hand side, at ", functor.endPosition);
+					}
+					IF_ERROR_RETURN_NODE;
+
+				}
+				else {
+					object.value = "<computed-call>";
+					property = parseExpression();
+					expect(TokenType::CLOSE_BRACKET, "Missing ']' in computed value at, ");
+					IF_ERROR_RETURN_NODE;
+				}
+
+				Node newReturnObject = Node(NodeType::MEMBER_EXPRESSION, "<member-exp>");
+				newReturnObject.left = std::make_shared<Node>(returnObject);
+				newReturnObject.right = std::make_shared<Node>(property);
+				newReturnObject.value = object.value;
+				returnObject = newReturnObject;
+			}
+
+			return returnObject;
+		}
+
+
 
 
 		Node Parser::parsePrimaryExpression()
@@ -297,38 +394,43 @@ namespace Coda {
 			Node expression;
 			expression.startPosition = mCurrentToken->startPosition;
 			TokenType* type = &mCurrentToken->type;
-
 			IF_ERROR_RETURN_NODE;
 
 
 			if (*type == TokenType::IDENTIFIER) {
 				expression.type = NodeType::IDENTIFIER;
 				expression.value = mCurrentToken->value;
+				advance();
 			}
 
 			else if (*type == TokenType::BYTE) {
 				expression.type = NodeType::BYTE_LITERAL;
 				expression.value = mCurrentToken->value;
+				advance();
 			}
 
 			else if (*type == TokenType::INT) {
 				expression.type = NodeType::INTEGER_LITERAL;
 				expression.value = mCurrentToken->value;
+				advance();
 			}
 
 			else if (*type == TokenType::LONG) {
 				expression.type = NodeType::LONG_INT_LITERAL;
 				expression.value = mCurrentToken->value;
+				advance();
 			}
 
 			else if (*type == TokenType::FLOAT) {
 				expression.type = NodeType::FLOATING_POINT_LITERAL;
 				expression.value = mCurrentToken->value;
+				advance();
 			}
 
 			else if (*type == TokenType::DOUBLE) {
 				expression.type = NodeType::DOUBLE_LITERAL;
 				expression.value = mCurrentToken->value;
+				advance();
 			}
 
 			else if (*type == TokenType::OPEN_PAREN) {
@@ -337,7 +439,14 @@ namespace Coda {
 				expect(TokenType::CLOSE_PAREN,
 					" Unexpected Token found '" +
 					mCurrentToken->value + "' was found instead of ')' at, ");
+
 			}
+
+			else if (*type == TokenType::SEMICOLON) {
+				advance();
+			}
+
+
 			else {
 				expression.type = NodeType::INVALID;
 				Coda::Error::Parser::raise("Invalid Token '" +
@@ -346,7 +455,7 @@ namespace Coda {
 			}
 
 			expression.endPosition = mCurrentToken->endPosition;
-			advance();
+			
 			return expression;
 
 		}

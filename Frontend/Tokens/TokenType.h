@@ -21,6 +21,7 @@ namespace Coda {
 			EQUALS,
 			SEMICOLON,
 			COMMA,
+			DOT,
 			COLON,
 			BINARY_OPERATOR,
 				// ()
