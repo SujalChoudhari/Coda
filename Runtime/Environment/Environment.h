@@ -12,7 +12,7 @@ namespace Coda {
 			Environment(Environment* parentEnvironment);
 			static Environment root();
 
-			Value declareOrAssignVariable(std::string name, Value value,bool isConstant = false);
+			Value declareOrAssignVariable(const std::string& name, const Value& value, bool isConstant = false);
 			Value lookupSymbol(std::string varname);
 
 		private:

@@ -153,6 +153,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Runtime\Environment\Environment.cpp" />
     <ClCompile Include="Runtime\Interpreter\Interpreter.cpp" />
+    <ClCompile Include="Runtime\RuntimeValue\NativeFunction.cpp" />
     <ClCompile Include="Runtime\RuntimeValue\Value.cpp" />
     <ClCompile Include="Utils\FileReader.cpp" />
   </ItemGroup>

@@ -47,7 +47,11 @@ namespace Coda {
 			while (mCurrentIndex < mTokens->size()
 				&& mCurrentToken->type != TokenType::END_OF_FILE) {
 				Node s = parseStatement();
+
+				IF_ERROR_RETURN_PROGRAM;
 				program.body.emplace_back(s);
+				
+				expect(TokenType::SEMICOLON, "Expected a ';' at the end of ");
 				IF_ERROR_RETURN_PROGRAM;
 			}
 			return program;
@@ -66,7 +70,6 @@ namespace Coda {
 
 			case TokenType::CONST:
 				return parseDeclaration(true);
-
 			default:
 				return parseExpression();
 			}
@@ -208,10 +211,10 @@ namespace Coda {
 			}
 
 
+			identifier = mCurrentToken->value;
 			expect(TokenType::IDENTIFIER, "Expected a <indetifier> at ");
 
 			IF_ERROR_RETURN_NODE;
-			identifier = mCurrentToken->value;
 
 
 			if (mCurrentToken->type == TokenType::EQUALS)
@@ -224,8 +227,6 @@ namespace Coda {
 				advance();
 				declaration.right = std::make_shared<Node>(parseExpression());
 
-				expect(TokenType::SEMICOLON, "Expected a ';' at the end of ");
-				IF_ERROR_RETURN_NODE;
 			}
 			else
 			{
@@ -350,17 +351,16 @@ namespace Coda {
 		{
 			IF_ERROR_RETURN_NODE;
 			Node object = parsePrimaryExpression();
-			Node returnObject = Node(NodeType::MEMBER_EXPRESSION, "<member-exp>");
-			returnObject.left = std::make_shared<Node>(object);
-			returnObject.value = object.value;
+
 
 			while (mCurrentToken->type == TokenType::DOT || mCurrentToken->type == TokenType::OPEN_BRACKET) {
 				Token functor = *mCurrentToken;
 				advance();
+				std::string computed = "";
 
 				Node property;
 				if (functor.type == TokenType::DOT) {
-					object.value = "<call>";
+					computed = "<call>";
 					property = parsePrimaryExpression();
 					IF_ERROR_RETURN_NODE;
 					if (property.type != NodeType::IDENTIFIER) {
@@ -370,20 +370,16 @@ namespace Coda {
 
 				}
 				else {
-					object.value = "<computed-call>";
+					computed = "<computed-call>";
 					property = parseExpression();
 					expect(TokenType::CLOSE_BRACKET, "Missing ']' in computed value at, ");
 					IF_ERROR_RETURN_NODE;
 				}
 
-				Node newReturnObject = Node(NodeType::MEMBER_EXPRESSION, "<member-exp>");
-				newReturnObject.left = std::make_shared<Node>(returnObject);
-				newReturnObject.right = std::make_shared<Node>(property);
-				newReturnObject.value = object.value;
-				returnObject = newReturnObject;
+				object = Node(NodeType::MEMBER_EXPRESSION, computed, std::make_shared<Node>(object));
 			}
 
-			return returnObject;
+			return object;
 		}
 
 
@@ -442,11 +438,6 @@ namespace Coda {
 
 			}
 
-			else if (*type == TokenType::SEMICOLON) {
-				advance();
-			}
-
-
 			else {
 				expression.type = NodeType::INVALID;
 				Coda::Error::Parser::raise("Invalid Token '" +
@@ -455,7 +446,7 @@ namespace Coda {
 			}
 
 			expression.endPosition = mCurrentToken->endPosition;
-			
+
 			return expression;
 
 		}

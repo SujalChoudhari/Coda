@@ -15,7 +15,7 @@ namespace Coda {
 			DOUBLE,
 
 			OBJECT,
-
+			NATIVE_FUNCTION,
 		};
 
 	}

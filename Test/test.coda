@@ -1,2 +1,4 @@
-obj.a(b(x,y));
-print(x / 3 * 4);
+const float x = 8;
+
+y = x + 5;
+print(x,y);
