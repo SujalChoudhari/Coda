@@ -7,6 +7,9 @@
 #include "../../Frontend/Node/NodeType.h"
 #include "../../Frontend/Node/Program.h"
 
+
+#define IF_ERROR_RETURN_VALUE if (!Error::Manager::isSafe()) return Value()
+ 
 namespace Coda {
 	namespace Runtime {
 
@@ -18,8 +21,10 @@ namespace Coda {
 		private:
 			Value evaluateBinaryExpression(const Frontend::Node& binop, Environment& env);
 			Value evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right);
+			Value evaluateStringBinaryExpression(const Value& left, const std::string& functor, const Value& right);
 			Value evaluateIdentifier(const Frontend::Node& astNode, Environment& env);
 			Value evaluateObjectExpression(const Frontend::Node& object, Environment& env);
+			Value evaluateCallExpression(const Frontend::Node& callexp, Environment& env);
 
 			Value evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env);
 			Value evaluateDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);

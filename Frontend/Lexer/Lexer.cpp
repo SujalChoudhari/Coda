@@ -12,7 +12,7 @@ namespace Coda {
 			mTokens = std::vector<Token>();
 			mSourceCode = "";
 			mCurrentIndex = -1;
-			mCurrentPosition = Position(0, 1,"");
+			mCurrentPosition = Position(0, 1, "");
 		}
 
 		void Lexer::advance()
@@ -42,10 +42,7 @@ namespace Coda {
 		}
 
 
-		bool Lexer::isSupportedDigit(char c)
-		{
-			return DIGITS_EXTRA.find(c) != std::string::npos;
-		}
+
 
 
 		std::vector<Token> Lexer::tokenise(std::string sourceCode)
@@ -55,92 +52,203 @@ namespace Coda {
 			advance();
 
 			while (mCurrentChar != '\0') {
-
 				if (mCurrentChar == '\n') {
-
-					advance();
+					handleNewLine();
 				}
 				else if (isspace(mCurrentChar)) {
-					advance();
+					handleWhitespace();
 				}
-				else if (mCurrentChar == '(')
-				{
-					mTokens.emplace_back(TokenType::OPEN_PAREN, "(", mCurrentPosition);
-					advance();
+				else if (isLetter(mCurrentChar)) {
+					handleIdentifiers();
 				}
-				else if (mCurrentChar == ')')
-				{
-					mTokens.emplace_back(TokenType::CLOSE_PAREN, ")", mCurrentPosition);
-					advance();
+				else if (mCurrentChar == '"') {
+					handleStringLiteral();
 				}
-				else if (mCurrentChar == '[')
-				{
-					mTokens.emplace_back(TokenType::OPEN_BRACKET, "[", mCurrentPosition);
-					advance();
+				else if (isdigit(mCurrentChar)) {
+					handleNumbers();
 				}
-				else if (mCurrentChar == ']')
-				{
-					mTokens.emplace_back(TokenType::CLOSE_BRACKET, "]", mCurrentPosition);
-					advance();
+				else if (isSymbolChar(mCurrentChar)) {
+					handleSymbol();
 				}
-				else if (mCurrentChar == '{')
-				{
-					mTokens.emplace_back(TokenType::OPEN_BRACE, "{", mCurrentPosition);
-					advance();
-				}
-				else if (mCurrentChar == '}')
-				{
-					mTokens.emplace_back(TokenType::CLOSE_BRACE, "}", mCurrentPosition);
-					advance();
-				}
-				else if (mCurrentChar == '+'
-					|| mCurrentChar == '-'
-					|| mCurrentChar == '*'
-					|| mCurrentChar == '/'
-					|| mCurrentChar == '%')
-				{
-					std::string s(1, mCurrentChar);
-					mTokens.emplace_back(TokenType::BINARY_OPERATOR, s, mCurrentPosition);
-					advance();
+				else if (isBinaryOperator(mCurrentChar)) {
+					handleBinaryOperator();
 				}
 				else if (mCurrentChar == '=') {
-					mTokens.emplace_back(TokenType::EQUALS, "=", mCurrentPosition);
-					advance();
+					handleEquals();
 				}
 				else if (mCurrentChar == ';') {
-					mTokens.emplace_back(TokenType::SEMICOLON, ";", mCurrentPosition);
-					advance();
+					handleSemicolon();
 				}
 				else if (mCurrentChar == ':') {
-					mTokens.emplace_back(TokenType::COLON, ":", mCurrentPosition);
-					advance();
+					handleColon();
 				}
 				else if (mCurrentChar == ',') {
-					mTokens.emplace_back(TokenType::COMMA, ",", mCurrentPosition);
-					advance();
+					handleComma();
 				}
 				else if (mCurrentChar == '.') {
-					mTokens.emplace_back(TokenType::DOT, ".", mCurrentPosition);
-					advance();
-				}
-				else if (FIRST_VALID_DIGITS.find(mCurrentChar) != std::string::npos) {
-					buildNumbers();
-				}
-				else if (isalpha(mCurrentChar)) {
-					buildIdentifiers();
+					handleDot();
 				}
 				else {
-					Coda::Error::Lexer::raise("Illegal Character '" +std::to_string((char) mCurrentChar) + "' found at ",mCurrentPosition);
-					advance();
+					handleIllegalCharacter();
 				}
 			}
 
 			mTokens.emplace_back(TokenType::END_OF_FILE, "\\0", mCurrentPosition);
-
 			return mTokens;
 		}
 
-		void Lexer::buildNumbers() {
+
+		void Lexer::handleNewLine() {
+			advance();
+		}
+
+		void Lexer::handleWhitespace() {
+			advance();
+		}
+
+
+		void Lexer::handleEquals() {
+			mTokens.emplace_back(TokenType::EQUALS, "=", mCurrentPosition);
+			advance();
+		}
+
+		void Lexer::handleSemicolon() {
+			mTokens.emplace_back(TokenType::SEMICOLON, ";", mCurrentPosition);
+			advance();
+		}
+
+		void Lexer::handleColon() {
+			mTokens.emplace_back(TokenType::COLON, ":", mCurrentPosition);
+			advance();
+		}
+
+		void Lexer::handleComma() {
+			mTokens.emplace_back(TokenType::COMMA, ",", mCurrentPosition);
+			advance();
+		}
+
+		void Lexer::handleDot() {
+			mTokens.emplace_back(TokenType::DOT, ".", mCurrentPosition);
+			advance();
+		}
+
+		void Lexer::handleIllegalCharacter() {
+			Coda::Error::Lexer::raise("Illegal Character '" + std::to_string((char)mCurrentChar) + "' found at ", mCurrentPosition);
+			advance();
+		}
+
+		bool Lexer::isSymbolChar(char c) {
+			return (c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}');
+		}
+
+		bool Lexer::isBinaryOperator(char c) {
+			return (c == '+' || c == '-' || c == '*' || c == '/' || c == '%');
+		}
+
+		bool Lexer::isSupportedDigit(char c)
+		{
+			return DIGITS_EXTRA.find(c) != std::string::npos;
+		}
+
+		bool Lexer::isLetter(char c) {
+			return isalpha(c);
+		}
+
+		void Lexer::handleSymbol() {
+			char symbol = mCurrentChar;
+			std::string symbolString(1, symbol);
+			TokenType tokenType;
+
+			switch (symbol) {
+			case '(':
+				tokenType = TokenType::OPEN_PAREN;
+				break;
+			case ')':
+				tokenType = TokenType::CLOSE_PAREN;
+				break;
+			case '[':
+				tokenType = TokenType::OPEN_BRACKET;
+				break;
+			case ']':
+				tokenType = TokenType::CLOSE_BRACKET;
+				break;
+			case '{':
+				tokenType = TokenType::OPEN_BRACE;
+				break;
+			case '}':
+				tokenType = TokenType::CLOSE_BRACE;
+				break;
+			default:
+				// Handle unrecognized symbols if needed
+				break;
+			}
+
+			mTokens.emplace_back(tokenType, symbolString, mCurrentPosition);
+			advance();
+		}
+
+		void Lexer::handleBinaryOperator() {
+			char operatorChar = mCurrentChar;
+			std::string operatorString(1, operatorChar);
+
+			TokenType tokenType;
+			// Assign the appropriate token type based on the operator character
+			switch (operatorChar) {
+			case '+':
+				tokenType = TokenType::BINARY_OPERATOR;
+				break;
+			case '-':
+				tokenType = TokenType::BINARY_OPERATOR;
+				break;
+			case '*':
+				tokenType = TokenType::BINARY_OPERATOR;
+				break;
+			case '/':
+				tokenType = TokenType::BINARY_OPERATOR;
+				break;
+			case '%':
+				tokenType = TokenType::BINARY_OPERATOR;
+				break;
+			default:
+				// Handle unrecognized operators if needed
+				break;
+			}
+
+			mTokens.emplace_back(tokenType, operatorString, mCurrentPosition);
+			advance();
+		}
+
+		void Lexer::handleStringLiteral() {
+			std::string stringLiteral;
+			Position startPosition = mCurrentPosition;
+
+			advance(); // Skip the opening double quote
+
+			while (mCurrentChar != '\0' && mCurrentChar != '"') {
+				if (mCurrentChar == '\\') {
+					advance();
+					if (mCurrentChar == '\0') {
+						break;
+					}
+				}
+
+				stringLiteral += mCurrentChar;
+				advance();
+			}
+
+			if (mCurrentChar == '"') {
+				// Add the string literal token to mTokens
+				mTokens.emplace_back(TokenType::STRING, stringLiteral, startPosition,mCurrentPosition);
+				advance(); // Skip the closing double quote
+			}
+			else {
+				 Error::Lexer::raise("Unterminated string literal at ", startPosition);
+			}
+		}
+
+
+
+		void Lexer::handleNumbers() {
 			Position start = mCurrentPosition;
 			std::string num = "";
 			bool dot = false;
@@ -203,7 +311,7 @@ namespace Coda {
 			mTokens.emplace_back(type, num, start, mCurrentPosition);
 		}
 
-		void Lexer::buildIdentifiers()
+		void Lexer::handleIdentifiers()
 		{
 			Position start = mCurrentPosition;
 			std::string identifier = "";
@@ -220,6 +328,5 @@ namespace Coda {
 				mTokens.emplace_back(KEYWORD[identifier], identifier, start, mCurrentPosition);
 			}
 		}
-
 	}
 }

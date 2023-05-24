@@ -50,7 +50,7 @@ namespace Coda {
 
 				IF_ERROR_RETURN_PROGRAM;
 				program.body.emplace_back(s);
-				
+
 				expect(TokenType::SEMICOLON, "Expected a ';' at the end of ");
 				IF_ERROR_RETURN_PROGRAM;
 			}
@@ -336,6 +336,11 @@ namespace Coda {
 		{
 			IF_ERROR_RETURN_NODE;
 			Node args = Node(NodeType::ARGUMENT_LIST, "<args>");
+
+			if (mCurrentToken->type == TokenType::CLOSE_PAREN) {
+				return args;
+			}
+
 			args.properties.insert({ "0",std::make_shared<Node>(parseExpression()) });
 			int index = 1;
 			while (mCurrentToken->type != TokenType::END_OF_FILE && mCurrentToken->type == TokenType::COMMA) {
@@ -391,53 +396,48 @@ namespace Coda {
 			expression.startPosition = mCurrentToken->startPosition;
 			TokenType* type = &mCurrentToken->type;
 			IF_ERROR_RETURN_NODE;
-
-
 			if (*type == TokenType::IDENTIFIER) {
 				expression.type = NodeType::IDENTIFIER;
 				expression.value = mCurrentToken->value;
 				advance();
 			}
-
 			else if (*type == TokenType::BYTE) {
 				expression.type = NodeType::BYTE_LITERAL;
 				expression.value = mCurrentToken->value;
 				advance();
 			}
-
 			else if (*type == TokenType::INT) {
 				expression.type = NodeType::INTEGER_LITERAL;
 				expression.value = mCurrentToken->value;
 				advance();
 			}
-
 			else if (*type == TokenType::LONG) {
 				expression.type = NodeType::LONG_INT_LITERAL;
 				expression.value = mCurrentToken->value;
 				advance();
 			}
-
 			else if (*type == TokenType::FLOAT) {
 				expression.type = NodeType::FLOATING_POINT_LITERAL;
 				expression.value = mCurrentToken->value;
 				advance();
 			}
-
 			else if (*type == TokenType::DOUBLE) {
 				expression.type = NodeType::DOUBLE_LITERAL;
 				expression.value = mCurrentToken->value;
 				advance();
 			}
-
+			else if (*type == TokenType::STRING) {
+				expression.type = NodeType::STRING_LITERAL;
+				expression.value = mCurrentToken->value;
+				advance();
+			}
 			else if (*type == TokenType::OPEN_PAREN) {
 				advance(); // skip the paren
 				expression = parseExpression();
 				expect(TokenType::CLOSE_PAREN,
 					" Unexpected Token found '" +
 					mCurrentToken->value + "' was found instead of ')' at, ");
-
 			}
-
 			else {
 				expression.type = NodeType::INVALID;
 				Coda::Error::Parser::raise("Invalid Token '" +
@@ -446,11 +446,7 @@ namespace Coda {
 			}
 
 			expression.endPosition = mCurrentToken->endPosition;
-
 			return expression;
-
 		}
-
-
 	}
 }

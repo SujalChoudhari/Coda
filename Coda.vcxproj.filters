@@ -51,7 +51,7 @@
     <ClCompile Include="Utils\FileReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Runtime\RuntimeValue\NativeFunction.cpp">
+    <ClCompile Include="Runtime\NativeFunctions\NativeFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -129,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Frontend\Node\Program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Runtime\NativeFunctions\NativeFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

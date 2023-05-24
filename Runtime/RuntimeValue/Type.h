@@ -13,6 +13,7 @@ namespace Coda {
 			LONG,
 			FLOAT,
 			DOUBLE,
+			STRING,
 
 			OBJECT,
 			NATIVE_FUNCTION,

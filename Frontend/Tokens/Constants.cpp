@@ -10,6 +10,7 @@ namespace Coda {
 			{"long", TokenType::TYPE},
 			{"float",TokenType::TYPE},
 			{"double",TokenType::TYPE},
+			{"string",TokenType::TYPE},
 			{"object",TokenType::TYPE},
 
 			{"let",TokenType::LET},

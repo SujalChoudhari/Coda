@@ -1,7 +1,12 @@
 #include "Environment.h"
+#include <vector>
 #include "../../Error/Error.h"
+#include "../NativeFunctions/NativeFunction.h"
+
+
 namespace Coda {
 	namespace Runtime {
+		
 		Environment::Environment()
 		{
 			parent = nullptr;
@@ -20,7 +25,11 @@ namespace Coda {
 			env.declareOrAssignVariable("true", Value(Type::BOOL, "1"), true);
 			env.declareOrAssignVariable("false", Value(Type::BOOL, "0"), true);
 
-			env.declareOrAssignVariable("print", Value(Type::NATIVE_FUNCTION, "<native-fn>"), true);
+			// native-fn
+			env.declareNativeFunction("print", Native::print);
+			env.declareNativeFunction("println",Native::println);
+			env.declareNativeFunction("input", Native::input);
+			env.declareNativeFunction("sleep", Native::sleep);
 
 			return env;
 		}
@@ -51,6 +60,25 @@ namespace Coda {
 			}
 			return value;
 		}
+
+		Value Environment::declareNativeFunction(const std::string& name, Function function)
+		{
+			declareOrAssignVariable(name, Value(Type::NATIVE_FUNCTION, name), true);
+			functions.emplace(name, function);
+			return Value();
+		}
+
+		Value Environment::callFunction(const std::string& name, const Value& args, Environment& env) {
+			auto it = functions.find(name);
+			if (it != functions.end()) {
+				return it->second(args, env);
+			}
+			else {
+				Error::Runtime::raise("Function " + name + " does not exist.");
+				return Value();
+			}
+		}
+
 
 
 		Value Environment::lookupSymbol(std::string name)

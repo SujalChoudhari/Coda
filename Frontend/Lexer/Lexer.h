@@ -13,6 +13,7 @@ namespace Coda {
 			Lexer();
 			std::vector<Token> tokenise(std::string sourceCode);
 
+
 		private:
 			std::vector<Token> mTokens = {};
 			std::string mSourceCode;
@@ -21,9 +22,24 @@ namespace Coda {
 			Position mCurrentPosition;
 
 		private:
-			void advance();
-			void buildNumbers();
-			void buildIdentifiers();
+        private:
+            void advance();
+            void handleNewLine();
+            void handleWhitespace();
+            void handleSymbol();
+            void handleBinaryOperator();
+            void handleStringLiteral();
+            void handleEquals();
+            void handleSemicolon();
+            void handleColon();
+            void handleComma();
+            void handleDot();
+            void handleNumbers();
+            void handleIdentifiers();
+            void handleIllegalCharacter();
+            bool isSymbolChar(char c);
+            bool isBinaryOperator(char c);
+            bool isLetter(char c);
 
 			bool isSupportedDigit(char ch);
 		};

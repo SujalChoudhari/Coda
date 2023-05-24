@@ -1,11 +1,12 @@
 #include "Interpreter.h"
 #include <string>
 #include "../../Error/Error.h"
+#include "../NativeFunctions/NativeFunction.h"
 namespace Coda {
 	namespace Runtime {
 		Value Interpreter::evaluate(const Frontend::Node& astNode, Environment& env)
 		{
-			if (!Error::Manager::isSafe()) return Value();
+			IF_ERROR_RETURN_VALUE;
 
 			Value value = Value();
 			value.startPosition = astNode.startPosition;
@@ -15,34 +16,35 @@ namespace Coda {
 			if (astNode.type == Frontend::NodeType::IDENTIFIER) {
 				return evaluateIdentifier(astNode, env);
 			}
-
 			else if (astNode.type == Frontend::NodeType::BYTE_LITERAL) {
 				value.type = Type::BYTE;
 				value.value = astNode.value;
 			}
-
 			else if (astNode.type == Frontend::NodeType::INTEGER_LITERAL) {
 				value.type = Type::INT;
 				value.value = astNode.value;
 			}
-
 			else if (astNode.type == Frontend::NodeType::LONG_INT_LITERAL) {
 				value.type = Type::LONG;
 				value.value = astNode.value;
 			}
-
 			else if (astNode.type == Frontend::NodeType::FLOATING_POINT_LITERAL) {
 				value.type = Type::FLOAT;
 				value.value = astNode.value;
 			}
-
 			else if (astNode.type == Frontend::NodeType::DOUBLE_LITERAL) {
 				value.type = Type::DOUBLE;
 				value.value = astNode.value;
 			}
-
+			else if (astNode.type == Frontend::NodeType::STRING_LITERAL) {
+				value.type = Type::STRING;
+				value.value = astNode.value;
+			}
 			else if (astNode.type == Frontend::NodeType::OBJECT_LITERAL) {
 				return evaluateObjectExpression(astNode, env);
+			}
+			else if (astNode.type == Frontend::NodeType::CALL_EXPRESSION) {
+				return evaluateCallExpression(astNode, env);
 			}
 
 			else if (astNode.type == Frontend::NodeType::BINARY_EXPRESSION) {
@@ -62,6 +64,7 @@ namespace Coda {
 			}
 
 
+
 			else {
 				Error::Runtime::raise("Unrecognised ASTNode '" + astNode.value + "'");
 			}
@@ -70,7 +73,7 @@ namespace Coda {
 
 		Value Interpreter::evaluateProgram(const Frontend::Program& program, Environment& env)
 		{
-			if (!Error::Manager::isSafe()) return Value();
+			IF_ERROR_RETURN_VALUE;
 			Value lastEvaluated = Value();
 			for (Frontend::Node statement : program.body) {
 				lastEvaluated = evaluate(statement, env);
@@ -82,21 +85,18 @@ namespace Coda {
 
 		Value Interpreter::evaluateBinaryExpression(const Frontend::Node& binop, Environment& env)
 		{
-			if (!Error::Manager::isSafe())
-				return Value();
+			IF_ERROR_RETURN_VALUE;
 
 			Value lhs = evaluate(*binop.left.get(), env);
 			Value rhs = evaluate(*binop.right.get(), env);
 
-			if (
-				(lhs.type == Type::INT
-					|| lhs.type == Type::BOOL
-					|| lhs.type == Type::BYTE
-					|| lhs.type == Type::LONG
-					|| lhs.type == Type::FLOAT
-					|| lhs.type == Type::DOUBLE)
-				&&
-				(rhs.type == Type::INT
+			if ((lhs.type == Type::INT
+				|| lhs.type == Type::BOOL
+				|| lhs.type == Type::BYTE
+				|| lhs.type == Type::LONG
+				|| lhs.type == Type::FLOAT
+				|| lhs.type == Type::DOUBLE)
+				&& (rhs.type == Type::INT
 					|| rhs.type == Type::BOOL
 					|| rhs.type == Type::BYTE
 					|| rhs.type == Type::LONG
@@ -104,6 +104,10 @@ namespace Coda {
 					|| rhs.type == Type::DOUBLE))
 			{
 				return evaluateNumericBinaryExpression(lhs, binop.value, rhs);
+			}
+			else if (lhs.type == Type::STRING
+				|| rhs.type == Type::STRING) {
+				return evaluateStringBinaryExpression(lhs, binop.value, rhs);
 			}
 
 			else if (lhs.type == Type::UNDEFINED || rhs.type == Type::UNDEFINED) {
@@ -123,10 +127,7 @@ namespace Coda {
 
 		Value Interpreter::evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right) {
 
-			if (!Error::Manager::isSafe()) {
-				return Value();
-			}
-
+			IF_ERROR_RETURN_VALUE;
 			if (functor == "%") {
 				return handleModulusOperation(left, right);
 			}
@@ -163,6 +164,17 @@ namespace Coda {
 			return result;
 		}
 
+		Value Interpreter::evaluateStringBinaryExpression(const Value& left, const std::string& functor, const Value& right)
+		{
+			IF_ERROR_RETURN_VALUE;
+
+			if (functor == "+") {
+				std::string concatenatedString = left.value + right.value;
+				return Value(Type::STRING, concatenatedString);
+			}
+
+			Error::Runtime::raise("Unsupported operation with strings");
+		}
 
 
 		Value Interpreter::evaluateIdentifier(const Frontend::Node& astNode, Environment& env)
@@ -170,12 +182,11 @@ namespace Coda {
 			return env.lookupSymbol(astNode.value);
 		}
 
+
 		Value Interpreter::evaluateObjectExpression(const Frontend::Node& astNode, Environment& env)
 		{
 
-			if (!Error::Manager::isSafe()) {
-				return Value();
-			}
+			IF_ERROR_RETURN_VALUE;
 
 			Value object = Value();
 			object.type = Type::OBJECT;
@@ -183,7 +194,7 @@ namespace Coda {
 			object.endPosition = astNode.endPosition;
 			object.startPosition = astNode.startPosition;
 
-			for (const auto& entry : astNode.properties) {	
+			for (const auto& entry : astNode.properties) {
 				const std::string& key = entry.first;
 				const std::shared_ptr<Frontend::Node>& value = entry.second;
 
@@ -199,6 +210,25 @@ namespace Coda {
 				object.properties.emplace(key, std::make_shared<Value>(runtimeValue));
 			}
 			return object;
+		}
+
+		Value Interpreter::evaluateCallExpression(const Frontend::Node& callexp, Environment& env)
+		{
+			Value args = Value();
+			Value name = evaluate(*callexp.left.get(), env);
+
+			if (name.type != Type::NATIVE_FUNCTION) {
+				Error::Runtime::raise("Calling a non function identifier");
+				IF_ERROR_RETURN_VALUE;
+			}
+			unsigned int argCount = 1;
+			for (auto& arg : callexp.properties) {
+				args.properties.insert({ std::to_string(argCount), std::make_shared<Value>(evaluate(*arg.second.get(), env)) });
+				argCount++;
+			}
+
+			return env.callFunction(name.value, args, env);
+
 		}
 
 		Value Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)
@@ -221,8 +251,7 @@ namespace Coda {
 		inline void Coda::Runtime::Interpreter::handleArithmeticOperation(const Value& left, const std::string& functor, const Value& right, Value& result)
 		{
 
-			if (!Error::Manager::isSafe()) return;
-
+			IF_ERROR_RETURN();
 			T typeLeft = getValue<T>(left.value);
 			T typeRight = getValue<T>(right.value);
 
@@ -249,7 +278,7 @@ namespace Coda {
 
 		Value Interpreter::handleModulusOperation(const Value& left, const Value& right)
 		{
-			if (!Error::Manager::isSafe()) return Value();
+			IF_ERROR_RETURN_VALUE;
 			if (left.type == Type::INT
 				&& right.type == Type::INT
 				&& std::stoi(right.value) != 0) {

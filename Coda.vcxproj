@@ -153,7 +153,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Runtime\Environment\Environment.cpp" />
     <ClCompile Include="Runtime\Interpreter\Interpreter.cpp" />
-    <ClCompile Include="Runtime\RuntimeValue\NativeFunction.cpp" />
+    <ClCompile Include="Runtime\NativeFunctions\NativeFunction.cpp" />
     <ClCompile Include="Runtime\RuntimeValue\Value.cpp" />
     <ClCompile Include="Utils\FileReader.cpp" />
   </ItemGroup>
@@ -176,6 +176,7 @@
     <ClInclude Include="Parser\Parser.h" />
     <ClInclude Include="Runtime\Environment\Environment.h" />
     <ClInclude Include="Runtime\Interpreter\Interpreter.h" />
+    <ClInclude Include="Runtime\NativeFunctions\NativeFunction.h" />
     <ClInclude Include="Runtime\Runtime.h" />
     <ClInclude Include="Runtime\RuntimeValue\Type.h" />
     <ClInclude Include="Runtime\RuntimeValue\Value.h" />

@@ -7,3 +7,5 @@
 
 #include "RuntimeValue/Type.h"
 #include "RuntimeValue/Value.h"
+
+#include "NativeFunctions/NativeFunction.h"

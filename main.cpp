@@ -29,14 +29,13 @@ int repl() {
 		Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
 		Coda::Runtime::Value out = inter.evaluateProgram(program, env);
 
-		IF_ERROR_CONTINUE;
-		std::cout << out << std::endl;
 	}
 	return 0;
 }
 
 int main() {
 
+#if 1
 	Coda::Runtime::Environment env = Coda::Runtime::Environment::root();
 
 	Coda::Utils::FileReader fr = { "Test/test.coda" };
@@ -55,10 +54,9 @@ int main() {
 	IF_ERROR_RETURN(1);
 	Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
 	Coda::Runtime::Value out = inter.evaluateProgram(program, env);
-	
-	IF_ERROR_RETURN(1);
-	std::cout << out << std::endl;
+#else
 
+	return repl();
 
-	//return repl();
+#endif
 }
