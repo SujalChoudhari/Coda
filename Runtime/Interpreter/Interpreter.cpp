@@ -90,43 +90,44 @@ namespace Coda {
 			Value lhs = evaluate(*binop.left.get(), env);
 			Value rhs = evaluate(*binop.right.get(), env);
 
-			if ((lhs.type == Type::INT
-				|| lhs.type == Type::BOOL
-				|| lhs.type == Type::BYTE
-				|| lhs.type == Type::LONG
-				|| lhs.type == Type::FLOAT
-				|| lhs.type == Type::DOUBLE)
-				&& (rhs.type == Type::INT
-					|| rhs.type == Type::BOOL
-					|| rhs.type == Type::BYTE
-					|| rhs.type == Type::LONG
-					|| rhs.type == Type::FLOAT
-					|| rhs.type == Type::DOUBLE))
-			{
+			if (isNumericType(lhs.type) && isNumericType(rhs.type)) {
 				return evaluateNumericBinaryExpression(lhs, binop.value, rhs);
 			}
-			else if (lhs.type == Type::STRING
-				|| rhs.type == Type::STRING) {
+			else if (isStringType(lhs.type) || isStringType(rhs.type)) {
 				return evaluateStringBinaryExpression(lhs, binop.value, rhs);
 			}
-
-			else if (lhs.type == Type::UNDEFINED || rhs.type == Type::UNDEFINED) {
+			else if (isUndefinedType(lhs.type) || isUndefinedType(rhs.type)) {
 				return Value(Type::UNDEFINED, "undefined", lhs.startPosition, rhs.endPosition);
 			}
-
 			else if (lhs.type != Type::NONE && rhs.type == Type::NONE) {
 				return lhs;
 			}
-
 			else if (lhs.type == Type::NONE && rhs.type != Type::NONE) {
 				return rhs;
 			}
 
-			else return Value();
+			return Value();
 		}
 
-		Value Interpreter::evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right) {
+		bool Interpreter::isNumericType(Type type)
+		{
+			return type == Type::INT || type == Type::BOOL || type == Type::BYTE ||
+				type == Type::LONG || type == Type::FLOAT || type == Type::DOUBLE;
+		}
 
+		bool Interpreter::isStringType(Type type)
+		{
+			return type == Type::STRING;
+		}
+
+		bool Interpreter::isUndefinedType(Type type)
+		{
+			return type == Type::UNDEFINED;
+		}
+
+
+		Value Interpreter::evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right) 
+		{
 			IF_ERROR_RETURN_VALUE;
 			if (functor == "%") {
 				return handleModulusOperation(left, right);
@@ -185,7 +186,6 @@ namespace Coda {
 
 		Value Interpreter::evaluateObjectExpression(const Frontend::Node& astNode, Environment& env)
 		{
-
 			IF_ERROR_RETURN_VALUE;
 
 			Value object = Value();
@@ -228,7 +228,6 @@ namespace Coda {
 			}
 
 			return env.callFunction(name.value, args, env);
-
 		}
 
 		Value Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)
@@ -250,7 +249,6 @@ namespace Coda {
 		template<typename T>
 		inline void Coda::Runtime::Interpreter::handleArithmeticOperation(const Value& left, const std::string& functor, const Value& right, Value& result)
 		{
-
 			IF_ERROR_RETURN();
 			T typeLeft = getValue<T>(left.value);
 			T typeRight = getValue<T>(right.value);

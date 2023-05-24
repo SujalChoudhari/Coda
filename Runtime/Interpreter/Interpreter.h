@@ -31,11 +31,13 @@ namespace Coda {
 
 			template <typename T>
 			void handleArithmeticOperation(const Value& left, const std::string& functor, const Value& right, Value& result);
-
 			Value handleModulusOperation(const Value& left, const Value& right);
-
 			template <typename T>
 			T getValue(const std::string& str);
+
+			bool isNumericType(Type type);
+			bool isStringType(Type type);
+			bool isUndefinedType(Type type);
 		};
 
 	}  // namespace Runtime
