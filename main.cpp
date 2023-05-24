@@ -35,7 +35,7 @@ int repl() {
 
 int main() {
 
-#if 1
+#if 0
 	Coda::Runtime::Environment env = Coda::Runtime::Environment::root();
 
 	Coda::Utils::FileReader fr = { "Test/test.coda" };
