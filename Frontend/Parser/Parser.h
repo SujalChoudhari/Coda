@@ -17,22 +17,23 @@ namespace Coda {
 			Parser();
 			Program parse(std::vector<Token> tokens);
 
-		private: // in the order of prescidence
+		private: // in the order of precedence
 			void advance();
-			Token expect(TokenType type,std::string error);
+			Token expect(TokenType type, std::string error);
 			Node parseStatement();
 			Node parseExpression();
 			Node parseAssignmentExpression();
 			Node parseObjectExpression();
 			Node parseAdditiveExpression();
-			Node parseMultiplacativeExpression();
+			Node parseMultiplicativeExpression();
+			Node parseBinaryOperatorExpression(Node(Parser::* parseSubExpression)(), const std::vector<std::string>& operators);
 
 			Node parseCallMemberExpression();
 			Node parseCallExpression(const Node& caller);
 			Node parseArguments();
 			Node parseArgumentList();
 			Node parseMemberExpression();
-			
+
 			Node parsePrimaryExpression();
 			Node parseDeclaration(bool isConstant);
 

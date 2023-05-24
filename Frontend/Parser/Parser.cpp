@@ -73,7 +73,6 @@ namespace Coda {
 			default:
 				return parseExpression();
 			}
-
 		}
 
 		Node Parser::parseExpression()
@@ -144,8 +143,6 @@ namespace Coda {
 					expect(TokenType::COMMA, "Expected a ',' or '}' in object literal");
 					IF_ERROR_RETURN_NODE;
 				}
-
-
 			}
 
 			expect(TokenType::CLOSE_BRACE, "Expected a '}' in object literal");
@@ -155,17 +152,17 @@ namespace Coda {
 			return obj;
 		}
 
-		Node Parser::parseAdditiveExpression()
+		Node Parser::parseBinaryOperatorExpression(Node(Parser::* parseSubExpression)(), const std::vector<std::string>& operators)
 		{
 			IF_ERROR_RETURN_NODE;
 			Error::Position currPos = mCurrentToken->startPosition;
-			Node left = parseMultiplacativeExpression();
+			Node left = (this->*parseSubExpression)();
 
-			while (mCurrentToken->value == "+" || mCurrentToken->value == "-") {
+			while (std::find(operators.begin(), operators.end(), mCurrentToken->value) != operators.end()) {
 				Token operatorToken = *mCurrentToken;
 				advance();
 
-				Node right = parseMultiplacativeExpression();
+				Node right = (this->*parseSubExpression)();
 				IF_ERROR_RETURN_NODE;
 
 				Node binaryExpression;
@@ -185,10 +182,19 @@ namespace Coda {
 				binaryExpression.endPosition = mCurrentToken->endPosition;
 
 				left = binaryExpression;
-
 			}
 
 			return left;
+		}
+
+		Node Parser::parseAdditiveExpression()
+		{
+			return parseBinaryOperatorExpression(&Parser::parseMultiplicativeExpression, { "+", "-" });
+		}
+
+		Node Parser::parseMultiplicativeExpression()
+		{
+			return parseBinaryOperatorExpression(&Parser::parseCallMemberExpression, { "/", "*", "%" });
 		}
 
 		Node Parser::parseDeclaration(bool isConstant)
@@ -212,7 +218,7 @@ namespace Coda {
 
 
 			identifier = mCurrentToken->value;
-			expect(TokenType::IDENTIFIER, "Expected a <indetifier> at ");
+			expect(TokenType::IDENTIFIER, "Expected a <identifier> at ");
 
 			IF_ERROR_RETURN_NODE;
 
@@ -226,7 +232,6 @@ namespace Coda {
 
 				advance();
 				declaration.right = std::make_shared<Node>(parseExpression());
-
 			}
 			else
 			{
@@ -246,44 +251,7 @@ namespace Coda {
 		}
 
 
-		Node Parser::parseMultiplacativeExpression()
-		{
-			IF_ERROR_RETURN_NODE;
 
-
-			Error::Position currPos = mCurrentToken->startPosition;
-			Node left = parseCallMemberExpression();
-
-			while (
-				mCurrentToken->value == "/"
-				|| mCurrentToken->value == "*"
-				|| mCurrentToken->value == "%") {
-				Token operatorToken = *mCurrentToken;
-				advance();
-
-				Node right = parseCallMemberExpression();
-
-				Node binaryExpression;
-				binaryExpression.type = NodeType::BINARY_EXPRESSION;
-				binaryExpression.value = operatorToken.value;
-				binaryExpression.left = std::make_shared<Node>(left);
-				binaryExpression.right = std::make_shared<Node>(right);
-
-				// Set position property for binaryExpression.left and binaryExpression.right
-				binaryExpression.left->startPosition = left.startPosition;
-				binaryExpression.left->endPosition = left.endPosition;
-				binaryExpression.right->startPosition = right.startPosition;
-				binaryExpression.right->endPosition = right.endPosition;
-
-				// Set position property for binaryExpression
-				binaryExpression.startPosition = currPos;
-				binaryExpression.endPosition = mCurrentToken->endPosition;
-
-				left = binaryExpression;
-			}
-
-			return left;
-		}
 
 		Node Parser::parseCallMemberExpression()
 		{
@@ -372,7 +340,6 @@ namespace Coda {
 						Error::Parser::raise("Cannot use '.' Dot operator without right hand side, at ", functor.endPosition);
 					}
 					IF_ERROR_RETURN_NODE;
-
 				}
 				else {
 					computed = "<computed-call>";
