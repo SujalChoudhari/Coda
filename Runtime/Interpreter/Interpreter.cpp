@@ -50,25 +50,18 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::CALL_EXPRESSION) {
 				return evaluateCallExpression(astNode, env);
 			}
-
 			else if (astNode.type == Frontend::NodeType::BINARY_EXPRESSION) {
 				return evaluateBinaryExpression(astNode, env);
 			}
-
 			else if (astNode.type == Frontend::NodeType::VARIABLE_DECLARATION) {
 				return evaluateDeclaration(astNode, env);
 			}
-
 			else if (astNode.type == Frontend::NodeType::CONSTANT_DECLARATION) {
 				return evaluateDeclaration(astNode, env, true);
 			}
-
 			else if (astNode.type == Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
 				return evaluateAssignmentExpression(astNode, env);
 			}
-
-
-
 			else {
 				Error::Runtime::raise("Unrecognized ASTNode '" + astNode.value + "'");
 			}

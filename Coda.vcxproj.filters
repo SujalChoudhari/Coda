@@ -149,5 +149,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Test\test.coda" />
+    <None Include="CHANGELOG.md" />
   </ItemGroup>
 </Project>

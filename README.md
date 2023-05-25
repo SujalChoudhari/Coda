@@ -27,7 +27,7 @@ To start using Coda, follow these steps:
 - [x] Lexer/Tokenizer
 - [x] Parser
 - [x] Interpreter
-- [x] Number Datatypes (int,float,byte,double)
+- [ ] Number Datatypes (int,float,byte,double) (removed)
 - [x] Boolean Types (bool, uses c++ boolean in background)
 - [x] Strings
 - [x] Variables (Assignment - dynamic)

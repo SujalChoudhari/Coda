@@ -188,6 +188,7 @@
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
+    <None Include="CHANGELOG.md" />
     <None Include="CppProperties.json" />
     <None Include="README.md" />
     <None Include="Test\test.coda" />

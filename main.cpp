@@ -35,7 +35,7 @@ int repl() {
 
 int main() {
 
-#if 1
+#ifdef _DEBUG
 	Coda::Runtime::Environment env = Coda::Runtime::Environment::root();
 
 	Coda::Utils::FileReader fr = { "Test/test.coda" };
@@ -54,8 +54,8 @@ int main() {
 	IF_ERROR_RETURN(1);
 	Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
 	Coda::Runtime::Value out = inter.evaluateProgram(program, env);
-#else
 
+#else
 	return repl();
 
 #endif
