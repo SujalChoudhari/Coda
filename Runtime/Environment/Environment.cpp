@@ -6,7 +6,7 @@
 
 namespace Coda {
 	namespace Runtime {
-		
+
 		Environment::Environment()
 		{
 			parent = nullptr;
@@ -27,9 +27,14 @@ namespace Coda {
 
 			// native-fn
 			env.declareNativeFunction("print", Native::print);
-			env.declareNativeFunction("println",Native::println);
+			env.declareNativeFunction("println", Native::println);
 			env.declareNativeFunction("input", Native::input);
 			env.declareNativeFunction("sleep", Native::sleep);
+			env.declareNativeFunction("parseInt", Native::parseInt);
+			env.declareNativeFunction("parseFloat", Native::parseFloat);
+			env.declareNativeFunction("parseDouble", Native::parseDouble);
+			env.declareNativeFunction("parseByte", Native::parseByte);
+			env.declareNativeFunction("parseBool", Native::parseBool);
 
 			return env;
 		}

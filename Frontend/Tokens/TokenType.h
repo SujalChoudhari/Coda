@@ -10,6 +10,7 @@ namespace Coda {
 			FLOAT,
 			DOUBLE,
 			LONG,
+			CHAR,
 			STRING,
 			IDENTIFIER,
 

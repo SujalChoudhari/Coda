@@ -4,14 +4,15 @@
 namespace Coda {
 	namespace Frontend {
 		std::map<std::string, TokenType> KEYWORD = {
-			{"bool",TokenType::TYPE},
-			{"byte",TokenType::TYPE},
-			{"int",TokenType::TYPE},
-			{"long", TokenType::TYPE},
-			{"float",TokenType::TYPE},
-			{"double",TokenType::TYPE},
-			{"string",TokenType::TYPE},
-			{"object",TokenType::TYPE},
+			//{"bool",TokenType::TYPE},
+			//{"byte",TokenType::TYPE},
+			//{"int",TokenType::TYPE},
+			//{"long", TokenType::TYPE},
+			//{"float",TokenType::TYPE},
+			//{"double",TokenType::TYPE},
+			//{"string",TokenType::TYPE},
+			//{"char",TokenType::TYPE},
+			//{"object",TokenType::TYPE},
 
 			{"let",TokenType::LET},
 			{"const",TokenType::CONST},
@@ -19,7 +20,7 @@ namespace Coda {
 
 		std::string DIGITS = "0123456789";
 		std::string FIRST_VALID_DIGITS = DIGITS + ".";
-		std::string DIGITS_EXTRA = "_,iIfFdDlLbB" + FIRST_VALID_DIGITS;
+		std::string DIGITS_EXTRA = "_iIfFdDlLbB" + FIRST_VALID_DIGITS;
 
 		const std::unordered_map<char, TokenType> DIGIT_EXTENTIONS = {
 			{'f', TokenType::FLOAT},

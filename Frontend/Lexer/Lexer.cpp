@@ -61,9 +61,6 @@ namespace Coda {
 				else if (isLetter(mCurrentChar)) {
 					handleIdentifiers();
 				}
-				else if (mCurrentChar == '"') {
-					handleStringLiteral();
-				}
 				else if (isdigit(mCurrentChar)) {
 					handleNumbers();
 				}
@@ -72,6 +69,12 @@ namespace Coda {
 				}
 				else if (isBinaryOperator(mCurrentChar)) {
 					handleBinaryOperator();
+				}
+				else if (mCurrentChar == '\'') {
+					handleCharacter();
+				}
+				else if (mCurrentChar == '"') {
+					handleStringLiteral();
 				}
 				else if (mCurrentChar == '=') {
 					handleEquals();
@@ -106,6 +109,16 @@ namespace Coda {
 			advance();
 		}
 
+		void Lexer::handleCharacter() {
+			advance(); // skip the quote
+			mTokens.emplace_back(TokenType::CHAR, std::to_string(mCurrentChar), mCurrentPosition);
+			advance();
+			if (mCurrentChar != '\'')
+			{
+				Error::Lexer::raise("Unterminated character literal at ", mCurrentPosition);
+			}
+			advance();
+		}
 
 		void Lexer::handleEquals() {
 			mTokens.emplace_back(TokenType::EQUALS, "=", mCurrentPosition);
@@ -238,11 +251,11 @@ namespace Coda {
 
 			if (mCurrentChar == '"') {
 				// Add the string literal token to mTokens
-				mTokens.emplace_back(TokenType::STRING, stringLiteral, startPosition,mCurrentPosition);
+				mTokens.emplace_back(TokenType::STRING, stringLiteral, startPosition, mCurrentPosition);
 				advance(); // Skip the closing double quote
 			}
 			else {
-				 Error::Lexer::raise("Unterminated string literal at ", startPosition);
+				Error::Lexer::raise("Unterminated string literal at ", startPosition);
 			}
 		}
 

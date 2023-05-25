@@ -21,7 +21,7 @@ namespace Coda {
 			Value() = default;
 			Value(Type type, Error::Position start, Error::Position end)
 				: type(type), value(), startPosition(start), endPosition(end) {}
-			Value(Type type, std::string value, Error::Position start = Error::Position(), Error::Position end = Error::Position())
+			Value(Type type, std::string value="", Error::Position start = Error::Position(), Error::Position end = Error::Position())
 				: type(type), value(value), startPosition(start), endPosition(end) {}
 
 			friend std::ostream& operator<<(std::ostream& os, const Value& value);

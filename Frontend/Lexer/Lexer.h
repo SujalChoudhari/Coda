@@ -29,6 +29,7 @@ namespace Coda {
             void handleSymbol();
             void handleBinaryOperator();
             void handleStringLiteral();
+            void handleCharacter();
             void handleEquals();
             void handleSemicolon();
             void handleColon();

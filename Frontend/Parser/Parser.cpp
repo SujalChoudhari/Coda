@@ -393,6 +393,11 @@ namespace Coda {
 				expression.value = mCurrentToken->value;
 				advance();
 			}
+			else if (*type == TokenType::CHAR) {
+				expression.type = NodeType::CHARACTER_LITERAL;
+				expression.value = mCurrentToken->value;
+				advance();
+			}
 			else if (*type == TokenType::STRING) {
 				expression.type = NodeType::STRING_LITERAL;
 				expression.value = mCurrentToken->value;

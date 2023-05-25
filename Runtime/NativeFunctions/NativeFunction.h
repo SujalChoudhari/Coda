@@ -10,6 +10,12 @@ namespace Coda {
 			NATIVE_FUNCTION(println);
 			NATIVE_FUNCTION(sleep);
 			NATIVE_FUNCTION(input);
+			NATIVE_FUNCTION(parseInt);
+			NATIVE_FUNCTION(parseFloat);
+			NATIVE_FUNCTION(parseDouble);
+			NATIVE_FUNCTION(parseByte);
+			NATIVE_FUNCTION(parseBool);
+
 		}
 	}
 }

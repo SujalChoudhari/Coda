@@ -40,6 +40,10 @@ namespace Coda {
 				value.type = Type::STRING;
 				value.value = astNode.value;
 			}
+			else if (astNode.type == Frontend::NodeType::CHARACTER_LITERAL) {
+				value.type = Type::CHAR;
+				value.value = astNode.value;
+			}
 			else if (astNode.type == Frontend::NodeType::OBJECT_LITERAL) {
 				return evaluateObjectExpression(astNode, env);
 			}
@@ -66,7 +70,7 @@ namespace Coda {
 
 
 			else {
-				Error::Runtime::raise("Unrecognised ASTNode '" + astNode.value + "'");
+				Error::Runtime::raise("Unrecognized ASTNode '" + astNode.value + "'");
 			}
 			return value;
 		}
@@ -112,7 +116,7 @@ namespace Coda {
 		bool Interpreter::isNumericType(Type type)
 		{
 			return type == Type::INT || type == Type::BOOL || type == Type::BYTE ||
-				type == Type::LONG || type == Type::FLOAT || type == Type::DOUBLE;
+				type == Type::LONG || type == Type::FLOAT || type == Type::DOUBLE || type == Type::CHAR;
 		}
 
 		bool Interpreter::isStringType(Type type)
@@ -126,7 +130,7 @@ namespace Coda {
 		}
 
 
-		Value Interpreter::evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right) 
+		Value Interpreter::evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right)
 		{
 			IF_ERROR_RETURN_VALUE;
 			if (functor == "%") {
@@ -142,6 +146,9 @@ namespace Coda {
 
 			if (suggestedType == Type::BOOL) {
 				handleArithmeticOperation<bool>(left, functor, right, result);
+			}
+			else if (suggestedType == Type::CHAR) {
+				handleArithmeticOperation<unsigned char>(left, functor, right, result);
 			}
 			else if (suggestedType == Type::BYTE) {
 				handleArithmeticOperation<unsigned char>(left, functor, right, result);
