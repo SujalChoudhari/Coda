@@ -5,11 +5,11 @@ namespace Coda {
 
 			// Statements
 			INVALID,
-			PROGRAM,
 			ARGUMENT_LIST,
 
 			VARIABLE_DECLARATION,
 			CONSTANT_DECLARATION,
+			BLOCK_STATEMENT,
 
 			// Expressions
 				//Literals
@@ -22,6 +22,7 @@ namespace Coda {
 			STRING_LITERAL,
 			PROPERTY,
 			OBJECT_LITERAL,
+			FUNCTION_LITERAL,
 
 				//Other
 			IDENTIFIER,

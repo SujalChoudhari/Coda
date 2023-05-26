@@ -17,12 +17,14 @@ namespace Coda {
 
 			Value declareOrAssignVariable(const std::string& name, const Value& value, bool isConstant = false);
 			Value declareNativeFunction(const std::string& name, Function function);
+			Value declareUserDefinedFunction(const std::string& name, Value function);
 			Value callFunction(const std::string& name, const Value& args, Environment& env);
 			Value lookupSymbol(std::string varname);
 
 		private:
 			Environment* parent;
 			std::map<std::string, Value> symbols;
+			std::map<std::string, Value> userDefinedFunctions;
 			std::map<std::string, Function> functions;
 			std::set<std::string> constants;
 

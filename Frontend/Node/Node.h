@@ -19,12 +19,11 @@ namespace Coda {
 			std::shared_ptr<Node> right;
 			Error::Position startPosition;
 			Error::Position endPosition;
-
 			std::map<std::string, std::shared_ptr<Node>> properties;
 			
 		public:
 			Node(
-				NodeType type = NodeType::PROGRAM,
+				NodeType type = NodeType::INVALID,
 				std::string value = "",
 				std::shared_ptr<Node> left = nullptr,
 				std::shared_ptr<Node> right = nullptr,
@@ -41,7 +40,5 @@ namespace Coda {
 
 			friend std::ostream& operator<<(std::ostream& os, const Node& node);
 		};
-
-
 	}
 }

@@ -191,6 +191,7 @@
     <None Include="CHANGELOG.md" />
     <None Include="CppProperties.json" />
     <None Include="README.md" />
+    <None Include="Test\func.coda" />
     <None Include="Test\test.coda" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

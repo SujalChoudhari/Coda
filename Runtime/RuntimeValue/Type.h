@@ -18,6 +18,7 @@ namespace Coda {
 
 			OBJECT,
 			NATIVE_FUNCTION,
+			FUNCTION,
 		};
 
 	}

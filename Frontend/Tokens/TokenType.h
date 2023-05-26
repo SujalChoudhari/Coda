@@ -18,6 +18,8 @@ namespace Coda {
 			LET,
 			CONST,
 			TYPE,
+			DEF,
+			RETURN,
 
 			// Operators
 			EQUALS,

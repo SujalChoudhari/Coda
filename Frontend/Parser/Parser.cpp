@@ -47,12 +47,11 @@ namespace Coda {
 			while (mCurrentIndex < mTokens->size()
 				&& mCurrentToken->type != TokenType::END_OF_FILE) {
 				Node s = parseStatement();
-
 				IF_ERROR_RETURN_PROGRAM;
-				program.body.emplace_back(s);
 
-				expect(TokenType::SEMICOLON, "Expected a ';' at the end of ");
-				IF_ERROR_RETURN_PROGRAM;
+				if (s.type != NodeType::INVALID)
+					program.body.emplace_back(s);
+
 			}
 			return program;
 		}
@@ -70,6 +69,8 @@ namespace Coda {
 
 			case TokenType::CONST:
 				return parseDeclaration(true);
+			case TokenType::DEF:
+				return parseFunctionExpression();
 			default:
 				return parseExpression();
 			}
@@ -78,6 +79,56 @@ namespace Coda {
 		Node Parser::parseExpression()
 		{
 			return parseAssignmentExpression();
+		}
+
+		Node Parser::parseFunctionExpression()
+		{
+			advance();
+			std::string name = mCurrentToken->value;
+
+			expect(TokenType::IDENTIFIER, "Expected an identifier for function declaration");
+			IF_ERROR_RETURN_NODE;
+
+
+			Node params = parseArguments();
+			IF_ERROR_RETURN_NODE;
+
+			for (auto it : params.properties) {
+				if (it.second->type != NodeType::IDENTIFIER) {
+					Error::Parser::raise("Expected an identifier for function argument", it.second->startPosition);
+					return Node();
+				}
+			}
+
+			Node block = parseBlockExpression();
+			Node function = Node(NodeType::FUNCTION_LITERAL, name);
+			function.left = std::make_shared<Node>(params);
+			function.right = std::make_shared<Node>(block);
+
+			return function;
+
+		}
+
+		Node Parser::parseBlockExpression()
+		{
+			expect(TokenType::OPEN_BRACE, "Expected an '{' after function declaration");
+			IF_ERROR_RETURN_NODE;
+
+			Node block = Node(NodeType::BLOCK_STATEMENT, "<block>");
+
+			while (mCurrentToken->type != TokenType::CLOSE_BRACE && mCurrentToken->type != TokenType::END_OF_FILE) {
+				Node s = parseStatement();
+				IF_ERROR_RETURN_NODE;
+				if (s.type != NodeType::INVALID)
+					block.properties.insert({ std::to_string(block.properties.size()), std::make_shared<Node>(s) });
+				IF_ERROR_RETURN_NODE;
+			}
+
+			expect(TokenType::CLOSE_BRACE, "Expected an '}' at the end of function declaration");
+			IF_ERROR_RETURN_NODE;
+
+			return block;
+
 		}
 
 		Node Parser::parseAssignmentExpression() {
@@ -103,6 +154,8 @@ namespace Coda {
 
 			return left;
 		}
+
+
 
 		Node Parser::parseObjectExpression()
 		{
@@ -236,7 +289,7 @@ namespace Coda {
 			else
 			{
 				if (isConstant) {
-					Error::Runtime::raise("Expected an '=' in a 'const' defination at, ", mCurrentToken->endPosition);
+					Error::Runtime::raise("Expected an '=' in a 'const' definition at, ", mCurrentToken->endPosition);
 					return declaration;
 				}
 
@@ -409,6 +462,9 @@ namespace Coda {
 				expect(TokenType::CLOSE_PAREN,
 					" Unexpected Token found '" +
 					mCurrentToken->value + "' was found instead of ')' at, ");
+			}
+			else if (*type == TokenType::SEMICOLON) {
+				advance(); // skip the semicolon
 			}
 			else {
 				expression.type = NodeType::INVALID;

@@ -27,7 +27,8 @@ namespace Coda {
 			Value evaluateCallExpression(const Frontend::Node& callexp, Environment& env);
 
 			Value evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env);
-			Value evaluateDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);
+			Value evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);
+			Value evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env);
 
 			template <typename T>
 			void handleArithmeticOperation(const Value& left, const std::string& functor, const Value& right, Value& result);

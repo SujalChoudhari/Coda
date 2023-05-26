@@ -73,6 +73,12 @@ namespace Coda {
 			return Value();
 		}
 
+		Value Environment::declareUserDefinedFunction(const std::string& name, Value function)
+		{
+			this->userDefinedFunctions.insert_or_assign(name, function);
+			return Value();
+		}
+
 		Value Environment::callFunction(const std::string& name, const Value& args, Environment& env) {
 			auto it = functions.find(name);
 			if (it != functions.end()) {

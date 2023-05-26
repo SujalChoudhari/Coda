@@ -38,7 +38,7 @@ int main() {
 #ifdef _DEBUG
 	Coda::Runtime::Environment env = Coda::Runtime::Environment::root();
 
-	Coda::Utils::FileReader fr = { "Test/test.coda" };
+	Coda::Utils::FileReader fr = { "Test/func.coda" };
 	std::string source = fr.readToString();
 
 	if (source.empty())

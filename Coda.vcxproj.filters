@@ -150,5 +150,6 @@
     </None>
     <None Include="Test\test.coda" />
     <None Include="CHANGELOG.md" />
+    <None Include="Test\func.coda" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,9 @@
+def add (x,y){
+
+	def subtract(x,y){
+		result = x - y;
+		result;
+	}
+	result = x + y;
+	result;
+}

@@ -54,10 +54,13 @@ namespace Coda {
 				return evaluateBinaryExpression(astNode, env);
 			}
 			else if (astNode.type == Frontend::NodeType::VARIABLE_DECLARATION) {
-				return evaluateDeclaration(astNode, env);
+				return evaluateVariableDeclaration(astNode, env);
+			}
+			else if (astNode.type == Frontend::NodeType::FUNCTION_LITERAL) {
+				return evaluateFunctionDeclaration(astNode, env);
 			}
 			else if (astNode.type == Frontend::NodeType::CONSTANT_DECLARATION) {
-				return evaluateDeclaration(astNode, env, true);
+				return evaluateVariableDeclaration(astNode, env, true);
 			}
 			else if (astNode.type == Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
 				return evaluateAssignmentExpression(astNode, env);
@@ -241,9 +244,25 @@ namespace Coda {
 		}
 
 
-		Value Interpreter::evaluateDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant)
+		Value Interpreter::evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant)
 		{
 			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env), isConstant);
+		}
+
+		Value Interpreter::evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env)
+		{
+
+			Value function = Value();
+			function.value = astNode.value;
+			function.type = Type::FUNCTION;
+			// dont want to evaluate the functions just yet.
+			//function.properties.insert({ "<params>", std::make_shared<Value>(evaluate(*astNode.left.get(), env)) });
+			//function.properties.insert({ "<body", std::make_shared<Value>(evaluate(*astNode.right.get(), env)) });
+			function.startPosition = astNode.startPosition;
+			function.endPosition = astNode.endPosition;
+
+			env.declareUserDefinedFunction(function.value,function);
+
 		}
 
 		template<typename T>
