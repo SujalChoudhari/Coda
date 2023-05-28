@@ -33,16 +33,30 @@ int repl() {
 	return 0;
 }
 
-int main() {
+
+
+int main(int argc, char** argv) {
+	Coda::Runtime::Environment env = Coda::Runtime::Environment::root();
+	std::string filename;
 
 #ifdef _DEBUG
-	Coda::Runtime::Environment env = Coda::Runtime::Environment::root();
+	filename = "Test/func.coda";
+#else
+	if (argc > 1) {
+		filename = argv[1];
+	}
+	else {
+		std::cout << "No file specified" << std::endl;
+		return 1;
+	}
+#endif
 
-	Coda::Utils::FileReader fr = { "Test/func.coda" };
+	Coda::Utils::FileReader fr = { filename };
 	std::string source = fr.readToString();
 
-	if (source.empty())
+	if (source.empty()) {
 		return 0;
+	}
 
 	Coda::Frontend::Lexer lexer = Coda::Frontend::Lexer();
 	std::vector<Coda::Frontend::Token> tokens = lexer.tokenise(source);
@@ -53,10 +67,8 @@ int main() {
 
 	IF_ERROR_RETURN(1);
 	Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
-	Coda::Runtime::Value out = inter.evaluateProgram(program, env);
+	inter.evaluateProgram(program, env);
 
-#else
-	return repl();
-
-#endif
+	return 0;
 }
+

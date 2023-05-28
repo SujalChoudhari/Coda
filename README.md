@@ -1,8 +1,9 @@
 # Coda
 ## C++ Objects Dynamic Architecture
-Coda is an interpreted utility language designed to provide a flexible and efficient programming experience. 
-The name "Coda" represents its ability to complement existing coding languages by serving as a valuable addition 
-or extension to any software development project.
+Coda is a C++-based interpreted language designed to allow for rapid development and execution of code. 
+Its built-in functions and libraries simplify common programming tasks, improving productivity. 
+Coda also offers high performance and versatility thanks to its implementation in C++. 
+
 
 ## Features
 
@@ -20,33 +21,45 @@ To start using Coda, follow these steps:
 
 1. Install the Coda interpreter.
 2. Write your Coda code in a text file with the `.coda` extension.
-3. Run the Coda code by executing the interpreter with the path to your code file.
-	Simply Run the Code, and start using it as a editor.
+3. Run the Coda interpreter with the path to your Coda file as an argument. 
+   For example, if your Coda file is named `hello.coda`, you would run the interpreter as follows:
+   ```
+   Coda hello.coda
+   
+   OR
+   
+   Coda.exe hello.coda
+   ```
 
 # Development Roadmap
 - [x] Lexer/Tokenizer
 - [x] Parser
 - [x] Interpreter
-- [ ] Number Datatypes (int,float,byte,double) (removed)
-- [x] Boolean Types (bool, uses c++ boolean in background)
+- [x] Boolean Types (bool, uses C++ Boolean in background)
 - [x] Strings
 - [x] Variables (Assignment - dynamic)
 - [x] Variables (Assignment - constants)
 - [x] Variables (Look Up)
 - [x] Objects (Js-like objects)
 - [x] Native Functions  (printing,inputs,sleep)
-- [ ] User Defined functions
+- [x] BuiltIn Functions (parse<data-type>,conversions)
+- [x] User Defined functions
 - [ ] Arrays
-- [ ] BuiltIn Functions (parse<data-type>,conversions)
 - [ ] Control Statements (if statements)
 - [ ] Control Statements (for loops)
 - [ ] Control Statements (while loops)
 - [ ] Control Statements (forEach loops)
-- [ ] Packages (importing and creating, potentially in C++ dll's))
+- [ ] Packages (importing and creating, potentially in C++ dll))
 - [ ] Object-Orientation
 
 ## Contributing
-Contributions to the Coda language are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request on the official Coda GitHub repository.
+Contributions to the Coda language are welcome! 
+If you encounter any issues or have suggestions for improvements, 
+please open an issue or submit a pull request on the official Coda GitHub repository.
+
+## Changelog
+See the [CHANGELOG](CHANGELOG.md) file for details.
+Go through the Changelog to see the progress of the language.
 
 ## License
 Coda is open-source software released under the MIT License.
