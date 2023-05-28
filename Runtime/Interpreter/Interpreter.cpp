@@ -267,9 +267,10 @@ namespace Coda {
 				}
 				return result;
 			}
-
-			Error::Runtime::raise("Calling a non function identifier");
-			IF_ERROR_RETURN_VALUE;
+			else {
+				Error::Runtime::raise("Calling a non function identifier");
+				IF_ERROR_RETURN_VALUE;
+			}
 		}
 
 		Value Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)

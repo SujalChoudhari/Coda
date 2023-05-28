@@ -23,13 +23,117 @@ To start using Coda, follow these steps:
 2. Write your Coda code in a text file with the `.coda` extension.
 3. Run the Coda interpreter with the path to your Coda file as an argument. 
    For example, if your Coda file is named `hello.coda`, you would run the interpreter as follows:
-   ```
+   ```bash
    Coda hello.coda
    
    OR
    
    Coda.exe hello.coda
    ```
+
+
+## Syntax Overview
+Coda has a simple syntax that is easy to learn and use. Most of the syntax is inspired by Python and JavaScript.
+
+### Variables
+Variables in Coda are dynamically typed, meaning that they can hold values of any type.
+To declare a variable, use the `let` keyword followed by the variable name and the value to assign to it.
+```js
+let x = 5
+let y = "Hello, World!"
+let z = true
+```
+
+Assignment is not required when declaring a variable.
+```js
+let x
+x = 5
+```
+
+Variables can be reassigned to values of different types.
+```js
+let x = 5
+x = "Hello, World!"
+```
+
+### Assignment without let
+Using `let` is also not required when assigning a value to a variable.
+But it is recommended to use `let` for better readability.
+```js
+x = 5
+x = "Hello, World!"
+```
+
+### Constants
+Constants in Coda are similar to variables, except that they cannot be reassigned.
+To declare a constant, use the `const` keyword followed by the constant name and the value to assign to it.
+```js
+const x = 5
+const y = "Hello, World!"
+const z = true
+```
+
+### Arithmetic Operators
+Coda supports the following arithmetic operators:
+- `+` Addition
+- `-` Subtraction
+- `*` Multiplication
+- `/` Division
+- `%` Modulo
+
+Only numbers can be used with arithmetic operators.
+```js
+let x = 5 + 5
+let y = 5 - 5
+let z = 5 * 5
+```
+
+Strings can be concatenated using the `+` operator.
+```js
+let x = "Hello, " + "World!"
+```
+
+### Object
+Objects in Coda are similar to objects in JavaScript.
+Objects are created like normal variables, but they are assigned a value using curly braces.
+```js
+let x = {
+	name: "John",
+	age: 20
+}
+```
+> Object is still in development. It is not fully functional yet.
+
+### Functions
+Functions in Coda are similar to functions in Python.
+Functions are created like normal variables, but they are assigned a value using the `def` keyword.
+A function always `returns` the value of the _last expression in its body_.
+
+```py
+def add(x, y) {
+	x + y
+}
+```
+
+Functions can be called using the `()` operator.
+```js
+add(5, 5)
+```
+functions are just like variables. They can be assigned to other variables.
+```js
+let x = add
+x(5, 5)
+```
+
+
+### Built-in Functions
+Coda has a number of built-in functions that can be used to perform common tasks.
+```js
+print("Hello, World!")
+println("Hello, World!")
+```
+
+
 
 # Development Roadmap
 - [x] Lexer/Tokenizer

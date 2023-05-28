@@ -1,9 +1,7 @@
-def add (a,b){
-	def sub(q,k){	
-		a+b+q-k
-	}
-	sub
+def add(x,y){
+	x+y
 }
-const sub = add(1,2)
 
-print(sub(3,7))
+let adder = add
+
+print(adder(1,2))
