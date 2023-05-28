@@ -125,6 +125,21 @@ namespace Coda {
 			return type == Type::UNDEFINED;
 		}
 
+		UserDefinedFunction Interpreter::getFunction(const std::string& name)
+		{
+
+			auto it = std::find_if(userDefinedFunctions.begin(), userDefinedFunctions.end(), [&](const auto& tuple) {
+				return std::get<0>(tuple) == name;
+				});
+			if (it != userDefinedFunctions.end()) {
+				return *it;
+			}
+			else {
+				Error::Runtime::raise("Function " + name + " does not exist.");
+				return UserDefinedFunction();
+			}
+		}
+
 
 		Value Interpreter::evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right)
 		{
@@ -178,6 +193,7 @@ namespace Coda {
 			}
 
 			Error::Runtime::raise("Unsupported operation with strings");
+			return Value();
 		}
 
 
@@ -220,17 +236,40 @@ namespace Coda {
 			Value args = Value();
 			Value name = evaluate(*callexp.left.get(), env);
 
-			if (name.type != Type::NATIVE_FUNCTION) {
-				Error::Runtime::raise("Calling a non function identifier");
-				IF_ERROR_RETURN_VALUE;
-			}
 			unsigned int argCount = 1;
 			for (auto& arg : callexp.properties) {
 				args.properties.insert({ std::to_string(argCount), std::make_shared<Value>(evaluate(*arg.second.get(), env)) });
 				argCount++;
 			}
 
-			return env.callFunction(name.value, args, env);
+			if (name.type == Type::NATIVE_FUNCTION) {
+				return env.callFunction(name.value, args, env);
+			}
+			else if (name.type == Type::FUNCTION) {
+				Value function = env.lookupSymbol(name.value);
+
+				UserDefinedFunction functionContent = getFunction(function.value);
+				Environment scope = Environment(std::get<1>(functionContent));
+
+				// create variables for each parameter
+				for (int i = 0; i < std::get<2>(functionContent).left->properties.size(); i++) {
+					auto& it = std::get<2>(functionContent).left->properties[std::to_string(i)];
+					// TODO: Check if the parameter is a variable declaration
+					// Check validity of the parameter
+					const std::string& name = it->value;
+					scope.declareOrAssignVariable(name, *args.properties[std::to_string(i + 1)].get(), true);
+				}
+
+				// Run the function
+				Value result = Value(Type::NONE);
+				for (auto& it : std::get<2>(functionContent).right->properties) {
+					result = evaluate(*it.second.get(), scope);
+				}
+				return result;
+			}
+
+			Error::Runtime::raise("Calling a non function identifier");
+			IF_ERROR_RETURN_VALUE;
 		}
 
 		Value Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)
@@ -251,18 +290,8 @@ namespace Coda {
 
 		Value Interpreter::evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env)
 		{
-
-			Value function = Value();
-			function.value = astNode.value;
-			function.type = Type::FUNCTION;
-			// dont want to evaluate the functions just yet.
-			//function.properties.insert({ "<params>", std::make_shared<Value>(evaluate(*astNode.left.get(), env)) });
-			//function.properties.insert({ "<body", std::make_shared<Value>(evaluate(*astNode.right.get(), env)) });
-			function.startPosition = astNode.startPosition;
-			function.endPosition = astNode.endPosition;
-
-			env.declareUserDefinedFunction(function.value,function);
-
+			this->userDefinedFunctions.push_back(UserDefinedFunction(astNode.value, env, astNode));
+			return env.declareUserDefinedFunction(astNode.value, astNode);
 		}
 
 		template<typename T>

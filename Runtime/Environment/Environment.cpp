@@ -30,6 +30,7 @@ namespace Coda {
 			env.declareNativeFunction("println", Native::println);
 			env.declareNativeFunction("input", Native::input);
 			env.declareNativeFunction("sleep", Native::sleep);
+
 			env.declareNativeFunction("parseInt", Native::parseInt);
 			env.declareNativeFunction("parseFloat", Native::parseFloat);
 			env.declareNativeFunction("parseDouble", Native::parseDouble);
@@ -73,10 +74,11 @@ namespace Coda {
 			return Value();
 		}
 
-		Value Environment::declareUserDefinedFunction(const std::string& name, Value function)
+		Value Environment::declareUserDefinedFunction(const std::string& name, Frontend::Node astNode)
 		{
-			this->userDefinedFunctions.insert_or_assign(name, function);
-			return Value();
+			Value function = Value(Type::FUNCTION, astNode.value);
+			this->declareOrAssignVariable(name, function, false);
+			return function;
 		}
 
 		Value Environment::callFunction(const std::string& name, const Value& args, Environment& env) {
@@ -89,8 +91,6 @@ namespace Coda {
 				return Value();
 			}
 		}
-
-
 
 		Value Environment::lookupSymbol(std::string name)
 		{

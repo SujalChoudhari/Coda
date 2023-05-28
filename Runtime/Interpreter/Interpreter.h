@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tuple>
+
 #include "../Environment/Environment.h"
 #include "../RuntimeValue/Type.h"
 #include "../RuntimeValue/Value.h"
@@ -9,7 +11,9 @@
 
 
 #define IF_ERROR_RETURN_VALUE if (!Error::Manager::isSafe()) return Value()
- 
+
+typedef std::tuple<std::string, Coda::Runtime::Environment, Coda::Frontend::Node> UserDefinedFunction;
+
 namespace Coda {
 	namespace Runtime {
 
@@ -39,6 +43,12 @@ namespace Coda {
 			bool isNumericType(Type type);
 			bool isStringType(Type type);
 			bool isUndefinedType(Type type);
+
+			UserDefinedFunction getFunction(const std::string& name);
+
+
+		private:
+			std::vector<UserDefinedFunction> userDefinedFunctions;
 		};
 
 	}  // namespace Runtime

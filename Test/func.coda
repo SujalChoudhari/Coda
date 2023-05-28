@@ -1,9 +1,9 @@
-def add (x,y){
-
-	def subtract(x,y){
-		result = x - y;
-		result;
+def add (a,b){
+	def sub(q,k){	
+		a+b+q-k
 	}
-	result = x + y;
-	result;
+	sub
 }
+const sub = add(1,2)
+
+print(sub(3,7))
