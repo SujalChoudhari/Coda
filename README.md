@@ -124,7 +124,7 @@ Objects can be reassigned using the Dot operator
 let x = {
 	a: {
 		b: "Hello",
-	},
+	},	
 	b: "World",
 	c: "!"
 }
