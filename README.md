@@ -102,7 +102,39 @@ let x = {
 	age: 20
 }
 ```
-> Object is still in development. It is not fully functional yet.
+
+### Chaining Objects and Dot Operator
+Objects can be chained together using the dot operator.
+Dot operator is used to access the properties of an object.
+```js
+const x = {
+	a: {
+		b: "Hello",
+	},
+	b: "World",
+	c: "!"
+}
+
+print(x.a.b + " " + x.b + x.c);
+```
+
+### Reassign Object variables
+Objects can be reassigned using the Dot operator
+```js
+let x = {
+	a: {
+		b: "Hello",
+	},
+	b: "World",
+	c: "!"
+}
+
+x.a.b = "Hi"
+
+print(x.a.b + " " + x.b + x.c); 
+```
+The following code will print `Hi World!`
+
 
 ### Functions
 Functions in Coda are similar to functions in Python.

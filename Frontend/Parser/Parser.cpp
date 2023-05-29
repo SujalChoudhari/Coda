@@ -171,7 +171,8 @@ namespace Coda {
 				// key: val, key2: val
 				// key, key2:val
 
-				Token key = expect(TokenType::IDENTIFIER, "Expected an Identifier in object literal");
+				Token key = *mCurrentToken;
+				expect(TokenType::IDENTIFIER, "Expected an Identifier in object literal");
 				IF_ERROR_RETURN_NODE;
 
 				if (mCurrentToken->type == TokenType::COMMA) {
@@ -401,7 +402,8 @@ namespace Coda {
 					IF_ERROR_RETURN_NODE;
 				}
 
-				object = Node(NodeType::MEMBER_EXPRESSION, computed, std::make_shared<Node>(object));
+				object = Node(NodeType::MEMBER_EXPRESSION, computed,std::make_shared<Node>(object));
+				object.right = std::make_shared<Node>(property);
 			}
 
 			return object;

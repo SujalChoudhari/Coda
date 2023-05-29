@@ -53,6 +53,9 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::BINARY_EXPRESSION) {
 				return evaluateBinaryExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::MEMBER_EXPRESSION) {
+				return evaluateMemberExpression(astNode, env);
+			}
 			else if (astNode.type == Frontend::NodeType::VARIABLE_DECLARATION) {
 				return evaluateVariableDeclaration(astNode, env);
 			}
@@ -279,8 +282,19 @@ namespace Coda {
 				Error::Runtime::raise("Invalid Assignment Operation, at ");
 				return Value();
 			}
+			if (astNode.left->type == Frontend::NodeType::STRING_LITERAL) {
+				return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env));
+			}
+			else if (astNode.left->type == Frontend::NodeType::MEMBER_EXPRESSION) {
+				return env.declareOrAssignVariable(*astNode.left.get(), evaluate(*astNode.right.get(), env));
+			}
+		}
 
-			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env));
+		Value Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
+		{
+			Value left = evaluate(*astNode.left.get(), env);
+			Value res = *left.properties[astNode.right->value].get();
+			return res;
 		}
 
 

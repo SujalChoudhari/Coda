@@ -17,6 +17,7 @@ namespace Coda {
 			static Environment root();
 
 			Value declareOrAssignVariable(const std::string& name, const Value& value, bool isConstant = false);
+			Value declareOrAssignVariable(const Frontend::Node& name, const Value& value, bool isConstant = false);
 			Value declareNativeFunction(const std::string& name, Function function);
 			Value declareUserDefinedFunction(const std::string& name, Frontend::Node astNode);
 			Value callFunction(const std::string& name, const Value& args, Environment& env);

@@ -39,9 +39,6 @@ int main(int argc, char** argv) {
 	Coda::Runtime::Environment env = Coda::Runtime::Environment::root();
 	std::string filename;
 
-#ifdef _DEBUG
-	filename = "Test/func.coda";
-#else
 	if (argc > 1) {
 		filename = argv[1];
 	}
@@ -49,7 +46,6 @@ int main(int argc, char** argv) {
 		std::cout << "No file specified" << std::endl;
 		return 1;
 	}
-#endif
 
 	Coda::Utils::FileReader fr = { filename };
 	std::string source = fr.readToString();

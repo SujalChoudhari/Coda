@@ -31,6 +31,7 @@ namespace Coda {
 			Value evaluateCallExpression(const Frontend::Node& callexp, Environment& env);
 
 			Value evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env);
+			Value evaluateMemberExpression(const Frontend::Node& astNode, Environment& env);
 			Value evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);
 			Value evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env);
 

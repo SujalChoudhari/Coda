@@ -1,5 +1,6 @@
 #include "Environment.h"
 #include <vector>
+#include <algorithm>
 #include "../../Error/Error.h"
 #include "../NativeFunctions/NativeFunction.h"
 
@@ -64,6 +65,37 @@ namespace Coda {
 				}
 				symbols.emplace(name, value);
 			}
+			return value;
+		}
+
+		Value Environment::declareOrAssignVariable(const Frontend::Node& name, const Value& value, bool isConstant)
+		{
+			if (name.type != Frontend::NodeType::MEMBER_EXPRESSION) {
+				Error::Runtime::raise("Invalid variable name");
+				IF_ERROR_RETURN_VALUE;
+			}
+
+			const Frontend::Node* current = &name;
+			std::vector<std::string> identifierChain;
+
+			// Navigate inwards through MemberExpression nodes
+			while (current->type == Frontend::NodeType::MEMBER_EXPRESSION) {
+				const Frontend::Node& left = *current->left;
+				const Frontend::Node& right = *current->right;
+
+				identifierChain.push_back(right.value);
+				current = &left;
+			}
+
+			std::reverse(identifierChain.begin(), identifierChain.end());
+			Value* variableValue;
+			variableValue = &symbols[current->value];
+
+			for (int i = 0; i < identifierChain.size() - 1; i++) {
+				variableValue = variableValue->properties[identifierChain[i]].get();
+			}
+
+			variableValue->properties[identifierChain.back()] = std::make_shared<Value>(value);
 			return value;
 		}
 
