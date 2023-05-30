@@ -1,6 +1,10 @@
 #pragma once
 namespace Coda {
 	namespace Frontend {
+		/*
+			A token can be of multiple types.
+			Each type has a different meaning, and a different purpose.
+		*/
 		enum class TokenType {
 			INVALID,
 			// Literal Types

@@ -11,10 +11,15 @@
 
 namespace Coda {
 	namespace Frontend {
+		/*
+			Converts a vector of tokens into a programs wiz. a list of binary trees.
+		*/
 		class Parser
 		{
 		public:
+			// Create a parser.
 			Parser();
+			// Parse a vector of tokens into a program.
 			Program parse(std::vector<Token> tokens);
 
 		private: // in the order of precedence
@@ -45,5 +50,5 @@ namespace Coda {
 			Token* mCurrentToken;
 			int mCurrentIndex = -1;
 		};
-	}
-}
+	} // namespace Frontend
+} // namespace Coda

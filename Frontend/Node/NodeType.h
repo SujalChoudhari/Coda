@@ -1,6 +1,7 @@
 #pragma once
 namespace Coda {
 	namespace Frontend {
+		// The type of the node.
 		enum class NodeType {
 
 			// Statements
@@ -33,5 +34,5 @@ namespace Coda {
 
 		};
 
-	}
-}
+	} // namespace Frontend
+} // namespace Coda

@@ -8,13 +8,25 @@
 
 namespace Coda {
 	namespace Runtime {
-
+		/*
+			A value represents a variable or a object or a function.
+			I.e. a storable value.
+		*/
 		class Value {
 		public:
+			// The type of the value.
 			Type type = Type::NONE;
+
+			// The value of the value.
 			std::string value;
+
+			// The position of the value in the source code.
 			Error::Position startPosition;
+
+			// The position of the value in the source code.
 			Error::Position endPosition;
+
+			// The properties of the value.
 			std::map<std::string, std::shared_ptr<Value>> properties = {};
 
 		public:
@@ -26,5 +38,5 @@ namespace Coda {
 			friend std::ostream& operator<<(std::ostream& os, const Value& value);
 		};
 
-	}
-}
+	} // namespace Runtime
+} // namespace Coda

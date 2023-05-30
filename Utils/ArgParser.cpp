@@ -12,7 +12,6 @@ void Coda::Utils::ArgParser::parse(int argc, char** argv)
 {
 	while (argc > 1)
 	{
-
 		std::string arg = argv[1];
 
 		if (arg[0] != '-')

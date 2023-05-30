@@ -8,9 +8,17 @@ using namespace Coda::Error;
 
 namespace Coda {
 	namespace Frontend {
+        /*
+            Lex/ Tokenize the source code.
+            Converts the source code into a vector of tokens.
+        */
 		class Lexer {
 		public:
+            // Create a new Lexer.
 			Lexer();
+
+        public:
+            // Create a new Lexer with the source code.
 			std::vector<Token> tokenize(std::string sourceCode);
 
 
@@ -21,7 +29,6 @@ namespace Coda {
 			char mCurrentChar;
 			Position mCurrentPosition;
 
-		private:
         private:
             void advance();
             void handleNewLine();
@@ -41,8 +48,7 @@ namespace Coda {
             bool isSymbolChar(char c);
             bool isBinaryOperator(char c);
             bool isLetter(char c);
-
 			bool isSupportedDigit(char ch);
 		};
-	}
-}
+	} // namespace Frontend
+} // namespace Coda

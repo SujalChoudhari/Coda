@@ -2,7 +2,7 @@
 
 namespace Coda {
 	namespace Runtime {
-
+		// Represents the Types of the Runtime::Value
 		enum class Type {
 			NONE,
 			UNDEFINED,
@@ -21,7 +21,7 @@ namespace Coda {
 			FUNCTION,
 		};
 
-	}
-}
+	} // namespace Runtime
+} // namespace Coda
 
 
