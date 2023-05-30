@@ -282,7 +282,7 @@ namespace Coda {
 				Error::Runtime::raise("Invalid Assignment Operation, at ");
 				return Value();
 			}
-			if (astNode.left->type == Frontend::NodeType::STRING_LITERAL) {
+			if (astNode.left->type == Frontend::NodeType::IDENTIFIER) {
 				return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env));
 			}
 			else if (astNode.left->type == Frontend::NodeType::MEMBER_EXPRESSION) {

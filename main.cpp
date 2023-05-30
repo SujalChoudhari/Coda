@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "Utils/FileReader.h"
 #include "Coda.h"
 
@@ -7,13 +8,18 @@
 int repl() {
 
 	Coda::Runtime::Environment env = Coda::Runtime::Environment::root();
+	std::cout << "Welcome to Coda REPL!" << std::endl;
 	while (1) {
 		Coda::Error::Manager::reset();
 
 		std::string source;
 		std::cout << ">> ";
 		std::getline(std::cin, source);
-		if (source == ":q" || source == "exit" || source == "quit") break;
+		if (source == ":q" 
+			|| source == "exit" 
+			|| source == "quit"
+			|| source == "e"
+			|| source == "q") break;
 
 
 		if (source.empty()) continue;
@@ -43,8 +49,8 @@ int main(int argc, char** argv) {
 		filename = argv[1];
 	}
 	else {
-		std::cout << "No file specified" << std::endl;
-		return 1;
+		std::cout << "[Coda] File not specified. Running REPL." << std::endl;
+		repl();
 	}
 
 	Coda::Utils::FileReader fr = { filename };
@@ -64,6 +70,9 @@ int main(int argc, char** argv) {
 	IF_ERROR_RETURN(1);
 	Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
 	inter.evaluateProgram(program, env);
+
+	std::cout << std::endl << "Press any key to continue...";
+	std::cin.get();
 
 	return 0;
 }

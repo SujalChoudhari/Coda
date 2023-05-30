@@ -240,14 +240,47 @@ namespace Coda {
 			while (mCurrentChar != '\0' && mCurrentChar != '"') {
 				if (mCurrentChar == '\\') {
 					advance();
-					if (mCurrentChar == '\0') {
+					switch (mCurrentChar) {
+					case 'n':
+						stringLiteral += '\n';
+						break;
+					case 't':
+						stringLiteral += '\t';
+						break;
+					case '\"':
+						stringLiteral += '\"';
+						break;
+					case '\'':
+						stringLiteral += '\'';
+						break;
+					case 'r':
+						stringLiteral += '\r';
+						break;
+					case 'b':
+						stringLiteral += '\b';
+						break;
+					case 'f':
+						stringLiteral += '\f';
+						break;
+					case '/':
+						stringLiteral += '/';
+						break;
+					case '\\':
+						stringLiteral += '\\';
+						break;
+					default:
+						stringLiteral += "\\" + mCurrentChar;
 						break;
 					}
 				}
-
-				stringLiteral += mCurrentChar;
+				else {
+					stringLiteral += mCurrentChar;
+				}
 				advance();
+
 			}
+
+
 
 			if (mCurrentChar == '"') {
 				// Add the string literal token to mTokens
