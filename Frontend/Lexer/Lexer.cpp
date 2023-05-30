@@ -45,7 +45,7 @@ namespace Coda {
 
 
 
-		std::vector<Token> Lexer::tokenise(std::string sourceCode)
+		std::vector<Token> Lexer::tokenize(std::string sourceCode)
 		{
 			mSourceCode = sourceCode;
 			mCurrentPosition = Position(0, 1, "");

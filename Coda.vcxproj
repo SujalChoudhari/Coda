@@ -155,6 +155,7 @@
     <ClCompile Include="Runtime\Interpreter\Interpreter.cpp" />
     <ClCompile Include="Runtime\NativeFunctions\NativeFunction.cpp" />
     <ClCompile Include="Runtime\RuntimeValue\Value.cpp" />
+    <ClCompile Include="Utils\ArgParser.cpp" />
     <ClCompile Include="Utils\FileReader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +184,7 @@
     <ClInclude Include="Tokens\Keywords.h" />
     <ClInclude Include="Tokens\Token.h" />
     <ClInclude Include="Tokens\TokenType.h" />
+    <ClInclude Include="Utils\ArgParser.h" />
     <ClInclude Include="Utils\FileReader.h" />
   </ItemGroup>
   <ItemGroup>

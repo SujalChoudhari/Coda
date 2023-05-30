@@ -19,7 +19,7 @@ namespace Coda {
 
 		class Interpreter {
 		public:
-			Value evaluate(const Frontend::Node& astNode, Environment& env);
+			Value interpret(const Frontend::Node& astNode, Environment& env);
 			Value evaluateProgram(const Frontend::Program& program, Environment& env);
 
 		private:

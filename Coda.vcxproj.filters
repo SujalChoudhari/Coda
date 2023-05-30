@@ -54,6 +54,9 @@
     <ClCompile Include="Runtime\NativeFunctions\NativeFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\ArgParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tokens\TokenType.h">
@@ -132,6 +135,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Runtime\NativeFunctions\NativeFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\ArgParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

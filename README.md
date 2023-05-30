@@ -180,6 +180,7 @@ println("Hello, World!")
 - [x] Native Functions  (printing,inputs,sleep)
 - [x] BuiltIn Functions (parse<data-type>,conversions)
 - [x] User Defined functions
+- [x] Command Line Argument Parser
 - [ ] Arrays
 - [ ] Control Statements (if statements)
 - [ ] Control Statements (for loops)

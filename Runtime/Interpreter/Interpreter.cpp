@@ -4,7 +4,7 @@
 #include "../NativeFunctions/NativeFunction.h"
 namespace Coda {
 	namespace Runtime {
-		Value Interpreter::evaluate(const Frontend::Node& astNode, Environment& env)
+		Value Interpreter::interpret(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE;
 
@@ -79,7 +79,7 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE;
 			Value lastEvaluated = Value();
 			for (Frontend::Node statement : program.body) {
-				lastEvaluated = evaluate(statement, env);
+				lastEvaluated = interpret(statement, env);
 			}
 
 			return lastEvaluated;
@@ -90,8 +90,8 @@ namespace Coda {
 		{
 			IF_ERROR_RETURN_VALUE;
 
-			Value lhs = evaluate(*binop.left.get(), env);
-			Value rhs = evaluate(*binop.right.get(), env);
+			Value lhs = interpret(*binop.left.get(), env);
+			Value rhs = interpret(*binop.right.get(), env);
 
 			if (isNumericType(lhs.type) && isNumericType(rhs.type)) {
 				return evaluateNumericBinaryExpression(lhs, binop.value, rhs);
@@ -226,7 +226,7 @@ namespace Coda {
 					runtimeValue = env.lookupSymbol(key);
 				}
 				else {
-					runtimeValue = evaluate(*value.get(), env);
+					runtimeValue = interpret(*value.get(), env);
 				}
 
 				object.properties.emplace(key, std::make_shared<Value>(runtimeValue));
@@ -237,11 +237,11 @@ namespace Coda {
 		Value Interpreter::evaluateCallExpression(const Frontend::Node& callexp, Environment& env)
 		{
 			Value args = Value();
-			Value name = evaluate(*callexp.left.get(), env);
+			Value name = interpret(*callexp.left.get(), env);
 
 			unsigned int argCount = 1;
 			for (auto& arg : callexp.properties) {
-				args.properties.insert({ std::to_string(argCount), std::make_shared<Value>(evaluate(*arg.second.get(), env)) });
+				args.properties.insert({ std::to_string(argCount), std::make_shared<Value>(interpret(*arg.second.get(), env)) });
 				argCount++;
 			}
 
@@ -266,7 +266,7 @@ namespace Coda {
 				// Run the function
 				Value result = Value(Type::NONE);
 				for (auto& it : std::get<2>(functionContent).right->properties) {
-					result = evaluate(*it.second.get(), scope);
+					result = interpret(*it.second.get(), scope);
 				}
 				return result;
 			}
@@ -283,16 +283,16 @@ namespace Coda {
 				return Value();
 			}
 			if (astNode.left->type == Frontend::NodeType::IDENTIFIER) {
-				return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env));
+				return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
 			}
 			else if (astNode.left->type == Frontend::NodeType::MEMBER_EXPRESSION) {
-				return env.declareOrAssignVariable(*astNode.left.get(), evaluate(*astNode.right.get(), env));
+				return env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
 			}
 		}
 
 		Value Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
 		{
-			Value left = evaluate(*astNode.left.get(), env);
+			Value left = interpret(*astNode.left.get(), env);
 			Value res = *left.properties[astNode.right->value].get();
 			return res;
 		}
@@ -300,7 +300,7 @@ namespace Coda {
 
 		Value Interpreter::evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant)
 		{
-			return env.declareOrAssignVariable(astNode.left->value, evaluate(*astNode.right.get(), env), isConstant);
+			return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env), isConstant);
 		}
 
 		Value Interpreter::evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env)

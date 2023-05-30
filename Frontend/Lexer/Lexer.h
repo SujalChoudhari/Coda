@@ -11,7 +11,7 @@ namespace Coda {
 		class Lexer {
 		public:
 			Lexer();
-			std::vector<Token> tokenise(std::string sourceCode);
+			std::vector<Token> tokenize(std::string sourceCode);
 
 
 		private:

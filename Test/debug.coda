@@ -1,1 +1,2 @@
-print("\t\t\n\nHello World")
+let x = 5;
+println(x);
