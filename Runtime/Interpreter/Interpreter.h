@@ -10,12 +10,13 @@
 #include "../../Frontend/Node/Program.h"
 
 
-#define IF_ERROR_RETURN_VALUE if (!Error::Manager::isSafe()) return Value()
 
-typedef std::tuple<std::string, Coda::Runtime::Environment, Coda::Frontend::Node> UserDefinedFunction;
+#define IF_ERROR_RETURN_VALUE_PTR if (!Error::Manager::isSafe()) return nullptr
 
 namespace Coda {
 	namespace Runtime {
+		typedef std::tuple<std::string, Coda::Runtime::Environment, Coda::Frontend::Node> UserDefinedFunction;
+		
 		/*
 			Interprets the AST.
 			Execution of the code is handled here.
@@ -28,7 +29,7 @@ namespace Coda {
 				@param env - the environment in which the AST will be interpreted.
 				@return - the value of the AST.
 			*/
-			Value interpret(const Frontend::Node& astNode, Environment& env);
+			ValuePtr interpret(const Frontend::Node& astNode, Environment& env);
 
 			/*
 				evaluate the Program.
@@ -36,20 +37,20 @@ namespace Coda {
 				@param env - the environment in which the program will be evaluated.
 				@return - the value of the program.
 			*/
-			Value evaluateProgram(const Frontend::Program& program, Environment& env);
+			ValuePtr evaluateProgram(const Frontend::Program& program, Environment& env);
 
 		private:
-			Value evaluateBinaryExpression(const Frontend::Node& binop, Environment& env);
-			Value evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right);
-			Value evaluateStringBinaryExpression(const Value& left, const std::string& functor, const Value& right);
-			Value evaluateIdentifier(const Frontend::Node& astNode, Environment& env);
-			Value evaluateObjectExpression(const Frontend::Node& object, Environment& env);
-			Value evaluateCallExpression(const Frontend::Node& callexp, Environment& env);
-
-			Value evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env);
-			Value evaluateMemberExpression(const Frontend::Node& astNode, Environment& env);
-			Value evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);
-			Value evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env);
+			ValuePtr evaluateBinaryExpression(const Frontend::Node& binop, Environment& env);
+			ValuePtr evaluateNumericBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
+			ValuePtr evaluateStringBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
+			ValuePtr evaluateIdentifier(const Frontend::Node& astNode, Environment& env);
+			ValuePtr evaluateObjectExpression(const Frontend::Node& object, Environment& env);
+			ValuePtr evaluateCallExpression(const Frontend::Node& callexp, Environment& env);
+			
+			ValuePtr evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env);
+			ValuePtr evaluateMemberExpression(const Frontend::Node& astNode, Environment& env);
+			ValuePtr evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);
+			ValuePtr evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env);
 
 			bool isNumericType(Type type);
 			bool isStringType(Type type);
@@ -58,8 +59,8 @@ namespace Coda {
 			UserDefinedFunction getFunction(const std::string& name);
 
 			template <typename T>
-			void handleArithmeticOperation(const Value& left, const std::string& functor, const Value& right, Value& result);
-			Value handleModulusOperation(const Value& left, const Value& right);
+			void handleArithmeticOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right, ValuePtr& result);
+			ValuePtr handleModulusOperation(const ValuePtr& left, const ValuePtr& right);
 			template <typename T>
 			T getValue(const std::string& str);
 

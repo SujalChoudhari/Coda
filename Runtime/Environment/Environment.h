@@ -16,7 +16,7 @@ namespace Coda {
 		*/
 		class Environment {
 			// A function is a callable object.
-			typedef std::function<Value(Value value, Environment scope)> Function;
+			typedef std::function<ValuePtr(ValuePtr value, Environment scope)> Function;
 		public:
 			// Creates a new environment.
 			Environment();
@@ -35,12 +35,12 @@ namespace Coda {
 				@param isConstant - Whether the variable is constant or not.
 				@return - The value of the variable.
 			*/
-			Value declareOrAssignVariable(const std::string& name, const Value& value, bool isConstant = false);
+			ValuePtr declareOrAssignVariable(const std::string& name, const ValuePtr& value, bool isConstant = false);
 			
 			/*
 				Overload of declareOrAssignVariable(const std::string&, const Value&, bool).
 			*/
-			Value declareOrAssignVariable(const Frontend::Node& name, const Value& value, bool isConstant = false);
+			ValuePtr declareOrAssignVariable(const Frontend::Node& name, const ValuePtr& value, bool isConstant = false);
 			
 			/*
 				Declare native function.
@@ -48,7 +48,7 @@ namespace Coda {
 				@param function - The function.
 				@return - The value of the function.
 			*/
-			Value declareNativeFunction(const std::string& name, Function function);
+			ValuePtr declareNativeFunction(const std::string& name, Function function);
 			
 			/*
 				Declare a user defined function.
@@ -56,7 +56,7 @@ namespace Coda {
 				@param astNode - The AST of the function which will be evaluated when the function is called.
 				@return - The value of the function.
 			*/
-			Value declareUserDefinedFunction(const std::string& name, Frontend::Node astNode);
+			ValuePtr declareUserDefinedFunction(const std::string& name, Frontend::Node astNode);
 
 			/*
 				call a UserDefinedFunction.
@@ -65,7 +65,7 @@ namespace Coda {
 				@param env - The environment in which the function will be called.
 				@return - The last evaluated value of the function.
 			*/
-			Value callFunction(const std::string& name, const Value& args, Environment& env);
+			ValuePtr callFunction(const std::string& name, const ValuePtr& args, Environment& env);
 			
 			/*
 				looks for the given symbol in the current environment and its parents.
@@ -74,11 +74,11 @@ namespace Coda {
 				@param varname - The name of the symbol.
 				@return - The value of the symbol.
 			*/
-			Value lookupSymbol(std::string varname);
+			ValuePtr lookupSymbol(std::string varname);
 
 		private:
 			Environment* parent;
-			std::map<std::string, Value> symbols;
+			std::map<std::string, ValuePtr> symbols;
 			std::map<std::string, Function> functions;
 			std::set<std::string> constants;
 

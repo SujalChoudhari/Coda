@@ -1,26 +1,27 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include "../RuntimeValue/Value.h"
 #include "../Runtime.h"
 #include "../../Error/Raiser.h"
 
 namespace Coda {
 	namespace Runtime {
 		namespace Native {
-			Value println(Value args, Environment env) {
+			ValuePtr println(ValuePtr args, Environment env) {
 				auto argv = print(args, env);
 				std::cout << std::endl;
 				return argv;
 			}
-			Value print(Value args, Environment env) {
-				for (auto& it : args.properties) {
+			ValuePtr print(ValuePtr args, Environment env) {
+				for (auto& it : args->properties) {
 					if (it.second->type == Type::BOOL) {
 						if (it.second->value == "0")
 							std::cout << "false ";
 						else std::cout << "true ";
 					}
 					else if (it.second->type == Type::CHAR) {
-						std::cout << (char) std::stoi(it.second->value) << " ";
+						std::cout << (char)std::stoi(it.second->value) << " ";
 					}
 					else {
 						std::cout << it.second->value << " ";
@@ -29,18 +30,18 @@ namespace Coda {
 				return args;
 			}
 
-			Value input(Value args, Environment env) {
+			ValuePtr input(ValuePtr args, Environment env) {
 				print(args, env);
 				std::string input_str;
 				std::getline(std::cin, input_str);
-				return Value(Type::INT, input_str);
+				return std::make_shared<Value>(Type::INT, input_str);
 			}
 
 
-			Value sleep(Value args, Environment env) {
-				if (!args.properties.empty()) {
-					if (args.properties.begin()->second->type == Type::INT) {
-						int seconds = std::stoi(args.properties.begin()->second->value);
+			ValuePtr sleep(ValuePtr args, Environment env) {
+				if (!args->properties.empty()) {
+					if (args->properties.begin()->second->type == Type::INT) {
+						int seconds = std::stoi(args->properties.begin()->second->value);
 						std::this_thread::sleep_for(std::chrono::seconds(seconds));
 					}
 					else {
@@ -51,43 +52,43 @@ namespace Coda {
 					std::this_thread::sleep_for(std::chrono::seconds(1));
 				}
 
-				return Value(Type::NONE, "");
+				return nullptr;
 			}
 
-			Value parseInt(Value args, Environment env) {
+			ValuePtr parseInt(ValuePtr args, Environment env) {
 
-				std::string stringValue = args.properties.begin()->second->value;
-				return Value(Type::INT, stringValue);
+				std::string stringValuePtr = args->properties.begin()->second->value;
+				return std::make_shared<Value>(Type::INT, stringValuePtr);
 			}
 
-			Value parseFloat(Value args, Environment env) {
+			ValuePtr parseFloat(ValuePtr args, Environment env) {
 
-				std::string stringValue = args.properties.begin()->second->value;
-				return Value(Type::FLOAT, stringValue);
+				std::string stringValuePtr = args->properties.begin()->second->value;
+				return std::make_shared<Value>(Type::FLOAT, stringValuePtr);
 			}
 
-			Value parseDouble(Value args, Environment env) {
+			ValuePtr parseDouble(ValuePtr args, Environment env) {
 
-				std::string stringValue = args.properties.begin()->second->value;
-				return Value(Type::DOUBLE, stringValue);
+				std::string stringValuePtr = args->properties.begin()->second->value;
+				return std::make_shared<Value>(Type::DOUBLE, stringValuePtr);
 			}
 
-			Value parseBool(Value args, Environment env) {
+			ValuePtr parseBool(ValuePtr args, Environment env) {
 
-				std::string stringValue = args.properties.begin()->second->value;
-				if (stringValue == "1" || stringValue == "0") {
-					return Value(Type::BOOL, stringValue);
+				std::string stringValuePtr = args->properties.begin()->second->value;
+				if (stringValuePtr == "1" || stringValuePtr == "0") {
+					return std::make_shared<Value>(Type::BOOL, stringValuePtr);
 				}
 				else {
-					Error::Runtime::raise("Cannot convert '" + stringValue + "' to a bool.");
-					return Value(Type::NONE);
+					Error::Runtime::raise("Cannot convert '" + stringValuePtr + "' to a bool.");
+					return nullptr;
 				}
 			}
 
-			Value parseByte(Value args, Environment env) {
+			ValuePtr parseByte(ValuePtr args, Environment env) {
 
-				std::string stringValue = args.properties.begin()->second->value;
-				return Value(Type::BYTE, stringValue);
+				std::string stringValuePtr = args->properties.begin()->second->value;
+				return std::make_shared<Value>(Type::BYTE, stringValuePtr);
 			}
 		}
 

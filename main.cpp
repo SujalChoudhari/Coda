@@ -105,7 +105,7 @@ namespace Coda {
 		}
 
 		/*
-			Inteprets the program.
+			Interprets the program.
 			Internally, it uses the Interpreter class.
 			@param program - The program to be interpreted.
 			@param env - The environment in which the program will be interpreted.
@@ -114,7 +114,7 @@ namespace Coda {
 		static Runtime::Value interpret(Frontend::Program& program, Runtime::Environment& env) {
 			IF_ERROR_RETURN(Runtime::Value());
 			Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
-			return inter.evaluateProgram(program, env);
+			return *inter.evaluateProgram(program, env).get();
 		}
 	};
 }

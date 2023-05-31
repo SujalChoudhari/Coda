@@ -1,12 +1,13 @@
 #include "Interpreter.h"
 #include <string>
+#include "../RuntimeValue/Value.h"
 #include "../../Error/Error.h"
 #include "../NativeFunctions/NativeFunction.h"
 namespace Coda {
 	namespace Runtime {
-		Value Interpreter::interpret(const Frontend::Node& astNode, Environment& env)
+		ValuePtr Interpreter::interpret(const Frontend::Node& astNode, Environment& env)
 		{
-			IF_ERROR_RETURN_VALUE;
+			IF_ERROR_RETURN_VALUE_PTR;
 
 			Value value = Value();
 			value.startPosition = astNode.startPosition;
@@ -71,13 +72,13 @@ namespace Coda {
 			else {
 				Error::Runtime::raise("Unrecognized ASTNode '" + astNode.value + "'");
 			}
-			return value;
+			return std::make_shared<Value>(value);
 		}
 
-		Value Interpreter::evaluateProgram(const Frontend::Program& program, Environment& env)
+		ValuePtr Interpreter::evaluateProgram(const Frontend::Program& program, Environment& env)
 		{
-			IF_ERROR_RETURN_VALUE;
-			Value lastEvaluated = Value();
+			IF_ERROR_RETURN_VALUE_PTR;
+			std::shared_ptr<Value> lastEvaluated = nullptr;
 			for (Frontend::Node statement : program.body) {
 				lastEvaluated = interpret(statement, env);
 			}
@@ -86,30 +87,30 @@ namespace Coda {
 		}
 
 
-		Value Interpreter::evaluateBinaryExpression(const Frontend::Node& binop, Environment& env)
+		ValuePtr Interpreter::evaluateBinaryExpression(const Frontend::Node& binop, Environment& env)
 		{
-			IF_ERROR_RETURN_VALUE;
+			IF_ERROR_RETURN_VALUE_PTR;
 
-			Value lhs = interpret(*binop.left.get(), env);
-			Value rhs = interpret(*binop.right.get(), env);
+			ValuePtr lhs = interpret(*binop.left.get(), env);
+			ValuePtr rhs = interpret(*binop.right.get(), env);
 
-			if (isNumericType(lhs.type) && isNumericType(rhs.type)) {
+			if (isNumericType(lhs->type) && isNumericType(rhs->type)) {
 				return evaluateNumericBinaryExpression(lhs, binop.value, rhs);
 			}
-			else if (isStringType(lhs.type) || isStringType(rhs.type)) {
+			else if (isStringType(lhs->type) || isStringType(rhs->type)) {
 				return evaluateStringBinaryExpression(lhs, binop.value, rhs);
 			}
-			else if (isUndefinedType(lhs.type) || isUndefinedType(rhs.type)) {
-				return Value(Type::UNDEFINED, "undefined", lhs.startPosition, rhs.endPosition);
+			else if (isUndefinedType(lhs->type) || isUndefinedType(rhs->type)) {
+				return std::make_shared<Value>(Type::UNDEFINED, "undefined", lhs->startPosition, rhs->endPosition);
 			}
-			else if (lhs.type != Type::NONE && rhs.type == Type::NONE) {
+			else if (lhs->type != Type::NONE && rhs->type == Type::NONE) {
 				return lhs;
 			}
-			else if (lhs.type == Type::NONE && rhs.type != Type::NONE) {
+			else if (lhs->type == Type::NONE && rhs->type != Type::NONE) {
 				return rhs;
 			}
 
-			return Value();
+			return nullptr;
 		}
 
 		bool Interpreter::isNumericType(Type type)
@@ -144,19 +145,19 @@ namespace Coda {
 		}
 
 
-		Value Interpreter::evaluateNumericBinaryExpression(const Value& left, const std::string& functor, const Value& right)
+		ValuePtr Interpreter::evaluateNumericBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right)
 		{
-			IF_ERROR_RETURN_VALUE;
+			IF_ERROR_RETURN_VALUE_PTR;
 			if (functor == "%") {
 				return handleModulusOperation(left, right);
 			}
 
-			Type suggestedType = left.type;
-			if (right.type > left.type) {
-				suggestedType = right.type;
+			Type suggestedType = left->type;
+			if (right->type > left->type) {
+				suggestedType = right->type;
 			}
 
-			Value result = Value(suggestedType, left.startPosition, right.endPosition);
+			ValuePtr result = std::make_shared<Value>(suggestedType, left->startPosition, right->endPosition);
 
 			if (suggestedType == Type::BOOL) {
 				handleArithmeticOperation<bool>(left, functor, right, result);
@@ -180,47 +181,47 @@ namespace Coda {
 				handleArithmeticOperation<double>(left, functor, right, result);
 			}
 			else {
-				result.type = Type::NONE;
+				result->type = Type::NONE;
 			}
 
 			return result;
 		}
 
-		Value Interpreter::evaluateStringBinaryExpression(const Value& left, const std::string& functor, const Value& right)
+		ValuePtr Interpreter::evaluateStringBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right)
 		{
-			IF_ERROR_RETURN_VALUE;
+			IF_ERROR_RETURN_VALUE_PTR;
 
 			if (functor == "+") {
-				std::string concatenatedString = left.value + right.value;
-				return Value(Type::STRING, concatenatedString);
+				std::string concatenatedString = left->value + right->value;
+				return std::make_shared<Value>(Type::STRING, concatenatedString);
 			}
 
 			Error::Runtime::raise("Unsupported operation with strings");
-			return Value();
+			return nullptr;
 		}
 
 
-		Value Interpreter::evaluateIdentifier(const Frontend::Node& astNode, Environment& env)
+		ValuePtr Interpreter::evaluateIdentifier(const Frontend::Node& astNode, Environment& env)
 		{
 			return env.lookupSymbol(astNode.value);
 		}
 
 
-		Value Interpreter::evaluateObjectExpression(const Frontend::Node& astNode, Environment& env)
+		ValuePtr Interpreter::evaluateObjectExpression(const Frontend::Node& astNode, Environment& env)
 		{
-			IF_ERROR_RETURN_VALUE;
+			IF_ERROR_RETURN_VALUE_PTR;
 
-			Value object = Value();
-			object.type = Type::OBJECT;
-			object.value = "<object>";
-			object.endPosition = astNode.endPosition;
-			object.startPosition = astNode.startPosition;
+			ValuePtr object = nullptr;
+			object->type = Type::OBJECT;
+			object->value = "<object>";
+			object->endPosition = astNode.endPosition;
+			object->startPosition = astNode.startPosition;
 
 			for (const auto& entry : astNode.properties) {
 				const std::string& key = entry.first;
 				const std::shared_ptr<Frontend::Node>& value = entry.second;
 
-				Value runtimeValue;
+				ValuePtr runtimeValue;
 
 				if (value.get()->type == Frontend::NodeType::PROPERTY) {
 					runtimeValue = env.lookupSymbol(key);
@@ -229,15 +230,15 @@ namespace Coda {
 					runtimeValue = interpret(*value.get(), env);
 				}
 
-				object.properties.emplace(key, std::make_shared<Value>(runtimeValue));
+				object->properties.emplace(key, std::make_shared<Value>(runtimeValue));
 			}
 			return object;
 		}
 
-		Value Interpreter::evaluateCallExpression(const Frontend::Node& callexp, Environment& env)
+		ValuePtr Interpreter::evaluateCallExpression(const Frontend::Node& callexp, Environment& env)
 		{
 			Value args = Value();
-			Value name = interpret(*callexp.left.get(), env);
+			ValuePtr name = interpret(*callexp.left.get(), env);
 
 			unsigned int argCount = 1;
 			for (auto& arg : callexp.properties) {
@@ -245,13 +246,13 @@ namespace Coda {
 				argCount++;
 			}
 
-			if (name.type == Type::NATIVE_FUNCTION) {
-				return env.callFunction(name.value, args, env);
+			if (name->type == Type::NATIVE_FUNCTION) {
+				return env.callFunction(name->value, std::make_shared<Value>(args), env);
 			}
-			else if (name.type == Type::FUNCTION) {
-				Value function = env.lookupSymbol(name.value);
+			else if (name->type == Type::FUNCTION) {
+				ValuePtr function = env.lookupSymbol(name->value);
 
-				UserDefinedFunction functionContent = getFunction(function.value);
+				UserDefinedFunction functionContent = getFunction(function->value);
 				Environment scope = Environment(std::get<1>(functionContent));
 
 				// create variables for each parameter
@@ -260,11 +261,11 @@ namespace Coda {
 					// TODO: Check if the parameter is a variable declaration
 					// Check validity of the parameter
 					const std::string& name = it->value;
-					scope.declareOrAssignVariable(name, *args.properties[std::to_string(i + 1)].get(), true);
+					scope.declareOrAssignVariable(name, args.properties[std::to_string(i + 1)], true);
 				}
 
 				// Run the function
-				Value result = Value(Type::NONE);
+				ValuePtr result = nullptr;
 				for (auto& it : std::get<2>(functionContent).right->properties) {
 					result = interpret(*it.second.get(), scope);
 				}
@@ -272,15 +273,15 @@ namespace Coda {
 			}
 			else {
 				Error::Runtime::raise("Calling a non function identifier");
-				IF_ERROR_RETURN_VALUE;
+				IF_ERROR_RETURN_VALUE_PTR;
 			}
 		}
 
-		Value Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)
+		ValuePtr Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)
 		{
 			if (astNode.type != Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
 				Error::Runtime::raise("Invalid Assignment Operation, at ");
-				return Value();
+				return nullptr;
 			}
 			if (astNode.left->type == Frontend::NodeType::IDENTIFIER) {
 				return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
@@ -290,66 +291,66 @@ namespace Coda {
 			}
 		}
 
-		Value Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
+		ValuePtr Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
 		{
-			Value left = interpret(*astNode.left.get(), env);
-			Value res = *left.properties[astNode.right->value].get();
-			return res;
+			ValuePtr left = interpret(*astNode.left.get(), env);
+			Value res = *left->properties[astNode.right->value].get();
+			return std::make_shared<Value>(res);
 		}
 
 
-		Value Interpreter::evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant)
+		ValuePtr Interpreter::evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant)
 		{
 			return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env), isConstant);
 		}
 
-		Value Interpreter::evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env)
+		ValuePtr Interpreter::evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env)
 		{
 			this->userDefinedFunctions.push_back(UserDefinedFunction(astNode.value, env, astNode));
 			return env.declareUserDefinedFunction(astNode.value, astNode);
 		}
 
 		template<typename T>
-		inline void Coda::Runtime::Interpreter::handleArithmeticOperation(const Value& left, const std::string& functor, const Value& right, Value& result)
+		inline void Coda::Runtime::Interpreter::handleArithmeticOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right, ValuePtr& result)
 		{
 			IF_ERROR_RETURN();
-			T typeLeft = getValue<T>(left.value);
-			T typeRight = getValue<T>(right.value);
+			T typeLeft = getValue<T>(left->value);
+			T typeRight = getValue<T>(right->value);
 
 			if (functor == "+") {
-				result.value = std::to_string(typeLeft + typeRight);
+				result->value = std::to_string(typeLeft + typeRight);
 			}
 			else if (functor == "-") {
-				result.value = std::to_string(typeLeft - typeRight);
+				result->value = std::to_string(typeLeft - typeRight);
 			}
 			else if (functor == "*") {
-				result.value = std::to_string(typeLeft * typeRight);
+				result->value = std::to_string(typeLeft * typeRight);
 			}
 			else if (functor == "/") {
 				if (typeRight == 0) {
-					Error::Runtime::raise("Division by Zero at, ", right.startPosition);
+					Error::Runtime::raise("Division by Zero at, ", right->startPosition);
 					return;
 				}
-				result.value = std::to_string(typeLeft / typeRight);
+				result->value = std::to_string(typeLeft / typeRight);
 			}
 			else {
-				result.type = Type::NONE;
+				result->type = Type::NONE;
 			}
 		}
 
-		Value Interpreter::handleModulusOperation(const Value& left, const Value& right)
+		ValuePtr Interpreter::handleModulusOperation(const ValuePtr& left, const ValuePtr& right)
 		{
-			IF_ERROR_RETURN_VALUE;
-			if (left.type == Type::INT
-				&& right.type == Type::INT
-				&& std::stoi(right.value) != 0) {
-				return Value(Type::INT,
-					std::to_string(std::stoi(left.value) % std::stoi(right.value)),
-					left.startPosition,
-					right.endPosition);
+			IF_ERROR_RETURN_VALUE_PTR;
+			if (left->type == Type::INT
+				&& right->type == Type::INT
+				&& std::stoi(right->value) != 0) {
+				return std::make_shared<Value>(Type::INT,
+					std::to_string(std::stoi(left->value) % std::stoi(right->value)),
+					left->startPosition,
+					right->endPosition);
 			}
 			else {
-				return Value(Type::UNDEFINED, "undefined", left.startPosition, right.endPosition);
+				return std::make_shared<Value>(Type::UNDEFINED, "undefined", left->startPosition, right->endPosition);
 			}
 		}
 

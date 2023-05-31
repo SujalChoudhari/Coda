@@ -1,7 +1,7 @@
 #pragma once
 #include "../Runtime.h"
 
-#define NATIVE_FUNCTION(x) Value x(Value argument, Environment env)
+#define NATIVE_FUNCTION(x) ValuePtr x(ValuePtr argument, Environment env)
 
 namespace Coda {
 	namespace Runtime {

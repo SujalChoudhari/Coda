@@ -31,12 +31,16 @@ namespace Coda {
 
 		public:
 			Value() = default;
+			Value(std::shared_ptr<Value> other)
+				: type(other->type), value(other->value), startPosition(other->startPosition), endPosition(other->endPosition), properties(other->properties) {}
 			Value(Type type, Error::Position start, Error::Position end)
 				: type(type), value(), startPosition(start), endPosition(end) {}
 			Value(Type type, std::string value="", Error::Position start = Error::Position(), Error::Position end = Error::Position())
 				: type(type), value(value), startPosition(start), endPosition(end) {}
 			friend std::ostream& operator<<(std::ostream& os, const Value& value);
 		};
+
+		typedef std::shared_ptr<Value> ValuePtr;
 
 	} // namespace Runtime
 } // namespace Coda
