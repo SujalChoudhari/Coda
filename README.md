@@ -157,6 +157,25 @@ let x = add
 x(5, 5)
 ```
 
+### Functions in Objects
+Functions can be defined in objects. It is similar to defining a function in a variable. 
+But in this case, the function is defined in an object. The name of the function is the key of the object.
+
+```js
+let hello = {
+	something: def(name){
+		println("Hello, " + name + "!");
+	},
+	earth: def(){
+		println("Hello, Earth!");
+	}
+}
+let inp = input("What is your name? ");
+hello.something("World");
+hello.earth();
+hello.something(inp);
+```
+
 
 ### Built-in Functions
 Coda has a number of built-in functions that can be used to perform common tasks.

@@ -1,7 +1,13 @@
-x = {
-	a: 1,
-	b: 2,
-	c: "hello"
+let hello = {
+	something: def(name){
+		println("Hello, " + name + "!");
+	},
+	earth: def(){
+		println("Hello, Earth!");
+	}
 }
+let inp = input("What is your name? ");
+hello.something("World");
+hello.earth();
+hello.something(inp);
 
-print(x.a);

@@ -111,10 +111,10 @@ namespace Coda {
 			@param env - The environment in which the program will be interpreted.
 			@return - The last calculated value.
 		*/
-		static Runtime::Value interpret(Frontend::Program& program, Runtime::Environment& env) {
-			IF_ERROR_RETURN(Runtime::Value());
+		static Runtime::ValuePtr interpret(Frontend::Program& program, Runtime::Environment& env) {
+			IF_ERROR_RETURN_VALUE_PTR;
 			Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
-			return *inter.evaluateProgram(program, env).get();
+			return inter.evaluateProgram(program, env);
 		}
 	};
 }

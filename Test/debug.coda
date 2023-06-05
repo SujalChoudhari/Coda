@@ -1,2 +1,16 @@
-let x = 5;
-println(x);
+y = {
+	x : 1,
+	y : def(o,n,e){
+		println(o,n,e);
+	},
+}
+
+z = {
+	x : 1,
+	y : def(o,n,e){
+		println(o + n + e);
+	},
+}
+
+
+println(y.y(3,45,3));

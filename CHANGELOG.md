@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.5] - 05-06-2023
+
+## Changed
+- Functions in Objects are supported
+- Bugs fixed
+
+## Added
+- Runtime error for different size of arguments in function call
+
+
 ## [0.0.4] - 30-05-2023
 Command Line Arguments
 

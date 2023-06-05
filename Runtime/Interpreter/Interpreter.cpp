@@ -203,6 +203,7 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateIdentifier(const Frontend::Node& astNode, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			return env.lookupSymbol(astNode.value);
 		}
 
@@ -211,8 +212,7 @@ namespace Coda {
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
 
-			ValuePtr object = nullptr;
-			object->type = Type::OBJECT;
+			ValuePtr object = std::make_shared<Value>(Type::OBJECT);
 			object->value = "<object>";
 			object->endPosition = astNode.endPosition;
 			object->startPosition = astNode.startPosition;
@@ -237,12 +237,15 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateCallExpression(const Frontend::Node& callexp, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			Value args = Value();
 			ValuePtr name = interpret(*callexp.left.get(), env);
 
 			unsigned int argCount = 1;
 			for (auto& arg : callexp.properties) {
-				args.properties.insert({ std::to_string(argCount), std::make_shared<Value>(interpret(*arg.second.get(), env)) });
+				ValuePtr value = interpret(*arg.second.get(), env);
+				IF_ERROR_RETURN_VALUE_PTR;
+				args.properties.insert({ std::to_string(argCount), value });
 				argCount++;
 			}
 
@@ -251,15 +254,24 @@ namespace Coda {
 			}
 			else if (name->type == Type::FUNCTION) {
 				ValuePtr function = env.lookupSymbol(name->value);
-
-				UserDefinedFunction functionContent = getFunction(function->value);
+				UserDefinedFunction functionContent;
+				if (function->type == Type::OBJECT) {
+					functionContent = getFunction(name->value);
+				}
+				else {
+					functionContent = getFunction(function->value);
+				}
 				Environment scope = Environment(std::get<1>(functionContent));
 
+
 				// create variables for each parameter
+				if (std::get<2>(functionContent).left->properties.size() != args.properties.size()) {
+					Error::Runtime::raise("Function " + name->value + " expects " + std::to_string(std::get<2>(functionContent).left->properties.size()) + " arguments, but " + std::to_string(args.properties.size()) + " were given.");
+					IF_ERROR_RETURN_VALUE_PTR;
+				}
+
 				for (int i = 0; i < std::get<2>(functionContent).left->properties.size(); i++) {
 					auto& it = std::get<2>(functionContent).left->properties[std::to_string(i)];
-					// TODO: Check if the parameter is a variable declaration
-					// Check validity of the parameter
 					const std::string& name = it->value;
 					scope.declareOrAssignVariable(name, args.properties[std::to_string(i + 1)], true);
 				}
@@ -279,6 +291,7 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			if (astNode.type != Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
 				Error::Runtime::raise("Invalid Assignment Operation, at ");
 				return nullptr;
@@ -293,6 +306,7 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			ValuePtr left = interpret(*astNode.left.get(), env);
 			Value res = *left->properties[astNode.right->value].get();
 			return std::make_shared<Value>(res);
@@ -301,11 +315,13 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env), isConstant);
 		}
 
 		ValuePtr Interpreter::evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			this->userDefinedFunctions.push_back(UserDefinedFunction(astNode.value, env, astNode));
 			return env.declareUserDefinedFunction(astNode.value, astNode);
 		}

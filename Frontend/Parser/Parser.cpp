@@ -70,7 +70,7 @@ namespace Coda {
 			case TokenType::CONST:
 				return parseDeclaration(true);
 			case TokenType::DEF:
-				return parseFunctionExpression();
+				return parseFunctionExpression("");
 			default:
 				return parseExpression();
 			}
@@ -81,13 +81,19 @@ namespace Coda {
 			return parseAssignmentExpression();
 		}
 
-		Node Parser::parseFunctionExpression()
+		Node Parser::parseFunctionExpression(std::string name)
 		{
 			advance();
-			std::string name = mCurrentToken->value;
+			std::string functionName;
+			if (name.empty()) {
+				functionName = mCurrentToken->value;
+				expect(TokenType::IDENTIFIER, "Expected an identifier for function declaration");
+				IF_ERROR_RETURN_NODE;
+			}
+			else {
+				functionName = name;
+			}
 
-			expect(TokenType::IDENTIFIER, "Expected an identifier for function declaration");
-			IF_ERROR_RETURN_NODE;
 
 
 			Node params = parseArguments();
@@ -101,7 +107,7 @@ namespace Coda {
 			}
 
 			Node block = parseBlockExpression();
-			Node function = Node(NodeType::FUNCTION_LITERAL, name);
+			Node function = Node(NodeType::FUNCTION_LITERAL, functionName);
 			function.left = std::make_shared<Node>(params);
 			function.right = std::make_shared<Node>(block);
 
@@ -184,12 +190,18 @@ namespace Coda {
 					obj.properties.emplace(key.value, std::make_shared<Node>(NodeType::PROPERTY));
 					continue;
 				}
-
-
+				
 				expect(TokenType::COLON, "Expected a ':' in object literal");
 				IF_ERROR_RETURN_NODE;
 
-				Node value = parseExpression();
+				Node value;
+
+				if (mCurrentToken->type == TokenType::DEF) {
+					value = parseFunctionExpression(key.value);
+				}
+				else {
+					value = parseExpression();
+				}
 
 				obj.properties.insert_or_assign(key.value, std::make_shared<Node>(value));
 
@@ -402,7 +414,7 @@ namespace Coda {
 					IF_ERROR_RETURN_NODE;
 				}
 
-				object = Node(NodeType::MEMBER_EXPRESSION, computed,std::make_shared<Node>(object));
+				object = Node(NodeType::MEMBER_EXPRESSION, computed, std::make_shared<Node>(object));
 				object.right = std::make_shared<Node>(property);
 			}
 

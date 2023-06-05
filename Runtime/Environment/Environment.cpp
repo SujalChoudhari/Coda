@@ -133,7 +133,6 @@ namespace Coda {
 			else
 				Error::Runtime::raise("Symbol '" + name + "' does not exist");
 			return nullptr;
-
 		}
 
 		Environment* Environment::resolve(std::string name)
