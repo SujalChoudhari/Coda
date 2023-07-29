@@ -1,5 +1,7 @@
-#include "Interpreter.h"
 #include <string>
+
+#include "Interpreter.h"
+#include "../Environment/Environment.h"
 #include "../RuntimeValue/Value.h"
 #include "../../Error/Error.h"
 #include "../NativeFunctions/NativeFunction.h"
@@ -129,22 +131,6 @@ namespace Coda {
 			return type == Type::UNDEFINED;
 		}
 
-		UserDefinedFunction Interpreter::getFunction(const std::string& name)
-		{
-
-			auto it = std::find_if(userDefinedFunctions.begin(), userDefinedFunctions.end(), [&](const auto& tuple) {
-				return std::get<0>(tuple) == name;
-				});
-			if (it != userDefinedFunctions.end()) {
-				return *it;
-			}
-			else {
-				Error::Runtime::raise("Function " + name + " does not exist.");
-				return UserDefinedFunction();
-			}
-		}
-
-
 		ValuePtr Interpreter::evaluateNumericBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
@@ -254,31 +240,31 @@ namespace Coda {
 			}
 			else if (name->type == Type::FUNCTION) {
 				ValuePtr function = env.lookupSymbol(name->value);
-				UserDefinedFunction functionContent;
+				Environment::UserDefinedFunction* functionContent;
 				if (function->type == Type::OBJECT) {
-					functionContent = getFunction(name->value);
+					functionContent = env.getFunction(name->value);
 				}
 				else {
-					functionContent = getFunction(function->value);
+					functionContent = env.getFunction(function->value);
 				}
-				Environment scope = Environment(std::get<1>(functionContent));
+				Environment scope = Environment(std::get<1>(*functionContent));
 
 
 				// create variables for each parameter
-				if (std::get<2>(functionContent).left->properties.size() != args.properties.size()) {
-					Error::Runtime::raise("Function " + name->value + " expects " + std::to_string(std::get<2>(functionContent).left->properties.size()) + " arguments, but " + std::to_string(args.properties.size()) + " were given.");
+				if (std::get<2>(*functionContent).left->properties.size() != args.properties.size()) {
+					Error::Runtime::raise("Function " + name->value + " expects " + std::to_string(std::get<2>(*functionContent).left->properties.size()) + " arguments, but " + std::to_string(args.properties.size()) + " were given.");
 					IF_ERROR_RETURN_VALUE_PTR;
 				}
 
-				for (int i = 0; i < std::get<2>(functionContent).left->properties.size(); i++) {
-					auto& it = std::get<2>(functionContent).left->properties[std::to_string(i)];
+				for (int i = 0; i < std::get<2>(*functionContent).left->properties.size(); i++) {
+					auto& it = std::get<2>(*functionContent).left->properties[std::to_string(i)];
 					const std::string& name = it->value;
 					scope.declareOrAssignVariable(name, args.properties[std::to_string(i + 1)], true);
 				}
 
 				// Run the function
 				ValuePtr result = nullptr;
-				for (auto& it : std::get<2>(functionContent).right->properties) {
+				for (auto& it : std::get<2>(*functionContent).right->properties) {
 					result = interpret(*it.second.get(), scope);
 				}
 				return result;
@@ -322,8 +308,7 @@ namespace Coda {
 		ValuePtr Interpreter::evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
-			this->userDefinedFunctions.push_back(UserDefinedFunction(astNode.value, env, astNode));
-			return env.declareUserDefinedFunction(astNode.value, astNode);
+			return env.addFunction(astNode.value,astNode,env);
 		}
 
 		template<typename T>

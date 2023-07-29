@@ -1,8 +1,5 @@
 #include "Environment.h"
-#include <vector>
-#include <algorithm>
-#include "../../Error/Error.h"
-#include "../RuntimeValue/Value.h"
+
 #include "../NativeFunctions/NativeFunction.h"
 
 
@@ -27,12 +24,13 @@ namespace Coda {
 			env.declareOrAssignVariable("true", std::make_shared<Value>(Type::BOOL, "1"), true);
 			env.declareOrAssignVariable("false", std::make_shared<Value>(Type::BOOL, "0"), true);
 
-			// native-fn
+			// i/o
 			env.declareNativeFunction("print", Native::print);
 			env.declareNativeFunction("println", Native::println);
 			env.declareNativeFunction("input", Native::input);
 			env.declareNativeFunction("sleep", Native::sleep);
 
+			// conversion
 			env.declareNativeFunction("parseInt", Native::parseInt);
 			env.declareNativeFunction("parseFloat", Native::parseFloat);
 			env.declareNativeFunction("parseDouble", Native::parseDouble);
@@ -148,5 +146,34 @@ namespace Coda {
 
 			return parent->resolve(name);
 		}
+
+		Environment::UserDefinedFunction* Environment::getFunction(const std::string& name) {
+			auto it = std::find_if(userDefinedFunctions.begin(), userDefinedFunctions.end(),
+				[&](auto func) {
+					return std::get<0>(func) == name;
+				});
+
+			if (it != userDefinedFunctions.end()) {
+				return &(*it);
+			}
+			else {
+				return nullptr;
+			}
+
+			/*if (this->parent) {
+				auto func = this->parent->getFunction(name);
+				if (func)
+					return func;
+			}
+			Error::Runtime::raise("Function '" + name + "' does not exist");
+			return nullptr;*/
+		}
+
+		ValuePtr Environment::addFunction(const std::string& name, const Frontend::Node& astNode, Environment& env)
+		{
+			userDefinedFunctions.push_back(UserDefinedFunction(astNode.value, env, astNode));
+			return env.declareUserDefinedFunction(astNode.value, astNode);
+		}
+
 	}
 }

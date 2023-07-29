@@ -14,9 +14,7 @@
 #define IF_ERROR_RETURN_VALUE_PTR if (!Error::Manager::isSafe()) return nullptr
 
 namespace Coda {
-	namespace Runtime {
-		typedef std::tuple<std::string, Coda::Runtime::Environment, Coda::Frontend::Node> UserDefinedFunction;
-		
+	namespace Runtime {		
 		/*
 			Interprets the AST.
 			Execution of the code is handled here.
@@ -56,7 +54,6 @@ namespace Coda {
 			bool isStringType(Type type);
 			bool isUndefinedType(Type type);
 
-			UserDefinedFunction getFunction(const std::string& name);
 
 			template <typename T>
 			void handleArithmeticOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right, ValuePtr& result);
@@ -64,8 +61,7 @@ namespace Coda {
 			template <typename T>
 			T getValue(const std::string& str);
 
-		private:
-			std::vector<UserDefinedFunction> userDefinedFunctions;
+		
 		};
 
 	}  // namespace Runtime

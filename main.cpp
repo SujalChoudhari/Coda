@@ -25,7 +25,11 @@ namespace Coda {
 			std::string filename;
 
 			try {
+#if _DEBUG
+				filename = "Test/debug.coda";
+#else 
 				filename = argParser.getStandaloneValueAt(0);
+#endif
 			}
 			catch (std::out_of_range e) {
 				return repl();

@@ -1,13 +1,11 @@
-let hello = {
-	something: def(name){
-		println("Hello, " + name + "!");
-	},
-	earth: def(){
-		println("Hello, Earth!");
+def makeAdder(offset){
+	def add(x,y){
+	x+y+offset
 	}
+
+	add(offset,offset);
 }
-let inp = input("What is your name? ");
-hello.something("World");
-hello.earth();
-hello.something(inp);
+
+x = makeAdder(10);
+print(x);
 
