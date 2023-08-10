@@ -1,0 +1,18 @@
+let x = 25;
+const bool y = 10;
+
+if(x!=y){
+	println("x is not y");
+}
+elif(x>y){
+	println("x is greater than y");
+}
+elif(x<y){
+	println("x is lesser than y");
+}
+elif(x==y){
+	println("x is equals y");
+}
+else{
+	println("x is equal to y");
+}

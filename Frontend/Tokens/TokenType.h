@@ -25,6 +25,9 @@ namespace Coda {
 			TYPE,
 			DEF,
 			RETURN,
+			IF,
+			ELIF,
+			ELSE,
 
 			// Operators
 			ASSIGN,

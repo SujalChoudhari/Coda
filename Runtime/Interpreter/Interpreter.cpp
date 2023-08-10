@@ -53,6 +53,9 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::CALL_EXPRESSION) {
 				return evaluateCallExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::BLOCK_STATEMENT) {
+				return evaluateBlockExpression(astNode, env);
+			}
 			else if (astNode.type == Frontend::NodeType::UNARY_EXPRESSION) {
 				return evaluateUnaryExpression(astNode, env);
 			}
@@ -73,6 +76,9 @@ namespace Coda {
 			}
 			else if (astNode.type == Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
 				return evaluateAssignmentExpression(astNode, env);
+			}
+			else if (astNode.type == Frontend::NodeType::IF_EXPRESSION) {
+				return evaluateIfExpression(astNode, env);
 			}
 			else {
 				Error::Runtime::raise("Unrecognized ASTNode '" + astNode.value + "'");
@@ -326,6 +332,43 @@ namespace Coda {
 				return nullptr;
 			}
 		}
+
+		ValuePtr Interpreter::evaluateBlockExpression(const Frontend::Node& astNode, Environment& env)
+		{
+			ValuePtr result;
+			for (auto& it : astNode.properties) {
+				result = interpret(*it.second.get(), env);
+			}
+			return result;
+		}
+
+		ValuePtr Interpreter::evaluateIfExpression(const Frontend::Node& astNode, Environment& env)
+		{
+			ValuePtr ifCondition = interpret(*astNode.left.get(), env);
+
+			if (Value::isTruthy(ifCondition)) {
+				return interpret(*astNode.right.get(), env);
+			}
+
+			for (auto it = astNode.properties.begin(); it != astNode.properties.end(); it++) {
+				if (it->second != nullptr) {
+					Frontend::Node elifExpression = *it->second.get();
+
+					ValuePtr elifCondition = interpret(*elifExpression.left.get(), env);
+					if (Value::isTruthy(elifCondition)) {
+						return interpret(*elifExpression.right.get(), env);
+					}
+				}
+				else {
+					return interpret(*astNode.right.get(), env);
+				}
+			}
+
+			// No else statement
+			return std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
+		}
+
+
 
 		ValuePtr Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
 		{

@@ -27,6 +27,7 @@ namespace Coda {
 			Token expect(TokenType type, std::string error);
 			Node parseStatement();
 			Node parseExpression();
+			Node parseIfExpression();
 			Node parseFunctionExpression(std::string name);
 			Node parseAssignmentExpression();
 			Node parseBlockExpression();

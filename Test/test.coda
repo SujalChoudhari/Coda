@@ -1,0 +1,13 @@
+let x = 5;
+y = 10;
+
+if(x<y){
+	println("x is less than y");
+	let x = 10;
+}
+elif(x>y){
+	println("x is greater than y");
+}
+else{
+	println("x is equal to y");
+}

@@ -70,9 +70,41 @@ namespace Coda {
 				return parseDeclaration(true);
 			case TokenType::DEF:
 				return parseFunctionExpression("");
+			case TokenType::IF:
+				return parseIfExpression();
 			default:
 				return parseExpression();
 			}
+		}
+
+		Node Parser::parseIfExpression() {
+			IF_ERROR_RETURN_NODE;
+			advance(); // skip the if
+
+			Node ifExpressionNode = Node(NodeType::IF_EXPRESSION, "<if>");
+			ifExpressionNode.left = std::make_shared<Node>(parseExpression());
+			ifExpressionNode.right = std::make_shared<Node>(parseBlockExpression());
+
+			int elifCount = 0;
+			while (mCurrentToken->type == TokenType::ELIF) {
+				advance(); // skip the elif
+				Node elifExpressionNode = Node(NodeType::IF_EXPRESSION, "<elif>");
+				elifExpressionNode.left = std::make_shared<Node>(parseExpression());
+				elifExpressionNode.right = std::make_shared<Node>(parseBlockExpression());
+
+				ifExpressionNode.properties.insert({ std::to_string(elifCount) ,std::make_shared<Node>(elifExpressionNode) });
+				elifCount++;
+			}
+
+			if (mCurrentToken->type == TokenType::ELSE) {
+				advance();
+				Node elseExpressionNode = Node(NodeType::IF_EXPRESSION, "<else>");
+				elseExpressionNode.right = std::make_shared<Node>(parseBlockExpression());
+				ifExpressionNode.properties.insert({ std::to_string(elifCount), std::make_shared<Node>(elseExpressionNode) });
+			}
+
+			return ifExpressionNode;
+
 		}
 
 		Node Parser::parseExpression()
@@ -493,6 +525,9 @@ namespace Coda {
 			}
 			else if (*type == TokenType::BINARY_OPERATOR) {
 				expression = parseUnaryExpression();
+			}
+			else if (*type == TokenType::RETURN) {
+				advance();
 			}
 			else if (*type == TokenType::OPEN_PAREN) {
 				advance(); // skip the paren
