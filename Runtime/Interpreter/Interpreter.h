@@ -39,6 +39,7 @@ namespace Coda {
 
 		private:
 			ValuePtr evaluateBinaryExpression(const Frontend::Node& binop, Environment& env);
+			ValuePtr evaluateUnaryExpression(const Frontend::Node& op, Environment& env);
 			ValuePtr evaluateNumericBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
 			ValuePtr evaluateStringBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
 			ValuePtr evaluateIdentifier(const Frontend::Node& astNode, Environment& env);

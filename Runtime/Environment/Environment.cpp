@@ -164,13 +164,14 @@ namespace Coda {
 				return nullptr;
 			}
 
-			/*if (this->parent) {
+			// TODO: Explain why this exists
+			if (this->parent) {
 				auto func = this->parent->getFunction(name);
 				if (func)
 					return func;
 			}
 			Error::Runtime::raise("Function '" + name + "' does not exist");
-			return nullptr;*/
+			return nullptr;
 		}
 
 		ValuePtr Environment::addFunction(const std::string& name, const Frontend::Node& astNode, Environment& env)

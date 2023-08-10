@@ -53,6 +53,9 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::CALL_EXPRESSION) {
 				return evaluateCallExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::UNARY_EXPRESSION) {
+				return evaluateUnaryExpression(astNode, env);
+			}
 			else if (astNode.type == Frontend::NodeType::BINARY_EXPRESSION) {
 				return evaluateBinaryExpression(astNode, env);
 			}
@@ -86,6 +89,17 @@ namespace Coda {
 			}
 
 			return lastEvaluated;
+		}
+
+		ValuePtr Interpreter::evaluateUnaryExpression(const Frontend::Node& op, Environment& env) {
+			std::string unaryOperator = op.value;
+			ValuePtr value = interpret(*op.left.get(), env);
+			if (unaryOperator == "-") {
+				double num = std::stod(value->value);
+				num = -num;
+				value->value = std::to_string(num);
+			}
+			return value;
 		}
 
 
@@ -271,7 +285,7 @@ namespace Coda {
 			}
 			else {
 				Error::Runtime::raise("Calling a non function identifier");
-				IF_ERROR_RETURN_VALUE_PTR;
+				return nullptr;
 			}
 		}
 
@@ -287,6 +301,10 @@ namespace Coda {
 			}
 			else if (astNode.left->type == Frontend::NodeType::MEMBER_EXPRESSION) {
 				return env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
+			}
+			else {
+				Error::Runtime::raise("Invalid Assignment Operation, at ");
+				return nullptr;
 			}
 		}
 

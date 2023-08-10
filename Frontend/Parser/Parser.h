@@ -41,6 +41,7 @@ namespace Coda {
 			Node parseArgumentList();
 			Node parseMemberExpression();
 
+			Node parseUnaryExpression();
 			Node parsePrimaryExpression();
 			Node parseDeclaration(bool isConstant);
 

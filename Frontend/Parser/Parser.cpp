@@ -66,7 +66,6 @@ namespace Coda {
 			{
 			case TokenType::LET:
 				return parseDeclaration(false);
-
 			case TokenType::CONST:
 				return parseDeclaration(true);
 			case TokenType::DEF:
@@ -142,7 +141,7 @@ namespace Coda {
 
 			Node left = parseObjectExpression(); // will switch it with objects
 
-			if (mCurrentToken->type == TokenType::EQUALS) {
+			if (mCurrentToken->type == TokenType::ASSIGN) {
 				advance();
 
 				Node right = parseAssignmentExpression();
@@ -218,6 +217,8 @@ namespace Coda {
 			return obj;
 		}
 
+		
+
 		Node Parser::parseBinaryOperatorExpression(Node(Parser::* parseSubExpression)(), const std::vector<std::string>& operators)
 		{
 			IF_ERROR_RETURN_NODE;
@@ -289,7 +290,7 @@ namespace Coda {
 			IF_ERROR_RETURN_NODE;
 
 
-			if (mCurrentToken->type == TokenType::EQUALS)
+			if (mCurrentToken->type == TokenType::ASSIGN)
 			{
 				IF_ERROR_RETURN_NODE;
 
@@ -421,8 +422,15 @@ namespace Coda {
 			return object;
 		}
 
-
-
+		Node Parser::parseUnaryExpression() {
+			std::string unaryOperator = mCurrentToken->value;
+			advance();
+			IF_ERROR_RETURN_NODE;
+			// expressions has to be a number-like value
+			Node expression = parseExpression();
+			Node unaryExpression = Node(NodeType::UNARY_EXPRESSION, unaryOperator, std::make_shared<Node>(expression));
+			return unaryExpression;
+		}
 
 		Node Parser::parsePrimaryExpression()
 		{
@@ -469,6 +477,9 @@ namespace Coda {
 				expression.type = NodeType::STRING_LITERAL;
 				expression.value = mCurrentToken->value;
 				advance();
+			}
+			else if (*type == TokenType::BINARY_OPERATOR) {
+				expression = parseUnaryExpression();
 			}
 			else if (*type == TokenType::OPEN_PAREN) {
 				advance(); // skip the paren

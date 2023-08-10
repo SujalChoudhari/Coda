@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="Error\Raiser.cpp" />
     <ClCompile Include="Error\Manager.cpp" />
     <ClCompile Include="Frontend\Node\Node.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Utils\FileReader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
     <ClInclude Include="Error\Error.h" />
     <ClInclude Include="Error\Raiser.h" />
     <ClInclude Include="Error\Manager.h" />

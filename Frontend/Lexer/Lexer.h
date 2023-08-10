@@ -8,17 +8,17 @@ using namespace Coda::Error;
 
 namespace Coda {
 	namespace Frontend {
-        /*
-            Lex/ Tokenize the source code.
-            Converts the source code into a vector of tokens.
-        */
+		/*
+			Lex/ Tokenize the source code.
+			Converts the source code into a vector of tokens.
+		*/
 		class Lexer {
 		public:
-            // Create a new Lexer.
+			// Create a new Lexer.
 			Lexer();
 
-        public:
-            // Create a new Lexer with the source code.
+		public:
+			// Create a new Lexer with the source code.
 			std::vector<Token> tokenize(std::string sourceCode);
 
 
@@ -29,25 +29,31 @@ namespace Coda {
 			char mCurrentChar;
 			Position mCurrentPosition;
 
-        private:
-            void advance();
-            void handleNewLine();
-            void handleWhitespace();
-            void handleSymbol();
-            void handleBinaryOperator();
-            void handleStringLiteral();
-            void handleCharacter();
-            void handleEquals();
-            void handleSemicolon();
-            void handleColon();
-            void handleComma();
-            void handleDot();
-            void handleNumbers();
-            void handleIdentifiers();
-            void handleIllegalCharacter();
-            bool isSymbolChar(char c);
-            bool isBinaryOperator(char c);
-            bool isLetter(char c);
+		private:
+			void advance();
+			void handleNewLine();
+			void handleWhitespace();
+			void handleSymbol();
+			void handleBinaryOperator();
+			void handleStringLiteral();
+			void handleCharacter();
+			void handleEquals();
+			void handleSemicolon();
+			void handleColon();
+			void handleComma();
+			void handleDot();
+			void handleBang();
+			void handleLeftArrow();
+			void handleRightArrow();
+			void handlePipe();
+			void handleAmpersand();
+			void handleNumbers();
+			void handleIdentifiers();
+			void handleIllegalCharacter();
+			bool isSymbolChar(char c);
+			bool isBinaryOperator(char c);
+			bool isUnaryOperator(char c);
+			bool isLetter(char c);
 			bool isSupportedDigit(char ch);
 		};
 	} // namespace Frontend

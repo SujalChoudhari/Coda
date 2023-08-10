@@ -91,6 +91,21 @@ namespace Coda {
 				else if (mCurrentChar == '.') {
 					handleDot();
 				}
+				else if (mCurrentChar == '!') {
+					handleBang();
+				}
+				else if (mCurrentChar == '<') {
+					handleLeftArrow();
+				}
+				else if (mCurrentChar == '>') {
+					handleRightArrow();
+				}
+				else if (mCurrentChar == '|') {
+					handlePipe();
+				}
+				else if (mCurrentChar == '&') {
+					handleAmpersand();
+				}
 				else {
 					handleIllegalCharacter();
 				}
@@ -121,8 +136,15 @@ namespace Coda {
 		}
 
 		void Lexer::handleEquals() {
-			mTokens.emplace_back(TokenType::EQUALS, "=", mCurrentPosition);
 			advance();
+			if (mCurrentChar == '=') {
+				mTokens.emplace_back(TokenType::EQUALS, "==", mCurrentPosition);
+				advance();
+			}
+			else {
+				mTokens.emplace_back(TokenType::ASSIGN, "=", mCurrentPosition);
+			}
+
 		}
 
 		void Lexer::handleSemicolon() {
@@ -145,6 +167,51 @@ namespace Coda {
 			advance();
 		}
 
+		void Lexer::handleBang() {
+			advance();
+			if (mCurrentChar == '=') {
+				mTokens.emplace_back(TokenType::NOT_EQUALS, "!=", mCurrentPosition);
+				advance();
+			}
+			else {
+				mTokens.emplace_back(TokenType::NOT, "!", mCurrentPosition);
+			}
+		}
+
+		void Lexer::handleLeftArrow() {
+			advance();
+			if (mCurrentChar == '=') {
+				mTokens.emplace_back(TokenType::LESS_THAN_OR_EQUAL_TO, "<=", mCurrentPosition);
+				advance();
+			}
+			else {
+				mTokens.emplace_back(TokenType::LESS_THAN, "<", mCurrentPosition);
+			}
+		}
+
+		void Lexer::handleRightArrow() {
+			advance();
+			if (mCurrentChar == '=') {
+				mTokens.emplace_back(TokenType::GREATER_THAN_OR_EQUAL_TO, ">=", mCurrentPosition);
+				advance();
+			}
+			else {
+				mTokens.emplace_back(TokenType::LESS_THAN, ">", mCurrentPosition);
+			}
+		}
+
+		void Lexer::handlePipe() {
+			mTokens.emplace_back(TokenType::OR,"||", mCurrentPosition);
+			advance();
+			// TODO: Handle Bitwise OR (|)
+		}
+
+		void Lexer::handleAmpersand() {
+			mTokens.emplace_back(TokenType::AND, "&&", mCurrentPosition);
+			advance();
+			// TODO: Handle Bitwise AND (&)
+		}
+
 		void Lexer::handleIllegalCharacter() {
 			Coda::Error::Lexer::raise("Illegal Character '" + std::to_string((char)mCurrentChar) + "' found at ", mCurrentPosition);
 			advance();
@@ -156,6 +223,10 @@ namespace Coda {
 
 		bool Lexer::isBinaryOperator(char c) {
 			return (c == '+' || c == '-' || c == '*' || c == '/' || c == '%');
+		}
+
+		bool Lexer::isUnaryOperator(char c) {
+			return (c == '+' || c == '-');
 		}
 
 		bool Lexer::isSupportedDigit(char c)
@@ -208,10 +279,10 @@ namespace Coda {
 			// Assign the appropriate token type based on the operator character
 			switch (operatorChar) {
 			case '+':
-				tokenType = TokenType::BINARY_OPERATOR;
+				tokenType = TokenType::BINARY_OPERATOR; // isboth unary and binary
 				break;
 			case '-':
-				tokenType = TokenType::BINARY_OPERATOR;
+				tokenType = TokenType::BINARY_OPERATOR; // isboth unary and binary
 				break;
 			case '*':
 				tokenType = TokenType::BINARY_OPERATOR;
@@ -279,8 +350,6 @@ namespace Coda {
 				advance();
 
 			}
-
-
 
 			if (mCurrentChar == '"') {
 				// Add the string literal token to mTokens
