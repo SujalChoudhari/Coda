@@ -90,6 +90,17 @@ namespace Coda {
 				std::string stringValuePtr = args->properties.begin()->second->value;
 				return std::make_shared<Value>(Type::BYTE, stringValuePtr);
 			}
+
+
+			ValuePtr quit(ValuePtr args, Environment env) {
+				int exitCode = 0;
+				if (!args->properties.empty() && args->properties.begin()->second->type == Type::INT)
+					exitCode = std::stoi(args->properties.begin()->second->value);
+				else
+					Error::Runtime::raise("Invalid exit status code. Received '" + args->properties.begin()->second->value + "' expected <int>.",args->endPosition);
+				std::exit(exitCode); // terminated by user
+				return nullptr;
+			}
 		}
 
 	}

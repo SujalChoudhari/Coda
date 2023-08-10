@@ -34,6 +34,9 @@ namespace Coda {
 			// Convert the argument to a Bool
 			NATIVE_FUNCTION(parseBool);
 
+			// Quit the program
+			NATIVE_FUNCTION(quit);
+
 		}
 	} // namespace Runtime
 } // namespace Coda

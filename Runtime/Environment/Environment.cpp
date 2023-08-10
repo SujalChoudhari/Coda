@@ -30,6 +30,10 @@ namespace Coda {
 			env.declareNativeFunction("input", Native::input);
 			env.declareNativeFunction("sleep", Native::sleep);
 
+			// quit
+			env.declareNativeFunction("quit", Native::quit);
+			env.declareNativeFunction("exit", Native::quit);
+
 			// conversion
 			env.declareNativeFunction("parseInt", Native::parseInt);
 			env.declareNativeFunction("parseFloat", Native::parseFloat);
