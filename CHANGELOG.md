@@ -7,12 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.7] - 11-8-2023
 
-## Added
+### Added
 - `if`, `elif` and `else` statements.
 
 ## [0.0.6] - 10-8-2023
 
-## Added
+### Added
 - Unary Operator (+/-)
 - Safety for unknown errors
 - `exit()` and `quit()` functions
@@ -21,11 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.5] - 05-06-2023
 
-## Changed
+### Changed
 - Functions in Objects are supported
 - Bugs fixed
 
-## Added
+### Added
 - Runtime error for different size of arguments in function call
 
 
