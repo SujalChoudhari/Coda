@@ -31,8 +31,11 @@ namespace Coda {
 			Node parseAssignmentExpression();
 			Node parseBlockExpression();
 			Node parseObjectExpression();
+			Node parseLogicalOperatorExpression();
+			Node parseRelationalOperatorExpression();
 			Node parseAdditiveExpression();
 			Node parseMultiplicativeExpression();
+
 			Node parseBinaryOperatorExpression(Node(Parser::* parseSubExpression)(), const std::vector<std::string>& operators);
 
 			Node parseCallMemberExpression();

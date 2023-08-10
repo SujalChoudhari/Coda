@@ -61,4 +61,4 @@ namespace Coda {
 		*/
 		static Runtime::ValuePtr interpret(Frontend::Program& program, Runtime::Environment& env);
 	};
-}
+} // namespace Coda

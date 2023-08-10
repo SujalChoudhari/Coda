@@ -110,7 +110,11 @@ namespace Coda {
 			ValuePtr lhs = interpret(*binop.left.get(), env);
 			ValuePtr rhs = interpret(*binop.right.get(), env);
 
-			if (isNumericType(lhs->type) && isNumericType(rhs->type)) {
+
+			if (isLogical(binop.value)) {
+				return handleLogicalOperation(lhs, binop.value, rhs);
+			}
+			else if (isNumericType(lhs->type) && isNumericType(rhs->type)) {
 				return evaluateNumericBinaryExpression(lhs, binop.value, rhs);
 			}
 			else if (isStringType(lhs->type) || isStringType(rhs->type)) {
@@ -145,11 +149,24 @@ namespace Coda {
 			return type == Type::UNDEFINED;
 		}
 
+		bool Interpreter::isRelational(std::string type)
+		{
+			return (type == "==" || type == "!=" || type == ">=" || type == "<=" || type == "<" || type == ">");
+		}
+
+		bool Interpreter::isLogical(std::string type)
+		{
+			return (type == "&&" || type == "||");
+		}
+
 		ValuePtr Interpreter::evaluateNumericBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
 			if (functor == "%") {
 				return handleModulusOperation(left, right);
+			}
+			else if (isRelational(functor)) {
+				return handleNumericRelationalOperation(left, functor, right);
 			}
 
 			Type suggestedType = left->type;
@@ -194,6 +211,8 @@ namespace Coda {
 			if (functor == "+") {
 				std::string concatenatedString = left->value + right->value;
 				return std::make_shared<Value>(Type::STRING, concatenatedString);
+			}if (isRelational(functor)) {
+				return handleStringRelationalOperation(left, functor, right);
 			}
 
 			Error::Runtime::raise("Unsupported operation with strings");
@@ -326,7 +345,7 @@ namespace Coda {
 		ValuePtr Interpreter::evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
-			return env.addFunction(astNode.value,astNode,env);
+			return env.addFunction(astNode.value, astNode, env);
 		}
 
 		template<typename T>
@@ -372,6 +391,68 @@ namespace Coda {
 				return std::make_shared<Value>(Type::UNDEFINED, "undefined", left->startPosition, right->endPosition);
 			}
 		}
+
+		ValuePtr Interpreter::handleNumericRelationalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right)
+		{
+			IF_ERROR_RETURN_VALUE_PTR;
+
+			bool result = false;
+
+			if (functor == "==" && left->value == right->value)
+				result = true;
+			else if (functor == "!=" && left->value != right->value)
+				result = true;
+			else if (functor == ">=" && std::stod(left->value) >= std::stod(right->value))
+				result = true;
+			else if (functor == "<=" && std::stod(left->value) <= std::stod(right->value))
+				result = true;
+			else if (functor == ">" && std::stod(left->value) > std::stod(right->value))
+				result = true;
+			else if (functor == "<" && std::stod(left->value) < std::stod(right->value))
+				result = true;
+
+			return std::make_shared<Value>(Type::BOOL, std::to_string(result), left->startPosition, right->endPosition);
+		}
+
+		ValuePtr Interpreter::handleStringRelationalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right)
+		{
+			IF_ERROR_RETURN_VALUE_PTR;
+
+			bool result = false;
+
+			if (functor == "==" && left->value == right->value)
+				result = true;
+			else if (functor == "!=" && left->value != right->value)
+				result = true;
+			else if (functor == ">=" && (left->value).length() >= (right->value).length())
+				result = true;
+			else if (functor == "<=" && (left->value).length() <= (right->value).length())
+				result = true;
+			else if (functor == ">" && (left->value).length() > (right->value).length())
+				result = true;
+			else if (functor == "<" && (left->value).length() < (right->value).length())
+				result = true;
+
+			return std::make_shared<Value>(Type::BOOL, std::to_string(result), left->startPosition, right->endPosition);
+		}
+
+		ValuePtr Interpreter::handleLogicalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right)
+		{
+			IF_ERROR_RETURN_VALUE_PTR;
+			bool result = false;
+			if (functor == "||"
+				&& (Value::isTruthy(*left.get()) || Value::isTruthy(*right.get()))) {
+				result = true;
+			}
+			else if (functor == "&&"
+				&& (Value::isTruthy(*left.get()) && Value::isTruthy(*right.get()))) {
+				result = true;
+			}
+
+			return std::make_shared<Value>(Type::BOOL, std::to_string(result), left->startPosition, right->endPosition);
+
+		}
+
 
 		template <typename T>
 		T Interpreter::getValue(const std::string& str)

@@ -138,7 +138,7 @@ namespace Coda {
 		void Lexer::handleEquals() {
 			advance();
 			if (mCurrentChar == '=') {
-				mTokens.emplace_back(TokenType::EQUALS, "==", mCurrentPosition);
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "==", mCurrentPosition);
 				advance();
 			}
 			else {
@@ -170,44 +170,44 @@ namespace Coda {
 		void Lexer::handleBang() {
 			advance();
 			if (mCurrentChar == '=') {
-				mTokens.emplace_back(TokenType::NOT_EQUALS, "!=", mCurrentPosition);
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "!=", mCurrentPosition);
 				advance();
 			}
 			else {
-				mTokens.emplace_back(TokenType::NOT, "!", mCurrentPosition);
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "!", mCurrentPosition);
 			}
 		}
 
 		void Lexer::handleLeftArrow() {
 			advance();
 			if (mCurrentChar == '=') {
-				mTokens.emplace_back(TokenType::LESS_THAN_OR_EQUAL_TO, "<=", mCurrentPosition);
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "<=", mCurrentPosition);
 				advance();
 			}
 			else {
-				mTokens.emplace_back(TokenType::LESS_THAN, "<", mCurrentPosition);
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "<", mCurrentPosition);
 			}
 		}
 
 		void Lexer::handleRightArrow() {
 			advance();
 			if (mCurrentChar == '=') {
-				mTokens.emplace_back(TokenType::GREATER_THAN_OR_EQUAL_TO, ">=", mCurrentPosition);
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, ">=", mCurrentPosition);
 				advance();
 			}
 			else {
-				mTokens.emplace_back(TokenType::LESS_THAN, ">", mCurrentPosition);
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, ">", mCurrentPosition);
 			}
 		}
 
 		void Lexer::handlePipe() {
-			mTokens.emplace_back(TokenType::OR,"||", mCurrentPosition);
+			mTokens.emplace_back(TokenType::BINARY_OPERATOR, "||", mCurrentPosition);
 			advance();
 			// TODO: Handle Bitwise OR (|)
 		}
 
 		void Lexer::handleAmpersand() {
-			mTokens.emplace_back(TokenType::AND, "&&", mCurrentPosition);
+			mTokens.emplace_back(TokenType::BINARY_OPERATOR, "&&", mCurrentPosition);
 			advance();
 			// TODO: Handle Bitwise AND (&)
 		}
@@ -226,7 +226,7 @@ namespace Coda {
 		}
 
 		bool Lexer::isUnaryOperator(char c) {
-			return (c == '+' || c == '-');
+			return (c == '+' || c == '-' || c == '!');
 		}
 
 		bool Lexer::isSupportedDigit(char c)

@@ -54,11 +54,18 @@ namespace Coda {
 			bool isNumericType(Type type);
 			bool isStringType(Type type);
 			bool isUndefinedType(Type type);
+			bool isRelational(std::string type);
+			bool isLogical(std::string type);
 
 
 			template <typename T>
 			void handleArithmeticOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right, ValuePtr& result);
 			ValuePtr handleModulusOperation(const ValuePtr& left, const ValuePtr& right);
+			ValuePtr handleNumericRelationalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
+			ValuePtr handleStringRelationalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
+			ValuePtr handleLogicalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
+			// TODO: Shift,  Ternary
+			
 			template <typename T>
 			T getValue(const std::string& str);
 

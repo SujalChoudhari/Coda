@@ -167,7 +167,7 @@ namespace Coda {
 			IF_ERROR_RETURN_NODE;
 
 			if (mCurrentToken->type != TokenType::OPEN_BRACE) {
-				return parseAdditiveExpression();
+				return parseLogicalOperatorExpression();
 			}
 			advance();
 			Node obj = Node(NodeType::OBJECT_LITERAL);
@@ -189,7 +189,7 @@ namespace Coda {
 					obj.properties.emplace(key.value, std::make_shared<Node>(NodeType::PROPERTY));
 					continue;
 				}
-				
+
 				expect(TokenType::COLON, "Expected a ':' in object literal");
 				IF_ERROR_RETURN_NODE;
 
@@ -217,7 +217,7 @@ namespace Coda {
 			return obj;
 		}
 
-		
+
 
 		Node Parser::parseBinaryOperatorExpression(Node(Parser::* parseSubExpression)(), const std::vector<std::string>& operators)
 		{
@@ -252,6 +252,16 @@ namespace Coda {
 			}
 
 			return left;
+		}
+
+
+
+		Node Parser::parseLogicalOperatorExpression() {
+			return parseBinaryOperatorExpression(&Parser::parseRelationalOperatorExpression, { "&&","||" });
+		}
+
+		Node Parser::parseRelationalOperatorExpression() {
+			return parseBinaryOperatorExpression(&Parser::parseAdditiveExpression, { "==","!=",">=","<=", "<",">" });
 		}
 
 		Node Parser::parseAdditiveExpression()

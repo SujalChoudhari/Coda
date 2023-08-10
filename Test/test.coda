@@ -1,3 +1,0 @@
-x = 'a';
-let y = x + 4;
-println(y);
