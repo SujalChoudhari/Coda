@@ -56,16 +56,32 @@ namespace Coda {
 
 
 	int Application::execute(std::string source, Coda::Runtime::Environment& env) {
+		int result = EXIT_SUCCESS;
 		if (source.empty()) {
-			return 1;
+			result = 1;
+			std::cerr << "Empty source file.";
+			return result;
 		}
-		std::vector<Coda::Frontend::Token> tokens = tokenize(source);
-		IF_ERROR_RETURN(1);
-		Coda::Frontend::Program program = parse(tokens);
-		IF_ERROR_RETURN(1);
-		interpret(program, env);
-		return 0;
+
+		try {
+			std::vector<Coda::Frontend::Token> tokens = tokenize(source);
+			IF_ERROR_RETURN(1);
+			Coda::Frontend::Program program = parse(tokens);
+			IF_ERROR_RETURN(1);
+			interpret(program, env);
+		}
+		catch (const std::exception& e) {
+			std::cerr <<"[CODA] A cpp error occurred in the interpreter.\n" << e.what() << std::endl;
+			result = EXIT_FAILURE;
+		}
+		catch (...) {
+			std::cerr << "[CODA] Unknown error occurred while executing the program." << std::endl;
+			result = EXIT_FAILURE;
+		}
+
+		return result;
 	}
+
 
 	std::vector<Coda::Frontend::Token> Application::tokenize(std::string source) {
 		IF_ERROR_RETURN(std::vector<Coda::Frontend::Token>());
