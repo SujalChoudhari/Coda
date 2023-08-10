@@ -291,6 +291,9 @@ namespace Coda {
 			{
 				type = mCurrentToken->value;
 				advance();
+				if (mCurrentToken->type != TokenType::IDENTIFIER) {
+					Error::Lexer::raise("Invalid type '" + mCurrentToken->value + "' at ", mCurrentToken->startPosition);
+				}
 			}
 
 

@@ -3,12 +3,19 @@
 
 namespace Coda {
 	namespace Frontend {
-		std::map<std::string, TokenType> KEYWORD = 
+		std::map<std::string, TokenType> KEYWORD =
 		{
 			{"let",TokenType::LET},
 			{"const",TokenType::CONST},
 			{"def",TokenType::DEF},
 			{"return",TokenType::RETURN},
+			{"int",TokenType::TYPE},
+			{"bool",TokenType::TYPE},
+			{"byte",TokenType::TYPE},
+			{"float",TokenType::TYPE},
+			{"double",TokenType::TYPE},
+			{"string",TokenType::TYPE},
+			{"long",TokenType::TYPE}
 		};
 
 		std::string DIGITS = "0123456789";
