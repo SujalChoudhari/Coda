@@ -186,7 +186,10 @@ namespace Coda {
 				mTokens.emplace_back(TokenType::UNARY_OPERATOR, "++", pos, mCurrentPosition);
 				advance();
 			}
-
+			else if (mCurrentChar == '=') {
+				mTokens.emplace_back(TokenType::ASSIGN, "+=", pos, mCurrentPosition);
+				advance();
+			}
 			else {
 				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "+", pos);
 			}
@@ -197,10 +200,47 @@ namespace Coda {
 			advance();
 			if (mCurrentChar == '-') {
 				mTokens.emplace_back(TokenType::UNARY_OPERATOR, "--", pos, mCurrentPosition);
+				advance();
+			}
+			else if (mCurrentChar == '=') {
+				mTokens.emplace_back(TokenType::ASSIGN, "-=", pos, mCurrentPosition);
+				advance();
 			}
 			else {
 				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "-", pos);
 			}
+		}
+
+		void Lexer::handleStar() {
+			Position pos = Position(mCurrentPosition);
+			advance();
+
+			if (mCurrentChar == '=') {
+				mTokens.emplace_back(TokenType::ASSIGN, "*=", pos, mCurrentPosition);
+				advance();
+			}
+			else {
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "*", pos);
+			}
+		}
+
+		void Lexer::handleSlash() {
+			Position pos = Position(mCurrentPosition);
+			advance();
+
+			if (mCurrentChar == '=') {
+				mTokens.emplace_back(TokenType::ASSIGN, "/=", pos, mCurrentPosition);
+				advance();
+			}
+			else {
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "/", pos);
+			}
+		}
+
+		void Lexer::handlePercent() {
+			Position pos = Position(mCurrentPosition);
+			mTokens.emplace_back(TokenType::BINARY_OPERATOR, "%", pos);
+			advance();
 		}
 
 		void Lexer::handleLeftArrow() {
@@ -308,10 +348,13 @@ namespace Coda {
 				handleMinus();
 				break;
 			case '*':
+				handleStar();
+				break;
 			case '/':
+				handleSlash();
+				break;
 			case '%':
-				mTokens.emplace_back(TokenType::BINARY_OPERATOR, operatorString, mCurrentPosition);
-				advance();
+				handlePercent();
 				break;
 			default:
 				break;

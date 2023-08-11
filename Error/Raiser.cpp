@@ -14,8 +14,8 @@ namespace Coda {
 			os << pos.lineText << std::endl;
 
 			// Print the arrows pointing to the location of the error
-			for (unsigned int i = 0; i < pos.character; i++) {
-				os << "-";
+			for (unsigned int i = 0; i < pos.character -1; i++) {
+				os << "~";
 			}
 			os << "^";
 

@@ -174,15 +174,15 @@ namespace Coda {
 			Node left = parseObjectExpression(); // will switch it with objects
 
 			if (mCurrentToken->type == TokenType::ASSIGN) {
+				std::string functor = mCurrentToken->value;
 				advance();
 
 				Node right = parseAssignmentExpression();
-				IF_ERROR_RETURN_NODE;
 
 				Node expr = Node(NodeType::ASSIGNMENT_EXPRESSION);
 				expr.left = std::make_shared<Node>(left);
 				expr.right = std::make_shared<Node>(right);
-				expr.value = "<assignment>";
+				expr.value = functor;
 				expr.startPosition = left.startPosition;
 				expr.endPosition = right.endPosition;
 

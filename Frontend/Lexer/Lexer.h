@@ -45,6 +45,9 @@ namespace Coda {
 			void handleBang();
 			void handlePlus();
 			void handleMinus();
+			void handleStar();
+			void handleSlash();
+			void handlePercent();
 			void handleLeftArrow();
 			void handleRightArrow();
 			void handlePipe();

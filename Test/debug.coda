@@ -1,3 +1,5 @@
-let x = 1;
+let x = 13;
 
-print(x!);
+x /= 5;
+
+print(typeof x, x);

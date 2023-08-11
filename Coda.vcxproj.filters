@@ -165,5 +165,6 @@
     <None Include="Test\func.coda" />
     <None Include="Test\debug.coda" />
     <None Include="LICENSE" />
+    <None Include="CODE_OF_CONDUCT.md" />
   </ItemGroup>
 </Project>

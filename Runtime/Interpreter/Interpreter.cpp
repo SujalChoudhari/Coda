@@ -347,19 +347,117 @@ namespace Coda {
 		ValuePtr Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
-			if (astNode.type != Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
-				Error::Runtime::raise("Invalid Assignment Operation, at ");
-				return nullptr;
+			if (astNode.value == "=") {
+				if (astNode.left->type == Frontend::NodeType::IDENTIFIER) {
+					return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
+				}
+				else if (astNode.left->type == Frontend::NodeType::MEMBER_EXPRESSION) {
+					return env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
+				}
+				else {
+					Error::Runtime::raise("Invalid Assignment Operation, at ");
+					return nullptr;
+
+				}
 			}
-			if (astNode.left->type == Frontend::NodeType::IDENTIFIER) {
-				return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
+
+			// TODO: Refactor this into a function
+			else if (astNode.value == "+=") {
+				ValuePtr left = env.lookupSymbol(astNode.left->value);
+				ValuePtr interpreted = interpret(*astNode.right.get(), env);
+				if ((left->type == Type::INT
+					|| left->type == Type::FLOAT
+					|| left->type == Type::DOUBLE
+					|| left->type == Type::LONG
+					|| left->type == Type::BYTE)
+					&& (interpreted->type == Type::INT
+						|| interpreted->type == Type::FLOAT
+						|| interpreted->type == Type::DOUBLE
+						|| interpreted->type == Type::LONG
+						|| interpreted->type == Type::BYTE)) {
+					double num = std::stod(left->value);
+					num += std::stod(interpreted->value);
+					left->value = std::to_string(num);
+					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
+					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
+				}
+				else if (left->type == Type::STRING) {
+					left->value += interpret(*astNode.right.get(), env)->value;
+				}
+				else {
+					Error::Runtime::raise("Types of '" + astNode.left->value + "' and '" + interpreted->value + "' are not equal, numeric and strings are only allowed, at: ", astNode.endPosition);
+				}
 			}
-			else if (astNode.left->type == Frontend::NodeType::MEMBER_EXPRESSION) {
-				return env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
+			else if (astNode.value == "-=") {
+				ValuePtr left = env.lookupSymbol(astNode.left->value);
+				ValuePtr interpreted = interpret(*astNode.right.get(), env);
+				if ((left->type == Type::INT
+					|| left->type == Type::FLOAT
+					|| left->type == Type::DOUBLE
+					|| left->type == Type::LONG
+					|| left->type == Type::BYTE)
+					&& (interpreted->type == Type::INT
+						|| interpreted->type == Type::FLOAT
+						|| interpreted->type == Type::DOUBLE
+						|| interpreted->type == Type::LONG
+						|| interpreted->type == Type::BYTE)) {
+					double num = std::stod(left->value);
+					num -= std::stod(interpreted->value);
+					left->value = std::to_string(num);
+					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
+					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
+				}
+				else {
+					Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + astNode.left->value + "' either of which types are non-numeric, at:", astNode.startPosition);
+				}
 			}
-			else {
-				Error::Runtime::raise("Invalid Assignment Operation, at ");
-				return nullptr;
+			else if (astNode.value == "*=") {
+				ValuePtr left = env.lookupSymbol(astNode.left->value);
+				ValuePtr interpreted = interpret(*astNode.right.get(), env);
+				if ((left->type == Type::INT
+					|| left->type == Type::FLOAT
+					|| left->type == Type::DOUBLE
+					|| left->type == Type::LONG
+					|| left->type == Type::BYTE)
+					&& (interpreted->type == Type::INT
+						|| interpreted->type == Type::FLOAT
+						|| interpreted->type == Type::DOUBLE
+						|| interpreted->type == Type::LONG
+						|| interpreted->type == Type::BYTE)) {
+					double num = std::stod(left->value);
+					num *= std::stod(interpreted->value);
+					left->value = std::to_string(num);
+					left->type = left->type == Type::DOUBLE ? Type::DOUBLE : Type::FLOAT;
+					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
+					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
+				}
+				else {
+					Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + astNode.left->value + "' either of which types are non-numeric, at:", astNode.startPosition);
+				}
+			}
+			else if (astNode.value == "/=") {
+				ValuePtr left = env.lookupSymbol(astNode.left->value);
+				ValuePtr interpreted = interpret(*astNode.right.get(), env);
+				if ((left->type == Type::INT
+					|| left->type == Type::FLOAT
+					|| left->type == Type::DOUBLE
+					|| left->type == Type::LONG
+					|| left->type == Type::BYTE)
+					&& (interpreted->type == Type::INT
+						|| interpreted->type == Type::FLOAT
+						|| interpreted->type == Type::DOUBLE
+						|| interpreted->type == Type::LONG
+						|| interpreted->type == Type::BYTE)) {
+					double num = std::stod(left->value);
+					num /= std::stod(interpreted->value);
+					left->value = std::to_string(num);
+					left->type = left->type == Type::DOUBLE ? Type::DOUBLE : Type::FLOAT;
+					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
+					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
+				}
+				else {
+					Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + astNode.left->value + "' either of which types are non-numeric, at:", astNode.startPosition);
+				}
 			}
 		}
 

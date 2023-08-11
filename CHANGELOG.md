@@ -10,14 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `if`, `elif` and `else` statements.
 - Unary operators `++`, `--` and `!`.
+- `+=`, `-=`, `*=` and `/=` operators.
 
 ## [0.0.6] - 10-8-2023
 
 ### Added
-- Unary Operator (+/-)
-- Safety for unknown errors
+- Unary Operator (`+`,`-`)
+- Safety for unknown errors (caused in the interpreter)
 - `exit()` and `quit()` functions
-- logical and relational operators added (<,>,<=,>=,==,!=) , (&&,||)
+- logical and relational operators added (`<`,`>`,`<=`,`>=`,`==`,`!=`) , (`&&`,`||`)
 
 
 ## [0.0.5] - 05-06-2023
