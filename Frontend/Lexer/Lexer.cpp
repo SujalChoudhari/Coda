@@ -174,7 +174,32 @@ namespace Coda {
 				advance();
 			}
 			else {
-				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "!", mCurrentPosition);
+				mTokens.emplace_back(TokenType::UNARY_OPERATOR, "!", mCurrentPosition);
+			}
+		}
+
+		void Lexer::handlePlus()
+		{
+			Position pos = Position(mCurrentPosition);
+			advance();
+			if (mCurrentChar == '+') {
+				mTokens.emplace_back(TokenType::UNARY_OPERATOR, "++", pos, mCurrentPosition);
+				advance();
+			}
+
+			else {
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "+", pos);
+			}
+		}
+
+		void Lexer::handleMinus() {
+			Position pos = Position(mCurrentPosition);
+			advance();
+			if (mCurrentChar == '-') {
+				mTokens.emplace_back(TokenType::UNARY_OPERATOR, "--", pos, mCurrentPosition);
+			}
+			else {
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "-", pos);
 			}
 		}
 
@@ -225,8 +250,8 @@ namespace Coda {
 			return (c == '+' || c == '-' || c == '*' || c == '/' || c == '%');
 		}
 
-		bool Lexer::isUnaryOperator(char c) {
-			return (c == '+' || c == '-' || c == '!');
+		bool Lexer::isUnaryOperator(std::string c) {
+			return (c == "!" || c == "++" || c == "--");
 		}
 
 		bool Lexer::isSupportedDigit(char c)
@@ -275,31 +300,22 @@ namespace Coda {
 			char operatorChar = mCurrentChar;
 			std::string operatorString(1, operatorChar);
 
-			TokenType tokenType;
-			// Assign the appropriate token type based on the operator character
 			switch (operatorChar) {
 			case '+':
-				tokenType = TokenType::BINARY_OPERATOR; // isboth unary and binary
+				handlePlus();
 				break;
 			case '-':
-				tokenType = TokenType::BINARY_OPERATOR; // isboth unary and binary
+				handleMinus();
 				break;
 			case '*':
-				tokenType = TokenType::BINARY_OPERATOR;
-				break;
 			case '/':
-				tokenType = TokenType::BINARY_OPERATOR;
-				break;
 			case '%':
-				tokenType = TokenType::BINARY_OPERATOR;
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, operatorString, mCurrentPosition);
+				advance();
 				break;
 			default:
-				// Handle unrecognized operators if needed
 				break;
 			}
-
-			mTokens.emplace_back(tokenType, operatorString, mCurrentPosition);
-			advance();
 		}
 
 		void Lexer::handleStringLiteral() {

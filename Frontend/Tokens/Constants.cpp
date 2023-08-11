@@ -12,13 +12,19 @@ namespace Coda {
 			{"if",TokenType::IF},
 			{"elif",TokenType::ELIF},
 			{"else",TokenType::ELSE},
+			{"for",TokenType::FOR},
+			{"while",TokenType::WHILE},
+			{"typeof",TokenType::UNARY_OPERATOR},
+			{"sizeof",TokenType::UNARY_OPERATOR},
+			{"do",TokenType::DO},
+			{"in",TokenType::IN},
 			{"int",TokenType::TYPE},
 			{"bool",TokenType::TYPE},
 			{"byte",TokenType::TYPE},
 			{"float",TokenType::TYPE},
 			{"double",TokenType::TYPE},
 			{"string",TokenType::TYPE},
-			{"long",TokenType::TYPE}
+			{"long",TokenType::TYPE},
 		};
 
 		std::string DIGITS = "0123456789";

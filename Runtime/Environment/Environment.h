@@ -100,6 +100,12 @@ namespace Coda {
 			*/
 			ValuePtr addFunction(const std::string& name, const Frontend::Node& astNode, Environment& env);
 
+			/*
+				Looks for variables, functions and constants with the given name and removes them.
+				@param name - The name of the variable, function or constant.
+			*/
+			void remove(const std::string& name);
+
 
 		private:
 			Environment* parent;

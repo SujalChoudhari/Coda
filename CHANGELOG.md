@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `if`, `elif` and `else` statements.
+- Unary operators `++`, `--` and `!`.
 
 ## [0.0.6] - 10-8-2023
 

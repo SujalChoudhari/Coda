@@ -101,11 +101,41 @@ namespace Coda {
 			std::string unaryOperator = op.value;
 			ValuePtr value = interpret(*op.left.get(), env);
 			if (unaryOperator == "-") {
-				double num = std::stod(value->value);
-				num = -num;
-				value->value = std::to_string(num);
+				value->value = ((value->value[0] == '-') ? value->value.substr(1) : "-" + value->value);
+				return value;
 			}
-			return value;
+			else if (unaryOperator == "!") {
+				Value booleanValue = Value(Type::BOOL, "false", op.startPosition, op.endPosition);
+				if (!Value::isTruthy(value))
+					booleanValue.value = "true";
+				return std::make_shared<Value>(booleanValue);
+			}
+			else if (unaryOperator == "++") {
+				double num = std::stod(value->value);
+				num++;
+				value->value = std::to_string(num);
+				return value;
+			}
+			else if (unaryOperator == "--") {
+				double num = std::stod(value->value);
+				num--;
+				value->value = std::to_string(num);
+				return value;
+			}
+			else if (unaryOperator == "typeof") {
+				return std::make_shared<Value>(Type::STRING, Value::getTypeAsString(value->type), value->startPosition, value->endPosition);
+			}
+			else if (unaryOperator == "sizeof") {
+				return std::make_shared<Value>(Type::INT, std::to_string(value->value.size()), value->startPosition, value->endPosition);
+			}
+			else if (unaryOperator == "delete") {
+				env.remove(value->value);
+				return std::make_shared<Value>(Type::UNDEFINED);
+			}
+			else {
+				Error::Runtime::raise("Unrecognized unary operator '" + unaryOperator + "'");
+			}
+
 		}
 
 

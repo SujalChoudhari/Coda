@@ -36,16 +36,17 @@ namespace Coda {
 			Node parseRelationalOperatorExpression();
 			Node parseAdditiveExpression();
 			Node parseMultiplicativeExpression();
+			Node parseUnaryOperatorExpression();
 
 			Node parseBinaryOperatorExpression(Node(Parser::* parseSubExpression)(), const std::vector<std::string>& operators);
 
+			Node parseUnaryExpression();
 			Node parseCallMemberExpression();
 			Node parseCallExpression(const Node& caller);
 			Node parseArguments();
 			Node parseArgumentList();
 			Node parseMemberExpression();
 
-			Node parseUnaryExpression();
 			Node parsePrimaryExpression();
 			Node parseDeclaration(bool isConstant);
 

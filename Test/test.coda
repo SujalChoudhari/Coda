@@ -1,13 +1,13 @@
-let x = 5;
-y = 10;
+let userRole = "admin";
+let accessLevel;
 
-if(x<y){
-	println("x is less than y");
-	let x = 10;
+if (userRole == "admin") {
+    accessLevel = "Full access rights granted.";
+} elif (userRole == "user") {
+    accessLevel = "Limited access rights granted.";
+} else {
+    accessLevel = "Unauthorized access.";
 }
-elif(x>y){
-	println("x is greater than y");
-}
-else{
-	println("x is equal to y");
-}
+
+println("User Role: " + userRole);
+println("Access Level: " + accessLevel);

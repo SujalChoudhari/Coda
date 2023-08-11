@@ -180,5 +180,42 @@ namespace Coda {
 			return env.declareUserDefinedFunction(astNode.value, astNode);
 		}
 
+		void Environment::remove(const std::string& name)
+		{
+			//find in functions
+			auto itF = functions.find(name);
+			if (itF != functions.end()) {
+				Error::Runtime::raise("Cannot remove native function");
+				return;
+			}
+
+			// find the symbol
+			auto itS = symbols.find(name);
+			if (itS != symbols.end()) {
+				symbols.erase(itS);
+				return;
+			}
+
+			// find the constant
+			auto itC = constants.find(name);
+			if (itC != constants.end()) {
+				Error::Runtime::raise("Cannot remove constant");
+				return;
+			}
+
+			// find the user defined function
+			auto itU = std::find_if(userDefinedFunctions.begin(), userDefinedFunctions.end(),
+				[&](auto func) {
+					return std::get<0>(func) == name;
+				});
+
+			if (itU != userDefinedFunctions.end()) {
+				userDefinedFunctions.erase(itU);
+				return;
+			}
+
+			// does not exist
+			Error::Runtime::raise("Symbol '" + name + "' does not exist");
+		}
 	}
 }

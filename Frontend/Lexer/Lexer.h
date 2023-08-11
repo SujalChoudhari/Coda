@@ -43,6 +43,8 @@ namespace Coda {
 			void handleComma();
 			void handleDot();
 			void handleBang();
+			void handlePlus();
+			void handleMinus();
 			void handleLeftArrow();
 			void handleRightArrow();
 			void handlePipe();
@@ -52,7 +54,7 @@ namespace Coda {
 			void handleIllegalCharacter();
 			bool isSymbolChar(char c);
 			bool isBinaryOperator(char c);
-			bool isUnaryOperator(char c);
+			bool isUnaryOperator(std::string c);
 			bool isLetter(char c);
 			bool isSupportedDigit(char ch);
 		};

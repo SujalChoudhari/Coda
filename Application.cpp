@@ -65,6 +65,7 @@ namespace Coda {
 
 		try {
 			std::vector<Coda::Frontend::Token> tokens = tokenize(source);
+
 			IF_ERROR_RETURN(1);
 			Coda::Frontend::Program program = parse(tokens);
 			IF_ERROR_RETURN(1);

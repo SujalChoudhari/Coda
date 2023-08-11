@@ -16,7 +16,7 @@ namespace Coda {
 			ValuePtr print(ValuePtr args, Environment env) {
 				for (auto& it : args->properties) {
 					if (it.second->type == Type::BOOL) {
-						if (it.second->value == "0")
+						if (it.second->value == "0" || it.second->value == "false")
 							std::cout << "false ";
 						else std::cout << "true ";
 					}

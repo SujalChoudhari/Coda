@@ -40,6 +40,7 @@ namespace Coda {
 
 		public:
 			static bool isTruthy(const Value& value);
+			static std::string getTypeAsString(Type type);
 
 		public:
 			friend std::ostream& operator<<(std::ostream& os, const Value& value);

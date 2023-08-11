@@ -17,5 +17,25 @@ namespace Coda {
 			}
 			else return false;
 		}
+		std::string Value::getTypeAsString(Type type)
+		{
+			std::string types[] = {
+				"<none>",
+				"<undefined>",
+				"<bool>",
+				"<char>",
+				"<byte>",
+				"<int>",
+				"<long>",
+				"<float>",
+				"<double>",
+				"<string>",
+				"<object>",
+				"<native_function>",
+				"<function>"
+			};
+
+			return types[(int)type];
+		}
 	}
 }

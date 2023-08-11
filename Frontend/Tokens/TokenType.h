@@ -28,6 +28,10 @@ namespace Coda {
 			IF,
 			ELIF,
 			ELSE,
+			FOR,
+			WHILE,
+			DO,
+			IN,
 
 			// Operators
 			ASSIGN,
@@ -35,6 +39,7 @@ namespace Coda {
 			COMMA,
 			DOT,
 			COLON,
+			UNARY_OPERATOR,
 			BINARY_OPERATOR,
 			OPEN_PAREN,
 			CLOSE_PAREN,

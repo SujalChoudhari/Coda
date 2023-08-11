@@ -303,7 +303,47 @@ namespace Coda {
 
 		Node Parser::parseMultiplicativeExpression()
 		{
-			return parseBinaryOperatorExpression(&Parser::parseCallMemberExpression, { "/", "*", "%" });
+			return parseBinaryOperatorExpression(&Parser::parseUnaryOperatorExpression, { "/", "*", "%" });
+		}
+
+		Node Parser::parseUnaryOperatorExpression() // ++x--
+		{
+			std::string unaryOperator = "";
+			Node unaryExpression;
+			unaryExpression.startPosition = mCurrentToken->startPosition;
+			// prefixed unary operators
+			if (mCurrentToken->type == TokenType::UNARY_OPERATOR) {
+				unaryOperator = mCurrentToken->value;
+				advance();
+
+				Node value = parseCallMemberExpression();
+
+				unaryExpression.type = NodeType::UNARY_EXPRESSION;
+				unaryExpression.value = unaryOperator;
+				unaryExpression.left = std::make_shared<Node>(value);
+				unaryExpression.endPosition = value.endPosition;
+				return unaryExpression;
+			}
+			else {
+				Node value = parseCallMemberExpression();
+				if (mCurrentToken->type == TokenType::UNARY_OPERATOR) {
+					unaryOperator = mCurrentToken->value;
+					advance();
+
+					if (mCurrentToken->value == "sizeof" || mCurrentToken->value == "typeof") {
+						Error::Parser::raise("Cannot postfix operator " + mCurrentToken->value + ". Use as prefixed operator", mCurrentToken->startPosition);
+					}
+
+					unaryExpression.type = NodeType::UNARY_EXPRESSION;
+					unaryExpression.value = unaryOperator;
+					unaryExpression.left = std::make_shared<Node>(value);
+					unaryExpression.endPosition = mCurrentToken->endPosition;
+					return unaryExpression;
+				}
+				else {
+					return value;
+				}
+			}
 		}
 
 		Node Parser::parseDeclaration(bool isConstant)
@@ -523,7 +563,7 @@ namespace Coda {
 				expression.value = mCurrentToken->value;
 				advance();
 			}
-			else if (*type == TokenType::BINARY_OPERATOR) {
+			else if (*type == TokenType::BINARY_OPERATOR) { // + or MINUS
 				expression = parseUnaryExpression();
 			}
 			else if (*type == TokenType::RETURN) {

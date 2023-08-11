@@ -1,13 +1,3 @@
-let userRole = "admin";
-let accessLevel;
+let x = 1;
 
-if (userRole == "admin") {
-    accessLevel = "Full access rights granted.";
-} elif (userRole == "user") {
-    accessLevel = "Limited access rights granted.";
-} else {
-    accessLevel = "Unauthorized access.";
-}
-
-println("User Role: " + userRole);
-println("Access Level: " + accessLevel);
+print(x!);
