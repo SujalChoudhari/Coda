@@ -29,6 +29,8 @@ namespace Coda {
 			Node parseExpression();
 			Node parseIfExpression();
 			Node parseForExpression();
+			Node parseWhileExpression();
+			Node parseDoWhileExpression();
 			Node parseFunctionExpression(std::string name);
 			Node parseAssignmentExpression();
 			Node parseBlockExpression();

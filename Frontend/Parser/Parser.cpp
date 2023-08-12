@@ -31,7 +31,7 @@ namespace Coda {
 		Token Parser::expect(TokenType type, std::string error)
 		{
 			if (mCurrentToken->type != type) {
-				Error::Parser::raise(error, mCurrentToken->endPosition);
+				Error::Parser::raise(error + ", at: ", mCurrentToken->endPosition);
 				return Token(TokenType::INVALID, "<invalid>", mCurrentToken->endPosition);
 			}
 			advance();
@@ -74,6 +74,10 @@ namespace Coda {
 				return parseIfExpression();
 			case TokenType::FOR:
 				return parseForExpression();
+			case TokenType::WHILE:
+				return parseWhileExpression();
+			case TokenType::DO:
+				return parseDoWhileExpression();
 			default:
 				return parseExpression();
 			}
@@ -132,10 +136,46 @@ namespace Coda {
 			return forExpressionNode;
 		}
 
+		Node Parser::parseWhileExpression()
+		{
+			advance();
+			expect(TokenType::OPEN_PAREN, "Expected an '(' after while");
+			Node condition = parseExpression();
+			expect(TokenType::CLOSE_PAREN, "Expected an ')' after while");
+			Node whileBlock = parseBlockExpression();
+
+			Node whileExpressionNode = Node(NodeType::WHILE_EXPRESSION, "<while>");
+			whileExpressionNode.left = std::make_shared<Node>(condition);
+			whileExpressionNode.right = std::make_shared<Node>(whileBlock);
+
+			whileExpressionNode.startPosition = condition.startPosition;
+			whileExpressionNode.endPosition = whileBlock.endPosition;
+			return whileExpressionNode;
+		}
+
+		Node Parser::parseDoWhileExpression()
+		{
+			advance();
+
+			Node doBlock = parseBlockExpression();
+			expect(TokenType::WHILE, "Expected a 'while' after do block");
+			expect(TokenType::OPEN_PAREN, "Expected an '(' after while");
+			Node condition = parseExpression();
+			expect(TokenType::CLOSE_PAREN, "Expected an ')' after while");
+
+			Node doWhileExpressionNode = Node(NodeType::DO_WHILE_EXPRESSION, "<do-while>");
+			doWhileExpressionNode.left = std::make_shared<Node>(condition);
+			doWhileExpressionNode.right = std::make_shared<Node>(doBlock);
+
+			doWhileExpressionNode.startPosition = doBlock.startPosition;
+			doWhileExpressionNode.endPosition = condition.endPosition;
+			return doWhileExpressionNode;
+		}
+
 		Node Parser::parseExpression()
 		{
-			Node exp =  parseAssignmentExpression();
-			if(mCurrentToken->value == ";")
+			Node exp = parseAssignmentExpression();
+			if (mCurrentToken->value == ";")
 				advance();
 			return exp;
 		}
@@ -336,13 +376,15 @@ namespace Coda {
 			return parseBinaryOperatorExpression(&Parser::parseUnaryOperatorExpression, { "/", "*", "%" });
 		}
 
-		Node Parser::parseUnaryOperatorExpression() // ++x--
+		Node Parser::parseUnaryOperatorExpression()
 		{
 			std::string unaryOperator = "";
 			Node unaryExpression;
 			unaryExpression.startPosition = mCurrentToken->startPosition;
 			// prefixed unary operators
-			if (mCurrentToken->type == TokenType::UNARY_OPERATOR) {
+			if (mCurrentToken->type == TokenType::UNARY_OPERATOR 
+				|| (mCurrentToken->type == TokenType::BINARY_OPERATOR && (mCurrentToken->value == "+" || mCurrentToken->value == "-"))
+				) {
 				unaryOperator = mCurrentToken->value;
 				advance();
 
@@ -428,7 +470,7 @@ namespace Coda {
 				declaration.value = type;
 			}
 
-			if(mCurrentToken->value == ";")
+			if (mCurrentToken->value == ";")
 				advance();
 
 			declaration.endPosition = mCurrentToken->endPosition;

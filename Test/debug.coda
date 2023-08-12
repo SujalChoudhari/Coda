@@ -1,7 +1,13 @@
-let object x = {
-	y: def(x,y){
-		x *y;
-	}
+i = 0;
+
+
+while(i < 10){
+	println(i);
+	i++;
 }
 
-println(typeof x.y, x.y(4,6));
+i=0
+do {
+	println(+9)
+	i++;
+} while(i< 10);

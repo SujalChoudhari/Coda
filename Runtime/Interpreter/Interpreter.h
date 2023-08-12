@@ -50,6 +50,8 @@ namespace Coda {
 			ValuePtr evaluateBlockExpression(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateIfExpression(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateForExpression(const Frontend::Node& astNode, Environment& env);
+			ValuePtr evaluateWhileExpression(const Frontend::Node& astNode, Environment& env);
+			ValuePtr evaluateDoWhileExpression(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateMemberExpression(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);
 			ValuePtr evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env);
@@ -67,6 +69,8 @@ namespace Coda {
 			ValuePtr handleNumericRelationalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
 			ValuePtr handleStringRelationalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
 			ValuePtr handleLogicalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
+			ValuePtr performAssignmentOperation(ValuePtr left, const ValuePtr& interpreted, const std::function<double(double, double)>& operation);
+
 			// TODO: Shift,  Ternary
 			
 			template <typename T>

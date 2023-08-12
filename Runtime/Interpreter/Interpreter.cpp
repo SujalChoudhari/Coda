@@ -83,6 +83,12 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::FOR_EXPRESSION) {
 				return evaluateForExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::WHILE_EXPRESSION) {
+				return evaluateWhileExpression(astNode, env);
+			}
+			else if (astNode.type == Frontend::NodeType::DO_WHILE_EXPRESSION) {
+				return evaluateDoWhileExpression(astNode, env);
+			}
 			else {
 				Error::Runtime::raise("Unrecognized ASTNode '" + astNode.value + "'");
 			}
@@ -105,7 +111,12 @@ namespace Coda {
 			ValuePtr value = interpret(*op.left.get(), env);
 			if (unaryOperator == "-") {
 				value->value = ((value->value[0] == '-') ? value->value.substr(1) : "-" + value->value);
+				value->value.erase(value->value.find_last_not_of('0') + 1, std::string::npos);
+				value->value.erase(value->value.find_last_not_of('.') + 1, std::string::npos);
 				return value;
+			}
+			else if (unaryOperator == "+") {
+				return std::make_shared<Value>(value);
 			}
 			else if (unaryOperator == "!") {
 				Value booleanValue = Value(Type::BOOL, "false", op.startPosition, op.endPosition);
@@ -117,12 +128,17 @@ namespace Coda {
 				double num = std::stod(value->value);
 				num++;
 				value->value = std::to_string(num);
+				value->value.erase(value->value.find_last_not_of('0') + 1, std::string::npos);
+				value->value.erase(value->value.find_last_not_of('.') + 1, std::string::npos);
+
 				return value;
 			}
 			else if (unaryOperator == "--") {
 				double num = std::stod(value->value);
 				num--;
 				value->value = std::to_string(num);
+				value->value.erase(value->value.find_last_not_of('0') + 1, std::string::npos);
+				value->value.erase(value->value.find_last_not_of('.') + 1, std::string::npos);
 				return value;
 			}
 			else if (unaryOperator == "typeof") {
@@ -339,7 +355,7 @@ namespace Coda {
 				for (auto& it : std::get<2>(*functionContent).right->properties) {
 					result = interpret(*it.second.get(), scope);
 				}
-				
+
 				return result;
 			}
 			else {
@@ -348,9 +364,28 @@ namespace Coda {
 			}
 		}
 
+		ValuePtr Interpreter::performAssignmentOperation(ValuePtr left, const ValuePtr& interpreted, const std::function<double(double, double)>& operation)
+		{
+			if (isNumericType(left->type) && isNumericType(interpreted->type)) {
+				double num = std::stod(left->value);
+				double rightNum = std::stod(interpreted->value);
+				num = operation(num, rightNum);
+				left->value = std::to_string(num);
+				left->type = (left->type == Type::DOUBLE) ? Type::DOUBLE : Type::FLOAT;
+				left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
+				left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
+				return left;
+			}
+			else {
+				Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + left->value + "' as both types must be numeric.");
+				return nullptr;
+			}
+		}
+
 		ValuePtr Interpreter::evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
+
 			if (astNode.value == "=") {
 				if (astNode.left->type == Frontend::NodeType::IDENTIFIER) {
 					return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
@@ -361,113 +396,30 @@ namespace Coda {
 				else {
 					Error::Runtime::raise("Invalid Assignment Operation, at ");
 					return nullptr;
-
 				}
 			}
-
-			// TODO: Refactor this into a function
 			else if (astNode.value == "+=") {
 				ValuePtr left = env.lookupSymbol(astNode.left->value);
 				ValuePtr interpreted = interpret(*astNode.right.get(), env);
-				if ((left->type == Type::INT
-					|| left->type == Type::FLOAT
-					|| left->type == Type::DOUBLE
-					|| left->type == Type::LONG
-					|| left->type == Type::BYTE)
-					&& (interpreted->type == Type::INT
-						|| interpreted->type == Type::FLOAT
-						|| interpreted->type == Type::DOUBLE
-						|| interpreted->type == Type::LONG
-						|| interpreted->type == Type::BYTE)) {
-					double num = std::stod(left->value);
-					num += std::stod(interpreted->value);
-					left->value = std::to_string(num);
-					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
-					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
-					return left;
-				}
-				else if (left->type == Type::STRING) {
-					left->value += interpret(*astNode.right.get(), env)->value;
-				}
-				else {
-					Error::Runtime::raise("Types of '" + astNode.left->value + "' and '" + interpreted->value + "' are not equal, numeric and strings are only allowed, at: ", astNode.endPosition);
-				}
+				return performAssignmentOperation(left, interpreted, [](double a, double b) { return a + b; });
 			}
 			else if (astNode.value == "-=") {
 				ValuePtr left = env.lookupSymbol(astNode.left->value);
 				ValuePtr interpreted = interpret(*astNode.right.get(), env);
-				if ((left->type == Type::INT
-					|| left->type == Type::FLOAT
-					|| left->type == Type::DOUBLE
-					|| left->type == Type::LONG
-					|| left->type == Type::BYTE)
-					&& (interpreted->type == Type::INT
-						|| interpreted->type == Type::FLOAT
-						|| interpreted->type == Type::DOUBLE
-						|| interpreted->type == Type::LONG
-						|| interpreted->type == Type::BYTE)) {
-					double num = std::stod(left->value);
-					num -= std::stod(interpreted->value);
-					left->value = std::to_string(num);
-					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
-					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
-					return left;
-				}
-				else {
-					Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + astNode.left->value + "' either of which types are non-numeric, at:", astNode.startPosition);
-				}
+				return performAssignmentOperation(left, interpreted, [](double a, double b) { return a - b; });
 			}
 			else if (astNode.value == "*=") {
 				ValuePtr left = env.lookupSymbol(astNode.left->value);
 				ValuePtr interpreted = interpret(*astNode.right.get(), env);
-				if ((left->type == Type::INT
-					|| left->type == Type::FLOAT
-					|| left->type == Type::DOUBLE
-					|| left->type == Type::LONG
-					|| left->type == Type::BYTE)
-					&& (interpreted->type == Type::INT
-						|| interpreted->type == Type::FLOAT
-						|| interpreted->type == Type::DOUBLE
-						|| interpreted->type == Type::LONG
-						|| interpreted->type == Type::BYTE)) {
-					double num = std::stod(left->value);
-					num *= std::stod(interpreted->value);
-					left->value = std::to_string(num);
-					left->type = left->type == Type::DOUBLE ? Type::DOUBLE : Type::FLOAT;
-					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
-					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
-					return left;
-				}
-				else {
-					Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + astNode.left->value + "' either of which types are non-numeric, at:", astNode.startPosition);
-				}
+				return performAssignmentOperation(left, interpreted, [](double a, double b) { return a * b; });
 			}
 			else if (astNode.value == "/=") {
 				ValuePtr left = env.lookupSymbol(astNode.left->value);
 				ValuePtr interpreted = interpret(*astNode.right.get(), env);
-				if ((left->type == Type::INT
-					|| left->type == Type::FLOAT
-					|| left->type == Type::DOUBLE
-					|| left->type == Type::LONG
-					|| left->type == Type::BYTE)
-					&& (interpreted->type == Type::INT
-						|| interpreted->type == Type::FLOAT
-						|| interpreted->type == Type::DOUBLE
-						|| interpreted->type == Type::LONG
-						|| interpreted->type == Type::BYTE)) {
-					double num = std::stod(left->value);
-					num /= std::stod(interpreted->value);
-					left->value = std::to_string(num);
-					left->type = left->type == Type::DOUBLE ? Type::DOUBLE : Type::FLOAT;
-					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
-					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
-					return left;
-				}
-				else {
-					Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + astNode.left->value + "' either of which types are non-numeric, at:", astNode.startPosition);
-				}
+				return performAssignmentOperation(left, interpreted, [](double a, double b) { return a / b; });
 			}
 		}
+
 
 		ValuePtr Interpreter::evaluateBlockExpression(const Frontend::Node& astNode, Environment& env)
 		{
@@ -512,6 +464,7 @@ namespace Coda {
 			Frontend::Node condition = *astNode.right.get();
 			Frontend::Node body = *astNode.properties.at("body").get();
 			Frontend::Node increment = *astNode.properties.at("increment").get();
+			ValuePtr result = std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
 
 			IF_ERROR_RETURN_VALUE_PTR;
 
@@ -520,11 +473,49 @@ namespace Coda {
 				if (!Value::isTruthy(conditionValue)) {
 					break;
 				}
-				ValuePtr bodyRes = interpret(body, forEnv);
-				ValuePtr incrementRes = interpret(increment, forEnv);
+				result = interpret(body, forEnv);
+				interpret(increment, forEnv);
 			}
 
-			return std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
+			return result;
+		}
+
+		ValuePtr Interpreter::evaluateWhileExpression(const Frontend::Node& astNode, Environment& env)
+		{
+			Environment whileEnv(&env);
+			Frontend::Node condition = *astNode.left.get();
+			Frontend::Node body = *astNode.right.get();
+			ValuePtr result = std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
+
+			while (1) {
+				ValuePtr conditionValue = interpret(condition, whileEnv);
+				if (!Value::isTruthy(conditionValue)) {
+					break;
+				}
+
+				result = interpret(body, whileEnv);
+			}
+
+			return result;
+		}
+
+		ValuePtr Interpreter::evaluateDoWhileExpression(const Frontend::Node& astNode, Environment& env)
+		{
+			Environment whileEnv(&env);
+			Frontend::Node condition = *astNode.left.get();
+			Frontend::Node body = *astNode.right.get();
+			ValuePtr result = std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
+
+			while (1) {
+				result = interpret(body, whileEnv);
+
+				ValuePtr conditionValue = interpret(condition, whileEnv);
+				if (!Value::isTruthy(conditionValue)) {
+					break;
+				}
+			}
+
+			return result;
 		}
 
 
