@@ -22,6 +22,8 @@ namespace Coda {
 			{"bool",TokenType::TYPE},
 			{"byte",TokenType::TYPE},
 			{"float",TokenType::TYPE},
+			{"list",TokenType::TYPE},
+			{"object",TokenType::TYPE},
 			{"double",TokenType::TYPE},
 			{"string",TokenType::TYPE},
 			{"long",TokenType::TYPE},

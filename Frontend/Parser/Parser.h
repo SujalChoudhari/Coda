@@ -35,6 +35,7 @@ namespace Coda {
 			Node parseAssignmentExpression();
 			Node parseBlockExpression();
 			Node parseObjectExpression();
+			Node parseListExpression();
 			Node parseLogicalOperatorExpression();
 			Node parseRelationalOperatorExpression();
 			Node parseAdditiveExpression();
@@ -46,6 +47,7 @@ namespace Coda {
 			Node parseUnaryExpression();
 			Node parseCallMemberExpression();
 			Node parseCallExpression(const Node& caller);
+			Node parseAccessExpression();
 			Node parseArguments();
 			Node parseArgumentList();
 			Node parseMemberExpression();

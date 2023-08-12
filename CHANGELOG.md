@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.8] - 12-8-2023
 
 ### Added
-- `for` loop- `while` loop- `do-while` loop### Changed- loop created a separate environment.
+- `for` loop
+- `while` loop
+- `do-while` loop
+- `list` data type along with `list` keywords and`[`,`]` (member access operators)
+
+### Changed
+- loop created a separate environment.
 - `+` is added as unary operator (no effect to values)
 
 ## [0.0.7] - 11-8-2023

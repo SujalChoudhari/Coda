@@ -44,6 +44,7 @@ namespace Coda {
 			ValuePtr evaluateStringBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
 			ValuePtr evaluateIdentifier(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateObjectExpression(const Frontend::Node& object, Environment& env);
+			ValuePtr evaluateListExpression(const Frontend::Node& list, Environment& env);
 			ValuePtr evaluateCallExpression(const Frontend::Node& callexp, Environment& env);
 			
 			ValuePtr evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env);

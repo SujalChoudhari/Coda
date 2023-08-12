@@ -17,6 +17,7 @@ namespace Coda {
 			STRING,
 
 			OBJECT,
+			LIST,
 			NATIVE_FUNCTION,
 			FUNCTION,
 		};

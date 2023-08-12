@@ -31,6 +31,7 @@ namespace Coda {
 				"<double>",
 				"<string>",
 				"<object>",
+				"<list>",
 				"<native_function>",
 				"<function>"
 			};

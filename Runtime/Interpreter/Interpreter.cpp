@@ -50,6 +50,9 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::OBJECT_LITERAL) {
 				return evaluateObjectExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::LIST_LITERAL) {
+				return evaluateListExpression(astNode, env);
+			}
 			else if (astNode.type == Frontend::NodeType::CALL_EXPRESSION) {
 				return evaluateCallExpression(astNode, env);
 			}
@@ -309,6 +312,21 @@ namespace Coda {
 			return object;
 		}
 
+		ValuePtr Interpreter::evaluateListExpression(const Frontend::Node& list, Environment& env)
+		{
+			Value listValue = Value();
+			listValue.value = "<list>";
+			listValue.type = Type::LIST;
+
+			for (auto& it : list.properties) {
+				listValue.properties.insert({ std::to_string(listValue.properties.size()), interpret(*it.second.get(), env) });
+			}
+
+			env.declareOrAssignVariable("name", std::make_shared<Value>(listValue), false);
+
+			return std::make_shared<Value>(listValue);
+		}
+
 		ValuePtr Interpreter::evaluateCallExpression(const Frontend::Node& callexp, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
@@ -394,7 +412,7 @@ namespace Coda {
 					return env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
 				}
 				else {
-					Error::Runtime::raise("Invalid Assignment Operation, at ");
+					Error::Runtime::raise("Invalid Assignment Operation, at ", astNode.endPosition);
 					return nullptr;
 				}
 			}

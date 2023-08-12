@@ -1,58 +1,8 @@
-let a = 10;
-let b = 5;
-let c = 3;
+let list x = {
+	li : [30,40],
+	lix : [50,60],
+}
 
-// Binary Operators
-let additionResult = a + b;       // 10 + 5 = 15
-let subtractionResult = a - b;    // 10 - 5 = 5
-let multiplicationResult = a * b; // 10 * 5 = 50
-let divisionResult = a / b;       // 10 / 5 = 2
-let modulusResult = a % b;        // 10 % 5 = 0
-let postIncrement = c++;          // c = 3 (post-increment)
-let preDecrement = --c;           // c = 2 (pre-decrement)
+x.li["b"] = [10,20,30]
 
-// Unary Operators
-let unaryPlus = +a;               // 10 (identity)
-let unaryMinus = -b;              // -5 (negation)
-let logicalNot = !true;           // false (logical NOT)
-let sizeOfA = sizeof(a);          // sizeof int (depends on system)
-let typeOfA = typeof(a);          // int (data type of 'a')
-
-// Relational Operators
-let greaterThan = a > b;          // true (10 is greater than 5)
-let lessThan = b < c;             // false (5 is not less than 3)
-let greaterThanOrEqual = a >= b;  // true (10 is greater than or equal to 5)
-let equalTo = a == c;             // false (10 is not equal to 3)
-let notEqualTo = b != c;          // true (5 is not equal to 3)
-
-// Logical Operators
-let logicalAnd = greaterThan && lessThan;  // false (true && false = false)
-let logicalOr = greaterThan || lessThan;    // true (true || false = true)
-
-// Assignment Operators
-let assignment = 7;
-assignment += 3;                 // assignment = 10 (7 + 3)
-assignment -= 2;                 // assignment = 8 (10 - 2)
-assignment *= 5;                 // assignment = 40 (8 * 5)
-// hello; assignment /= 4;       // assignment = 10 (40 / 4)
-// Output results
-println(additionResult);
-println(subtractionResult);
-println(multiplicationResult);
-println(divisionResult);
-println(modulusResult);
-println(postIncrement);
-println(preDecrement);
-println(unaryPlus);
-println(unaryMinus);
-println(logicalNot);
-println(sizeOfA);
-println(typeOfA);
-println(greaterThan);
-println(lessThan);
-println(greaterThanOrEqual);
-println(equalTo);
-println(notEqualTo);
-println(logicalAnd);
-println(logicalOr);
-println(assignment);
+print(x.li["b"][2])
