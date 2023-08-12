@@ -1,5 +1,7 @@
-let x = 13;
+let object x = {
+	y: def(x,y){
+		x *y;
+	}
+}
 
-x /= 5;
-
-print(typeof x, x);
+println(typeof x.y, x.y(4,6));

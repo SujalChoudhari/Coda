@@ -49,6 +49,7 @@ namespace Coda {
 			ValuePtr evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateBlockExpression(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateIfExpression(const Frontend::Node& astNode, Environment& env);
+			ValuePtr evaluateForExpression(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateMemberExpression(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);
 			ValuePtr evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env);

@@ -80,6 +80,9 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::IF_EXPRESSION) {
 				return evaluateIfExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::FOR_EXPRESSION) {
+				return evaluateForExpression(astNode, env);
+			}
 			else {
 				Error::Runtime::raise("Unrecognized ASTNode '" + astNode.value + "'");
 			}
@@ -336,6 +339,7 @@ namespace Coda {
 				for (auto& it : std::get<2>(*functionContent).right->properties) {
 					result = interpret(*it.second.get(), scope);
 				}
+				
 				return result;
 			}
 			else {
@@ -380,6 +384,7 @@ namespace Coda {
 					left->value = std::to_string(num);
 					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
 					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
+					return left;
 				}
 				else if (left->type == Type::STRING) {
 					left->value += interpret(*astNode.right.get(), env)->value;
@@ -406,6 +411,7 @@ namespace Coda {
 					left->value = std::to_string(num);
 					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
 					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
+					return left;
 				}
 				else {
 					Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + astNode.left->value + "' either of which types are non-numeric, at:", astNode.startPosition);
@@ -430,6 +436,7 @@ namespace Coda {
 					left->type = left->type == Type::DOUBLE ? Type::DOUBLE : Type::FLOAT;
 					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
 					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
+					return left;
 				}
 				else {
 					Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + astNode.left->value + "' either of which types are non-numeric, at:", astNode.startPosition);
@@ -454,6 +461,7 @@ namespace Coda {
 					left->type = left->type == Type::DOUBLE ? Type::DOUBLE : Type::FLOAT;
 					left->value.erase(left->value.find_last_not_of('0') + 1, std::string::npos);
 					left->value.erase(left->value.find_last_not_of('.') + 1, std::string::npos);
+					return left;
 				}
 				else {
 					Error::Runtime::raise("Cannot assign '" + interpreted->value + "' to '" + astNode.left->value + "' either of which types are non-numeric, at:", astNode.startPosition);
@@ -493,6 +501,29 @@ namespace Coda {
 			}
 
 			// No else statement
+			return std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
+		}
+
+		ValuePtr Interpreter::evaluateForExpression(const Frontend::Node& astNode, Environment& env)
+		{
+			Environment forEnv(&env);
+			ValuePtr init = interpret(*astNode.left.get(), forEnv);
+			env.declareOrAssignVariable(astNode.left->value, init, false);
+			Frontend::Node condition = *astNode.right.get();
+			Frontend::Node body = *astNode.properties.at("body").get();
+			Frontend::Node increment = *astNode.properties.at("increment").get();
+
+			IF_ERROR_RETURN_VALUE_PTR;
+
+			while (1) {
+				ValuePtr conditionValue = interpret(condition, forEnv);
+				if (!Value::isTruthy(conditionValue)) {
+					break;
+				}
+				ValuePtr bodyRes = interpret(body, forEnv);
+				ValuePtr incrementRes = interpret(increment, forEnv);
+			}
+
 			return std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
 		}
 

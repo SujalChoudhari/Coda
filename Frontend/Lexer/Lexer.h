@@ -31,6 +31,7 @@ namespace Coda {
 
 		private:
 			void advance();
+
 			void handleNewLine();
 			void handleWhitespace();
 			void handleSymbol();
@@ -55,6 +56,7 @@ namespace Coda {
 			void handleNumbers();
 			void handleIdentifiers();
 			void handleIllegalCharacter();
+
 			bool isSymbolChar(char c);
 			bool isBinaryOperator(char c);
 			bool isUnaryOperator(std::string c);

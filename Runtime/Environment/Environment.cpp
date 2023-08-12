@@ -62,10 +62,18 @@ namespace Coda {
 				symbolIt->second = value;
 			}
 			else {
-				// Variable does not exist, create it
+				// Variable does not exist, check in parent environment
+				if (parent != nullptr) {
+					return parent->declareOrAssignVariable(name, value, isConstant);
+				}
+
+				// Variable does not exist in parent environment, declare it
 				if (isConstant) {
 					constants.insert(name);
 				}
+
+				
+
 				symbols.emplace(name, value);
 			}
 			return value;
@@ -119,10 +127,14 @@ namespace Coda {
 		ValuePtr Environment::callFunction(const std::string& name, const ValuePtr& args, Environment& env) {
 			auto it = functions.find(name);
 			if (it != functions.end()) {
+
 				return it->second(args, env);
 			}
+			else if (parent != nullptr) {
+				return parent->callFunction(name, args, env);
+			}
 			else {
-				Error::Runtime::raise("Function " + name + " does not exist.");
+				Error::Runtime::raise("Function '" + name + "' does not exist in the scope.");
 				return nullptr;
 			}
 		}

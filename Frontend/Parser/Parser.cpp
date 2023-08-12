@@ -72,6 +72,8 @@ namespace Coda {
 				return parseFunctionExpression("");
 			case TokenType::IF:
 				return parseIfExpression();
+			case TokenType::FOR:
+				return parseForExpression();
 			default:
 				return parseExpression();
 			}
@@ -107,9 +109,35 @@ namespace Coda {
 
 		}
 
+		Node Parser::parseForExpression()
+		{
+			Node forExpressionNode = Node(NodeType::FOR_EXPRESSION, "<for>");
+			advance();
+			expect(TokenType::OPEN_PAREN, "Expected an '(' after for");
+			Node initializer = parseStatement();
+			Node condition = parseExpression();
+			Node increment = parseStatement();
+			expect(TokenType::CLOSE_PAREN, "Expected an ')' after for");
+
+			Node forBlock = parseBlockExpression();
+
+			forExpressionNode.left = std::make_shared<Node>(initializer);
+			forExpressionNode.right = std::make_shared<Node>(condition);
+			forExpressionNode.properties.insert({ "increment", std::make_shared<Node>(increment) });
+			forExpressionNode.properties.insert({ "body", std::make_shared<Node>(forBlock) });
+
+			forExpressionNode.startPosition = initializer.startPosition;
+			forExpressionNode.endPosition = forBlock.endPosition;
+
+			return forExpressionNode;
+		}
+
 		Node Parser::parseExpression()
 		{
-			return parseAssignmentExpression();
+			Node exp =  parseAssignmentExpression();
+			if(mCurrentToken->value == ";")
+				advance();
+			return exp;
 		}
 
 		Node Parser::parseFunctionExpression(std::string name)
@@ -288,11 +316,13 @@ namespace Coda {
 
 
 
-		Node Parser::parseLogicalOperatorExpression() {
+		Node Parser::parseLogicalOperatorExpression()
+		{
 			return parseBinaryOperatorExpression(&Parser::parseRelationalOperatorExpression, { "&&","||" });
 		}
 
-		Node Parser::parseRelationalOperatorExpression() {
+		Node Parser::parseRelationalOperatorExpression()
+		{
 			return parseBinaryOperatorExpression(&Parser::parseAdditiveExpression, { "==","!=",">=","<=", "<",">" });
 		}
 
@@ -397,6 +427,9 @@ namespace Coda {
 				declaration.right = std::make_shared<Node>(NodeType::INTEGER_LITERAL, "0");
 				declaration.value = type;
 			}
+
+			if(mCurrentToken->value == ";")
+				advance();
 
 			declaration.endPosition = mCurrentToken->endPosition;
 			return declaration;
