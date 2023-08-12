@@ -506,10 +506,11 @@ namespace Coda {
 		{
 			Position start = mCurrentPosition;
 			std::string identifier = "";
-			while (mCurrentChar != '\0' && isalpha(mCurrentChar)) {
+			do {
 				identifier.push_back(mCurrentChar);
 				advance();
-			}
+			} while (mCurrentChar != '\0' && (isalnum(mCurrentChar) || mCurrentChar =='_'));
+
 			auto iden = KEYWORD.find(identifier);
 			if (iden == KEYWORD.end())
 			{

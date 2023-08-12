@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - loop created a separate environment.
 - `+` is added as unary operator (no effect to values)
+- identifiers can be alphanumeric and can contain `	_` (underscore) in between. (first letter must be alphabet)
 
 ## [0.0.7] - 11-8-2023
 
