@@ -1,13 +1,54 @@
-let userRole = "admin";
-let accessLevel;
+let a = 10;
+let b = 5;
+let c = 3;
 
-if (userRole == "admin") {
-    accessLevel = "Full access rights granted.";
-} elif (userRole == "user") {
-    accessLevel = "Limited access rights granted.";
-} else {
-    accessLevel = "Unauthorized access.";
-}
+let additionResult = a + b;
+let subtractionResult = a - b;
+let multiplicationResult = a * b;
+let divisionResult = a / b;
+let modulusResult = a % b;
+let postIncrement = c++;
+let preDecrement = --c;
 
-println("User Role: " + userRole);
-println("Access Level: " + accessLevel);
+let unaryPlus = +a;
+let unaryMinus = -b;
+let logicalNot = !true;
+let sizeOfA = sizeof(a);
+let typeOfA = typeof(a);
+
+let greaterThan = a > b;
+let lessThan = b < c;
+let greaterThanOrEqual = a >= b;
+let equalTo = a == c;
+let notEqualTo = b != c;
+
+let logicalAnd = greaterThan && lessThan;
+let logicalOr = greaterThan || lessThan;
+
+let assignment = 7;
+assignment += 3;
+assignment -= 2;
+assignment *= 5;
+assignment /= 4;
+
+
+println(additionResult);
+println(subtractionResult);
+println(multiplicationResult);
+println(divisionResult);
+println(modulusResult);
+println(postIncrement);
+println(preDecrement);
+println(unaryPlus);
+println(unaryMinus);
+println(logicalNot);
+println(sizeOfA);
+println(typeOfA);
+println(greaterThan);
+println(lessThan);
+println(greaterThanOrEqual);
+println(equalTo);
+println(notEqualTo);
+println(logicalAnd);
+println(logicalOr);
+println(assignment);

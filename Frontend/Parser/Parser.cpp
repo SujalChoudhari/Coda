@@ -382,9 +382,7 @@ namespace Coda {
 			Node unaryExpression;
 			unaryExpression.startPosition = mCurrentToken->startPosition;
 			// prefixed unary operators
-			if (mCurrentToken->type == TokenType::UNARY_OPERATOR 
-				|| (mCurrentToken->type == TokenType::BINARY_OPERATOR && (mCurrentToken->value == "+" || mCurrentToken->value == "-"))
-				) {
+			if (mCurrentToken->type == TokenType::UNARY_OPERATOR) {
 				unaryOperator = mCurrentToken->value;
 				advance();
 
@@ -586,6 +584,7 @@ namespace Coda {
 			std::string unaryOperator = mCurrentToken->value;
 			advance();
 			IF_ERROR_RETURN_NODE;
+
 			// expressions has to be a number-like value
 			Node expression = parseExpression();
 			Node unaryExpression = Node(NodeType::UNARY_EXPRESSION, unaryOperator, std::make_shared<Node>(expression));
@@ -638,7 +637,7 @@ namespace Coda {
 				expression.value = mCurrentToken->value;
 				advance();
 			}
-			else if (*type == TokenType::BINARY_OPERATOR) { // + or MINUS
+			else if (*type == TokenType::BINARY_OPERATOR && (mCurrentToken->value == "+" || mCurrentToken->value == "-")) { // + or MINUS
 				expression = parseUnaryExpression();
 			}
 			else if (*type == TokenType::RETURN) {

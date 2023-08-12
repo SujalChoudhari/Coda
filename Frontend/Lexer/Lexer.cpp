@@ -232,6 +232,11 @@ namespace Coda {
 				mTokens.emplace_back(TokenType::ASSIGN, "/=", pos, mCurrentPosition);
 				advance();
 			}
+			else if (mCurrentChar == '/') { // Comments
+				while (mCurrentChar != '\n' && mCurrentChar != '\0' && mCurrentChar != ';') {
+					advance();
+				}
+			}
 			else {
 				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "/", pos);
 			}
@@ -266,14 +271,26 @@ namespace Coda {
 		}
 
 		void Lexer::handlePipe() {
-			mTokens.emplace_back(TokenType::BINARY_OPERATOR, "||", mCurrentPosition);
 			advance();
+			if (mCurrentChar == '|') {
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "||", mCurrentPosition);
+				advance();
+			}
+			else {
+				Error::Lexer::raise("Bitwise OR (|) is not supported at ", mCurrentPosition);
+			}
 			// TODO: Handle Bitwise OR (|)
 		}
 
 		void Lexer::handleAmpersand() {
-			mTokens.emplace_back(TokenType::BINARY_OPERATOR, "&&", mCurrentPosition);
 			advance();
+			if (mCurrentChar == '&') {
+				mTokens.emplace_back(TokenType::BINARY_OPERATOR, "&&", mCurrentPosition);
+				advance();
+			}
+			else {
+				Error::Lexer::raise("Bitwise AND (&) is not supported at ", mCurrentPosition);
+			}
 			// TODO: Handle Bitwise AND (&)
 		}
 
