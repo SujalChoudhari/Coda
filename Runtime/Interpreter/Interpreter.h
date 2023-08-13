@@ -1,15 +1,17 @@
 #pragma once
 
 #include <tuple>
+#include <string>
 
+
+#include "../../Error/Error.h"
 #include "../Environment/Environment.h"
 #include "../RuntimeValue/Type.h"
 #include "../RuntimeValue/Value.h"
 #include "../../Frontend/Node/Node.h"
 #include "../../Frontend/Node/NodeType.h"
 #include "../../Frontend/Node/Program.h"
-
-
+#include "../NativeFunctions/NativeFunction.h"
 
 #define IF_ERROR_RETURN_VALUE_PTR if (!Error::Manager::isSafe()) return nullptr
 
@@ -19,6 +21,7 @@ namespace Coda {
 			Interprets the AST.
 			Execution of the code is handled here.
 		*/
+
 		class Interpreter {
 		public:
 			/*

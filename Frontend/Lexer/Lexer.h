@@ -1,10 +1,12 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <iostream>
+
 #include "../Tokens/Token.h"
 #include "../../Error/Position.h"
-
-using namespace Coda::Error;
+#include "../Tokens/Constants.h"
+#include "../../Error/Error.h"
 
 namespace Coda {
 	namespace Frontend {
@@ -23,15 +25,32 @@ namespace Coda {
 
 
 		private:
+			// The tokens that have been generated.
 			std::vector<Token> mTokens = {};
+			
+			// Input source code.
 			std::string mSourceCode;
+
+			// Current index in the source code.
 			unsigned int mCurrentIndex = -1;
+			
+			// A pointer to the current character.
 			char mCurrentChar;
+
+			// The current line number.
 			Position mCurrentPosition;
 
 		private:
+
+			/*
+				Go to the next character in the source code.
+				Used when the current character has been processed completely.
+			*/
 			void advance();
 
+			/*
+				Handlers for different types of characters.
+			*/
 			void handleNewLine();
 			void handleWhitespace();
 			void handleSymbol();
@@ -57,6 +76,10 @@ namespace Coda {
 			void handleIdentifiers();
 			void handleIllegalCharacter();
 
+			/*
+				Checkers for specific types of characters.
+				returns true if the character is of the specified type.
+			*/
 			bool isSymbolChar(char c);
 			bool isBinaryOperator(char c);
 			bool isUnaryOperator(std::string c);
