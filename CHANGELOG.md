@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `import` keyword
 - import copies the code from the file and pastes it in the current file (like `#include` in C)
+- `return`, `break` and `continue` keywords added as type `<jump>`, hence are assignable and returnable.
+
+### Changed
+- function parameters are constants (can't be changed)
+- functions create a seperate scope for themselves, hence variables declared inside a function are not accessible outside the function. Function body `<block>` is a seperate scope.
 
 
 ## [0.0.8] - 12-8-2023

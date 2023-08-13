@@ -28,14 +28,14 @@ namespace Coda {
 			typedef std::tuple<std::string, Coda::Runtime::Environment, Coda::Frontend::Node> UserDefinedFunction;
 
 		public:
-			// Creates a new environment.
-			Environment();
 
 			// Creates a new environment also setting its parent. 
 			Environment(Environment* parentEnvironment);
 
 			// Generate a new environment with the root environment as its parent.
 			static Environment root();
+
+			ValuePtr declareFunctionParameter(const std::string name, const ValuePtr& value);
 
 			/*
 				Declares a new variable or assigns a value to an existing variable.
@@ -116,6 +116,10 @@ namespace Coda {
 
 		private:
 			Environment* resolve(std::string name);
+			
+			// Creates a new environment.
+			Environment();
+
 		};
 	} // namespace Runtime
 } // namespace Coda

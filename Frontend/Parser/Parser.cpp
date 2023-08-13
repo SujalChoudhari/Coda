@@ -683,6 +683,20 @@ namespace Coda {
 			else if (*type == TokenType::SEMICOLON) {
 				advance(); // skip the semicolon
 			}
+			else if (*type == TokenType::JUMP) {
+				expression.value = mCurrentToken->value;
+				expression.type = NodeType::JUMP_EXPRESSION;
+				if (mCurrentToken->value == "return") {
+					advance();
+					expression.left = std::make_shared<Node>(parseExpression());
+					if (expression.left->type == NodeType::INVALID)
+						expression.left = nullptr;
+				}
+				else
+				{
+					advance();
+				}
+			}
 			else {
 				expression.type = NodeType::INVALID;
 				Coda::Error::Parser::raise("Invalid Token '" +

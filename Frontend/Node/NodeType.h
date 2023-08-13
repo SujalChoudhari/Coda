@@ -11,6 +11,7 @@ namespace Coda {
 			VARIABLE_DECLARATION,
 			CONSTANT_DECLARATION,
 			BLOCK_STATEMENT,
+			JUMP_EXPRESSION,
 
 			// Expressions
 				//Literals

@@ -92,6 +92,9 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::DO_WHILE_EXPRESSION) {
 				return evaluateDoWhileExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::JUMP_EXPRESSION) {
+				return evaluateJumpExpression(astNode, env);
+			}
 			else {
 				Error::Runtime::raise("Unrecognized ASTNode '" + astNode.value + "'");
 			}
@@ -353,8 +356,8 @@ namespace Coda {
 				else {
 					functionContent = env.getFunction(function->value);
 				}
-				Environment scope = Environment(std::get<1>(*functionContent));
-
+				//Environment scope = Environment(std::get<1>(*functionContent));
+				Environment scope = Environment(&env);
 
 				// create variables for each parameter
 				if (std::get<2>(*functionContent).left->properties.size() != args.properties.size()) {
@@ -365,14 +368,11 @@ namespace Coda {
 				for (int i = 0; i < std::get<2>(*functionContent).left->properties.size(); i++) {
 					auto& it = std::get<2>(*functionContent).left->properties[std::to_string(i)];
 					const std::string& name = it->value;
-					scope.declareOrAssignVariable(name, args.properties[std::to_string(i + 1)], true);
+					scope.declareFunctionParameter(name, args.properties[std::to_string(i + 1)]);
 				}
 
 				// Run the function
-				ValuePtr result = nullptr;
-				for (auto& it : std::get<2>(*functionContent).right->properties) {
-					result = interpret(*it.second.get(), scope);
-				}
+				ValuePtr result = evaluateBlockExpression(*(std::get<2>(*functionContent).right).get(), scope);
 
 				return result;
 			}
@@ -406,10 +406,22 @@ namespace Coda {
 
 			if (astNode.value == "=") {
 				if (astNode.left->type == Frontend::NodeType::IDENTIFIER) {
-					return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
+					if (astNode.right->type == Frontend::NodeType::JUMP_EXPRESSION) {
+						env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
+						return std::make_shared<Value>(Type::NONE, "");
+					}
+					else {
+						return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
+					}
 				}
 				else if (astNode.left->type == Frontend::NodeType::MEMBER_EXPRESSION) {
-					return env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
+					if (astNode.right->type == Frontend::NodeType::JUMP_EXPRESSION) {
+						env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
+						return std::make_shared<Value>(Type::NONE, "");
+					}
+					else {
+						return env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
+					}
 				}
 				else {
 					Error::Runtime::raise("Invalid Assignment Operation, at ", astNode.endPosition);
@@ -436,6 +448,9 @@ namespace Coda {
 				ValuePtr interpreted = interpret(*astNode.right.get(), env);
 				return performAssignmentOperation(left, interpreted, [](double a, double b) { return a / b; });
 			}
+			else {
+				return nullptr;
+			}
 		}
 
 
@@ -444,29 +459,42 @@ namespace Coda {
 			ValuePtr result;
 			for (auto& it : astNode.properties) {
 				result = interpret(*it.second.get(), env);
+				IF_ERROR_RETURN_VALUE_PTR;
+				if (result->type == Type::JUMP) {
+					if (result->value == "return")
+						return result->properties["returnable"];
+					else
+						return result;
+				}
+
+
 			}
-			return result;
+			return std::make_shared<Value>(Type::NONE, "");
 		}
 
 		ValuePtr Interpreter::evaluateIfExpression(const Frontend::Node& astNode, Environment& env)
 		{
-			ValuePtr ifCondition = interpret(*astNode.left.get(), env);
+			Environment ifEnviron = Environment(&env);
+			ValuePtr ifCondition = interpret(*astNode.left.get(), ifEnviron);
 
 			if (Value::isTruthy(ifCondition)) {
-				return interpret(*astNode.right.get(), env);
+				return interpret(*astNode.right.get(), ifEnviron);
 			}
 
 			for (auto it = astNode.properties.begin(); it != astNode.properties.end(); it++) {
 				if (it->second != nullptr) {
 					Frontend::Node elifExpression = *it->second.get();
+					if (elifExpression.left == nullptr) {
+						return interpret(*elifExpression.right.get(), ifEnviron);
+					}
 
-					ValuePtr elifCondition = interpret(*elifExpression.left.get(), env);
+					ValuePtr elifCondition = interpret(*elifExpression.left.get(), ifEnviron);
 					if (Value::isTruthy(elifCondition)) {
-						return interpret(*elifExpression.right.get(), env);
+						return interpret(*elifExpression.right.get(), ifEnviron);
 					}
 				}
 				else {
-					return interpret(*astNode.right.get(), env);
+					return interpret(*astNode.right.get(), ifEnviron);
 				}
 			}
 
@@ -492,6 +520,15 @@ namespace Coda {
 					break;
 				}
 				result = interpret(body, forEnv);
+				IF_ERROR_RETURN_VALUE_PTR;
+
+				if (result->type == Type::JUMP) {
+					if (result->value == "break")
+						break;
+					else if (result->value == "return")
+						return result->properties.at("returnable");
+				}
+
 				interpret(increment, forEnv);
 			}
 
@@ -512,6 +549,16 @@ namespace Coda {
 				}
 
 				result = interpret(body, whileEnv);
+				IF_ERROR_RETURN_VALUE_PTR;
+
+				if (result->type == Type::JUMP) {
+					if (result->value == "break")
+						break;
+					else if (result->value == "continue")
+						continue;
+					else if (result->value == "return")
+						return result->properties.at("returnable");
+				}
 			}
 
 			return result;
@@ -531,11 +578,46 @@ namespace Coda {
 				if (!Value::isTruthy(conditionValue)) {
 					break;
 				}
+
+				if (result->type == Type::JUMP) {
+					if (result->value == "break")
+						break;
+					else if (result->value == "continue")
+						continue;
+					else if (result->value == "return")
+						return result->properties.at("returnable");
+				}
 			}
 
 			return result;
 		}
 
+		ValuePtr Interpreter::evaluateJumpExpression(const Frontend::Node& astNode, Environment& env)
+		{
+			if (astNode.value == "break") {
+				return std::make_shared<Value>(Type::JUMP, "break", astNode.startPosition, astNode.endPosition);
+			}
+			else if (astNode.value == "continue") {
+				return std::make_shared<Value>(Type::JUMP, "continue", astNode.startPosition, astNode.endPosition);
+			}
+			else if (astNode.value == "return") {
+				Value value = Value(Type::JUMP);
+				value.value = "return";
+				value.startPosition = astNode.startPosition;
+				value.endPosition = astNode.endPosition;
+				if (astNode.left != nullptr) {
+					value.properties.insert({ "returnable",interpret(*astNode.left.get(), env) });
+				}
+				else {
+					value.properties.insert({ "returnable",std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition) });
+				}
+				return std::make_shared<Value>(value);
+			}
+			else {
+				Error::Runtime::raise("Not a valid jump statement, at: ", astNode.endPosition);
+				return std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
+			}
+		}
 
 
 		ValuePtr Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)

@@ -44,6 +44,17 @@ namespace Coda {
 			return env;
 		}
 
+		ValuePtr Environment::declareFunctionParameter(const std::string name, const ValuePtr& value) {
+			auto symbolIt = symbols.find(name);
+			if (symbolIt != symbols.end()) { // Prameters cannot exist with same name
+				Error::Runtime::raise("Parameter with same name already exists, at ", value->endPosition);
+				return nullptr;
+			}
+			else {
+				symbols.emplace(name, value);
+				constants.insert(name);
+			}
+		}
 
 		ValuePtr Environment::declareOrAssignVariable(const std::string& name, const ValuePtr& value, bool isConstant)
 		{
@@ -64,17 +75,17 @@ namespace Coda {
 			else {
 				// Variable does not exist, check in parent environment
 				if (parent != nullptr) {
-					return parent->declareOrAssignVariable(name, value, isConstant);
+					Environment* env = resolve(name);
+					if (env != nullptr)
+						return parent->declareOrAssignVariable(name, value, isConstant);
 				}
 
 				// Variable does not exist in parent environment, declare it
 				if (isConstant) {
 					constants.insert(name);
 				}
-
-				
-
 				symbols.emplace(name, value);
+
 			}
 			return value;
 		}
@@ -172,15 +183,11 @@ namespace Coda {
 			if (it != userDefinedFunctions.end()) {
 				return &(*it);
 			}
-			else {
-				return nullptr;
-			}
 
-			// TODO: Explain why this exists
+
 			if (this->parent) {
 				auto func = this->parent->getFunction(name);
-				if (func)
-					return func;
+				return func;
 			}
 			Error::Runtime::raise("Function '" + name + "' does not exist");
 			return nullptr;

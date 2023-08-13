@@ -33,7 +33,8 @@ namespace Coda {
 				"<object>",
 				"<list>",
 				"<native_function>",
-				"<function>"
+				"<function>",
+				"<jump>"
 			};
 
 			return types[(int)type];

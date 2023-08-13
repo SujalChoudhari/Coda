@@ -1,4 +1,18 @@
-import func;
-import test;
 
-funcMethod(10,20);
+def canBreak(i){
+	if(i == 10){
+		return break;
+	}
+	else{
+		return continue;
+	}
+}
+
+i = 1;
+while(true){
+	i++;
+	
+	print(i);
+
+	canBreak(i);
+}

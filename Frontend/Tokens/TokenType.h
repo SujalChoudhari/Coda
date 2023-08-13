@@ -23,6 +23,7 @@ namespace Coda {
 			LET,
 			CONST,
 			TYPE,
+			JUMP,
 			DEF,
 			RETURN,
 			IF,

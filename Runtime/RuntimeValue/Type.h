@@ -20,6 +20,8 @@ namespace Coda {
 			LIST,
 			NATIVE_FUNCTION,
 			FUNCTION,
+
+			JUMP
 		};
 
 	} // namespace Runtime
