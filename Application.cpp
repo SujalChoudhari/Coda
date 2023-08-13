@@ -19,9 +19,11 @@ namespace Coda {
 		catch (std::out_of_range e) {
 			return repl();
 		}
+		
+		Frontend::Importer importer = Frontend::Importer();
 
-		Coda::Utils::FileReader fr = { filename };
-		std::string source = fr.readToString();
+		std::string source = importer.import(filename);
+
 		Runtime::Environment env = Runtime::Environment::root();
 		if (source.empty()) {
 			std::cout << "Source file is empty.\nOpening REPL...\n+------------------------+" << std::endl;

@@ -146,6 +146,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Error\Raiser.cpp" />
     <ClCompile Include="Error\Manager.cpp" />
+    <ClCompile Include="Frontend\Importer\Importer.cpp" />
     <ClCompile Include="Frontend\Node\Node.cpp" />
     <ClCompile Include="Frontend\Lexer\Lexer.cpp" />
     <ClCompile Include="Frontend\Parser\Parser.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Error\Manager.h" />
     <ClInclude Include="Error\Position.h" />
     <ClInclude Include="Frontend\Frontend.h" />
+    <ClInclude Include="Frontend\Importer\Importer.h" />
     <ClInclude Include="Frontend\Lexer\Lexer.h" />
     <ClInclude Include="Frontend\Node\Node.h" />
     <ClInclude Include="Frontend\Node\NodeType.h" />

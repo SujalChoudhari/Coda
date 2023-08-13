@@ -1,8 +1,4 @@
-let list x = {
-	l_i : [30,40],
-	li2 : [50,60],
-}
+import func;
+import test;
 
-x.l_i["b"] = [10,20,30]
-
-print(x.l_i["b"][2])
+funcMethod(10,20);

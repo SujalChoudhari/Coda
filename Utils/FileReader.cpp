@@ -8,7 +8,7 @@ namespace Coda {
 			: mFile(filename)
 		{
 			if (!mFile)
-				Error::Runtime::raise("Failed to open file: " + filename);
+				Error::Importer::raise("Failed to open file: " + filename);
 		}
 
 		FileReader::~FileReader()
@@ -19,7 +19,7 @@ namespace Coda {
 		std::string FileReader::readToString()
 		{
 			if (!mFile)
-				Error::Runtime::raise("File not open.");
+				Error::Importer::raise("File not open.");
 			std::string content;
 			mFile.seekg(0, std::ios::end);
 			content.reserve(mFile.tellg());
@@ -34,7 +34,7 @@ namespace Coda {
 		std::vector<std::string> FileReader::readToLines()
 		{
 			if (!mFile)
-				Error::Runtime::raise("File not open.");
+				Error::Importer::raise("File not open.");
 			std::vector<std::string> lines;
 			std::string line;
 			while (std::getline(mFile, line))

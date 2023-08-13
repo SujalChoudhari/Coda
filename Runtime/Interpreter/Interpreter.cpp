@@ -543,6 +543,7 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE_PTR;
 			ValuePtr left = interpret(*astNode.left.get(), env);
 			Value res = *left->properties[astNode.right->value].get();
+
 			return std::make_shared<Value>(res);
 		}
 

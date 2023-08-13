@@ -5,7 +5,7 @@ namespace Coda {
 		std::ostream& operator<<(std::ostream& os, const Position& pos) {
 			os << "Line: " << pos.line
 				<< " Character: " << pos.character << std::endl;
-			
+
 
 			if (pos.lineText.empty())
 				return os;
@@ -14,7 +14,7 @@ namespace Coda {
 			os << pos.lineText << std::endl;
 
 			// Print the arrows pointing to the location of the error
-			for (unsigned int i = 0; i < pos.character -1; i++) {
+			for (unsigned int i = 0; i < pos.character - 1; i++) {
 				os << "~";
 			}
 			os << "^";
@@ -22,7 +22,11 @@ namespace Coda {
 			return os;
 		}
 
-		
+		void Importer::raise(std::string error) {
+			Manager::raiseError();
+			std::cout << "[IMPTR]: " << error << std::endl;
+		}
+
 		void Lexer::raise(std::string error, const Position& pos) {
 			Manager::raiseError();
 			std::cout << "[LEXER]: " << error << pos << std::endl;

@@ -5,6 +5,12 @@
 
 namespace Coda {
 	namespace Error {
+
+		namespace Importer {
+			// Raise an importer error.
+			void raise(std::string);
+		}
+
 		namespace Lexer {
 			// Raise a lexer error.
 			void raise(std::string, const Position& pos);

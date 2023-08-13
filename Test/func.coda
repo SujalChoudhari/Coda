@@ -1,11 +1,5 @@
-def makeAdder(offset){
-	def add(x,y){
-	x+y+offset
-	}
-
-	add(offset,offset);
+def funcMethod(x,y){
+	println("X is",x,"Y is",y);
 }
 
-x = makeAdder(10);
-print(x);
-
+import test

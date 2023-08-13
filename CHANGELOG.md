@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.0.9] - 13-8-2023
+
+### Added
+- `import` keyword
+- import copies the code from the file and pastes it in the current file (like `#include` in C)
+
+
 ## [0.0.8] - 12-8-2023
 
 ### Added

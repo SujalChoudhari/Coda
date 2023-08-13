@@ -19,6 +19,8 @@
 	Frontend::Parser is used to parse the tokens.
 */
 
+#include "Importer/Importer.h"
+
 #include "Lexer/Lexer.h"
 
 #include "Node/Node.h"
