@@ -1,18 +1,14 @@
+// Login system
 
-def canBreak(i){
-	if(i == 10){
-		return break;
-	}
-	else{
-		return continue;
-	}
-}
+adminName = "Sujal";
+adminPassword = "1234";
 
-i = 1;
-while(true){
-	i++;
-	
-	print(i);
 
-	canBreak(i);
+let userName = input("Enter your Username: ");
+let userPassword = input("Enter your Password: ");
+
+if (userName == adminName && userPassword == adminPassword) {
+	println("Welcome to the admin panel");
+} else {
+	println("Invalid Username or Password");
 }

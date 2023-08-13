@@ -136,91 +136,107 @@ namespace Coda {
 			return unaryExpression;
 		}
 
-		Node Parser::parsePrimaryExpression()
-		{
+		Node Parser::parsePrimaryExpression() {
 			Node expression;
 			expression.startPosition = mCurrentToken->startPosition;
-			TokenType* type = &mCurrentToken->type;
+			TokenType type = mCurrentToken->type;
+
 			IF_ERROR_RETURN_NODE;
-			if (*type == TokenType::IDENTIFIER) {
-				expression.type = NodeType::IDENTIFIER;
-				expression.value = mCurrentToken->value;
+
+			switch (type) {
+			case TokenType::IDENTIFIER:
+			case TokenType::BYTE:
+			case TokenType::INT:
+			case TokenType::LONG:
+			case TokenType::FLOAT:
+			case TokenType::DOUBLE:
+			case TokenType::CHAR:
+			case TokenType::STRING:
+				parseLiteralExpression(expression, type);
+				break;
+
+			case TokenType::BINARY_OPERATOR:
+				if (isBinaryOperatorToken("+") || isBinaryOperatorToken("-")) {
+					expression = parseUnaryExpression();
+				}
+				break;
+
+			case TokenType::RETURN:
+				parseReturnExpression();
+				break;
+
+			case TokenType::OPEN_PAREN:
 				advance();
-			}
-			else if (*type == TokenType::BYTE) {
-				expression.type = NodeType::BYTE_LITERAL;
-				expression.value = mCurrentToken->value;
-				advance();
-			}
-			else if (*type == TokenType::INT) {
-				expression.type = NodeType::INTEGER_LITERAL;
-				expression.value = mCurrentToken->value;
-				advance();
-			}
-			else if (*type == TokenType::LONG) {
-				expression.type = NodeType::LONG_INT_LITERAL;
-				expression.value = mCurrentToken->value;
-				advance();
-			}
-			else if (*type == TokenType::FLOAT) {
-				expression.type = NodeType::FLOATING_POINT_LITERAL;
-				expression.value = mCurrentToken->value;
-				advance();
-			}
-			else if (*type == TokenType::DOUBLE) {
-				expression.type = NodeType::DOUBLE_LITERAL;
-				expression.value = mCurrentToken->value;
-				advance();
-			}
-			else if (*type == TokenType::CHAR) {
-				expression.type = NodeType::CHARACTER_LITERAL;
-				expression.value = mCurrentToken->value;
-				advance();
-			}
-			else if (*type == TokenType::STRING) {
-				expression.type = NodeType::STRING_LITERAL;
-				expression.value = mCurrentToken->value;
-				advance();
-			}
-			else if (*type == TokenType::BINARY_OPERATOR && (mCurrentToken->value == "+" || mCurrentToken->value == "-")) {
-				expression = parseUnaryExpression();
-			}
-			else if (*type == TokenType::RETURN) {
-				advance();
-			}
-			else if (*type == TokenType::OPEN_PAREN) {
-				advance(); // skip the paren
 				expression = parseExpression();
-				expect(TokenType::CLOSE_PAREN,
-					" Unexpected Token found '" +
-					mCurrentToken->value + "' was found instead of ')' at, ");
-			}
-			else if (*type == TokenType::SEMICOLON) {
-				advance(); // skip the semicolon
-			}
-			else if (*type == TokenType::JUMP) {
-				expression.value = mCurrentToken->value;
-				expression.type = NodeType::JUMP_EXPRESSION;
-				if (mCurrentToken->value == "return") {
-					advance();
-					expression.left = std::make_shared<Node>(parseExpression());
-					if (expression.left->type == NodeType::INVALID)
-						expression.left = nullptr;
-				}
-				else
-				{
-					advance();
-				}
-			}
-			else {
-				expression.type = NodeType::INVALID;
-				Coda::Error::Parser::raise("Invalid Token '" +
-					mCurrentToken->value + "' was found at, ",
-					mCurrentToken->startPosition);
+				expect(TokenType::CLOSE_PAREN, " Unexpected Token found '" + mCurrentToken->value + "' was found instead of ')' at, ");
+				break;
+
+			case TokenType::SEMICOLON:
+				advance();
+				break;
+
+			case TokenType::JUMP:
+				parseJumpExpression(expression);
+				break;
+
+			default:
+				handleInvalidToken();
+				break;
 			}
 
 			expression.endPosition = mCurrentToken->endPosition;
 			return expression;
 		}
+
+		void Parser::parseLiteralExpression(Node& expression, TokenType type) {
+			expression.type = getTokenTypeAsNodeType(type);
+			expression.value = mCurrentToken->value;
+			advance();
+		}
+
+		void Parser::parseReturnExpression() {
+			advance();
+		}
+
+		void Parser::parseJumpExpression(Node& expression) {
+			expression.value = mCurrentToken->value;
+			expression.type = NodeType::JUMP_EXPRESSION;
+			if (mCurrentToken->value == "return") {
+				advance();
+				expression.left = std::make_shared<Node>(parseExpression());
+				if (expression.left->type == NodeType::INVALID) {
+					expression.left = nullptr;
+				}
+			}
+			else {
+				advance();
+			}
+		}
+
+		void Parser::handleInvalidToken() {
+			Node expression;
+			expression.type = NodeType::INVALID;
+			Coda::Error::Parser::raise("Invalid Token '" + mCurrentToken->value + "' was found at, ", mCurrentToken->startPosition);
+		}
+
+		bool Parser::isBinaryOperatorToken(const std::string& op) {
+			return mCurrentToken->value == op && mCurrentToken->type == TokenType::BINARY_OPERATOR;
+		}
+
+
+		NodeType Parser::getTokenTypeAsNodeType(TokenType tokenType) {
+			switch (tokenType) {
+			case TokenType::IDENTIFIER:          return NodeType::IDENTIFIER;
+			case TokenType::BYTE:                return NodeType::BYTE_LITERAL;
+			case TokenType::INT:                 return NodeType::INTEGER_LITERAL;
+			case TokenType::LONG:                return NodeType::LONG_INT_LITERAL;
+			case TokenType::FLOAT:               return NodeType::FLOATING_POINT_LITERAL;
+			case TokenType::DOUBLE:              return NodeType::DOUBLE_LITERAL;
+			case TokenType::CHAR:                return NodeType::CHARACTER_LITERAL;
+			case TokenType::STRING:              return NodeType::STRING_LITERAL;
+			default:							 return NodeType::INVALID;
+			}
+		}
+
 	}
 }

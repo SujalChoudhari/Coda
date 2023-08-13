@@ -30,7 +30,6 @@ namespace Coda {
 			else {
 				mTokens.emplace_back(TokenType::ASSIGN, "=", mCurrentPosition);
 			}
-
 		}
 
 		void Lexer::handleSemicolon() {
@@ -252,45 +251,12 @@ namespace Coda {
 
 			while (mCurrentChar != '\0' && mCurrentChar != '"') {
 				if (mCurrentChar == '\\') {
-					advance();
-					switch (mCurrentChar) {
-					case 'n':
-						stringLiteral += '\n';
-						break;
-					case 't':
-						stringLiteral += '\t';
-						break;
-					case '\"':
-						stringLiteral += '\"';
-						break;
-					case '\'':
-						stringLiteral += '\'';
-						break;
-					case 'r':
-						stringLiteral += '\r';
-						break;
-					case 'b':
-						stringLiteral += '\b';
-						break;
-					case 'f':
-						stringLiteral += '\f';
-						break;
-					case '/':
-						stringLiteral += '/';
-						break;
-					case '\\':
-						stringLiteral += '\\';
-						break;
-					default:
-						stringLiteral += "\\" + mCurrentChar;
-						break;
-					}
+					stringLiteral += handleEscapeSequence();
 				}
 				else {
 					stringLiteral += mCurrentChar;
+					advance();
 				}
-				advance();
-
 			}
 
 			if (mCurrentChar == '"') {
@@ -303,69 +269,53 @@ namespace Coda {
 			}
 		}
 
-
+		std::string Lexer::handleEscapeSequence() {
+			advance(); // Skip the backslash
+			switch (mCurrentChar) {
+			case 'n':  return "\n";
+			case 't':  return "\t";
+			case '\"': return "\"";
+			case '\'': return "\'";
+			case 'r':  return "\r";
+			case 'b':  return "\b";
+			case 'f':  return "\f";
+			case '/':  return "/";
+			case '\\': return "\\";
+			default:
+				return "\\" + std::string(1, mCurrentChar);
+			}
+		}
 
 		void Lexer::handleNumbers() {
 			Position start = mCurrentPosition;
 			std::string num = "";
-			bool dot = false;
-			bool sci = false;
-			bool signedSci = false;
 			TokenType type = TokenType::INT;
 
-			while (mCurrentChar != '\0' && (isSupportedDigit(mCurrentChar) || mCurrentChar == '.' || mCurrentChar == 'e' || mCurrentChar == 'E' || (sci && (mCurrentChar == '-' || mCurrentChar == '+')))) {
-				if (mCurrentChar == '.') {
-					if (dot) {
-						Error::Lexer::raise("Unexpected Character '" + std::to_string(mCurrentChar) + "' found at", mCurrentPosition);
-						advance();
-						continue;
-					}
-					else {
-						dot = true;
-						type = TokenType::DOUBLE;
-						num.push_back(mCurrentChar);
-					}
+			while (isDigitOrNumberComponent(mCurrentChar)) {
+				if (mCurrentChar == '.' || mCurrentChar == 'e' || mCurrentChar == 'E') {
+					type = TokenType::DOUBLE;
+					num.push_back(mCurrentChar);
 				}
-				else if (mCurrentChar == 'e' || mCurrentChar == 'E') {
-					if (sci) {
-						Error::Lexer::raise("Unexpected Character '" + std::to_string(mCurrentChar) + "' found at", mCurrentPosition);
-
-						advance();
-						continue;
-					}
-					else {
-						sci = true;
-						type = TokenType::DOUBLE;
-						num.push_back(mCurrentChar);
-					}
-				}
-				else if (sci && (mCurrentChar == '-' || mCurrentChar == '+')) {
-					if (signedSci) {
-						Error::Lexer::raise("Unexpected Character '" + std::to_string(mCurrentChar) + "' found at", mCurrentPosition);
-						advance();
-						continue;
-					}
-					else {
-						signedSci = true;
-						num.push_back(mCurrentChar);
-					}
+				else if ((mCurrentChar == '-' || mCurrentChar == '+') && (num.empty() || (num.back() == 'e' || num.back() == 'E'))) {
+					num.push_back(mCurrentChar);
 				}
 				else {
-					auto it = DIGIT_EXTENTIONS.find(mCurrentChar);
-					if (it != DIGIT_EXTENTIONS.end()) {
-						type = it->second;
-					}
-					else if (isdigit(mCurrentChar)) {
-						num.push_back(mCurrentChar);
-					}
-					else {
-						break;
-					}
+					num += handleDigitOrExtension();
 				}
 				advance();
 			}
 
 			mTokens.emplace_back(type, num, start, mCurrentPosition);
+		}
+
+		std::string Lexer::handleDigitOrExtension() {
+			if (isdigit(mCurrentChar)) {
+				return std::string(1, mCurrentChar);
+			}
+			else {
+				auto it = DIGIT_EXTENTIONS.find(mCurrentChar);
+				return (it != DIGIT_EXTENTIONS.end()) ? std::string(1, static_cast<char>(it->second)) : "";
+			}
 		}
 
 		void Lexer::handleIdentifiers()

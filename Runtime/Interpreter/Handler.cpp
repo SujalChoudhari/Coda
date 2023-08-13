@@ -78,7 +78,6 @@ namespace Coda {
 			}
 
 			return std::make_shared<Value>(Type::BOOL, std::to_string(result), left->startPosition, right->endPosition);
-
 		}
 
 		bool Interpreter::isNumericType(Type type)

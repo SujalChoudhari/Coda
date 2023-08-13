@@ -126,5 +126,9 @@ namespace Coda {
 		bool Lexer::isLetter(char c) {
 			return isalpha(c);
 		}
+
+		bool Lexer::isDigitOrNumberComponent(char c) {
+			return isdigit(c) || c == '.' || c == 'e' || c == 'E' || c == '-' || c == '+';
+		}
 	}
 }

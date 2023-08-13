@@ -31,12 +31,8 @@ namespace Coda {
 			Node function = Node(NodeType::FUNCTION_LITERAL, functionName);
 			function.left = std::make_shared<Node>(params);
 			function.right = std::make_shared<Node>(block);
-
 			return function;
-
 		}
-
-
 
 		Node Parser::parseBlockExpression()
 		{
@@ -57,10 +53,7 @@ namespace Coda {
 			IF_ERROR_RETURN_NODE;
 
 			return block;
-
 		}
-
-
 
 		Node Parser::parseObjectExpression()
 		{

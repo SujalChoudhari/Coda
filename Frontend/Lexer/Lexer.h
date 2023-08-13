@@ -41,21 +41,17 @@ namespace Coda {
 			Position mCurrentPosition;
 
 		private:
-
-			/*
-				Go to the next character in the source code.
-				Used when the current character has been processed completely.
-			*/
+			//	Go to the next character in the source code.
+			//	Used when the current character has been processed completely.
 			void advance();
 
-			/*
-				Handlers for different types of characters.
-			*/
+			//	Handlers for different types of characters.
 			void handleNewLine();
 			void handleWhitespace();
 			void handleSymbol();
 			void handleBinaryOperator();
 			void handleStringLiteral();
+			std::string handleEscapeSequence();
 			void handleCharacter();
 			void handleEquals();
 			void handleSemicolon();
@@ -73,6 +69,7 @@ namespace Coda {
 			void handlePipe();
 			void handleAmpersand();
 			void handleNumbers();
+			std::string handleDigitOrExtension();
 			void handleIdentifiers();
 			void handleIllegalCharacter();
 
@@ -85,6 +82,7 @@ namespace Coda {
 			bool isUnaryOperator(std::string c);
 			bool isLetter(char c);
 			bool isSupportedDigit(char ch);
+			bool isDigitOrNumberComponent(char c);
 		};
 	} // namespace Frontend
 } // namespace Coda

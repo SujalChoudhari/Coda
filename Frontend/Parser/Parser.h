@@ -53,6 +53,13 @@ namespace Coda {
 			Node parsePrimaryExpression();
 			Node parseDeclaration(bool isConstant);
 
+			void parseLiteralExpression(Node& expression, TokenType type);
+			void parseReturnExpression();
+			void parseJumpExpression(Node& expression);
+			bool isBinaryOperatorToken(const std::string& op);
+			NodeType getTokenTypeAsNodeType(TokenType tokenType);
+			void handleInvalidToken();
+
 
 		private:
 			std::vector<Token>* mTokens;

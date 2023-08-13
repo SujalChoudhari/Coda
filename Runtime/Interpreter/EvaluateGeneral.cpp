@@ -50,18 +50,13 @@ namespace Coda {
 			else {
 				Error::Runtime::raise("Unrecognized unary operator '" + unaryOperator + "'");
 			}
-
 		}
-
-
 
 		ValuePtr Interpreter::evaluateIdentifier(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
 			return env.lookupSymbol(astNode.value);
 		}
-
-
 
 		ValuePtr Interpreter::performAssignmentOperation(ValuePtr left, const ValuePtr& interpreted, const std::function<double(double, double)>& operation)
 		{

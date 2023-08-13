@@ -120,8 +120,6 @@ namespace Coda {
 					else
 						return result;
 				}
-
-
 			}
 			return std::make_shared<Value>(Type::NONE, "");
 		}
