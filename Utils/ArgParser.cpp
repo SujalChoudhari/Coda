@@ -51,6 +51,6 @@ std::string Coda::Utils::ArgParser::getValue(std::string flag) const
 std::string Coda::Utils::ArgParser::getStandaloneValueAt(int i)
 {
 	if (i >= mStandaloneValues.size())
-		throw std::out_of_range("Index out of range");
+		return "";
 	return mStandaloneValues.at(i);
 }

@@ -60,5 +60,8 @@ namespace Coda {
 			@return - The last calculated value.
 		*/
 		static Runtime::ValuePtr interpret(Frontend::Program& program, Runtime::Environment& env);
+
+	private:
+		static int runnable(int argc, char** argv);
 	};
 } // namespace Coda

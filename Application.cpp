@@ -5,22 +5,36 @@
 
 namespace Coda {
 	int Application::run(int argc, char** argv) {
+		int result = EXIT_SUCCESS;
+		try {
+			return runnable(argc, argv);
+		}
+		catch (const std::exception& e) {
+			std::cerr << "[CODA] A fatal error occurred in the interpreter.\n" << e.what() << std::endl;
+			result = EXIT_FAILURE;
+		}
+		catch (...) {
+			std::cerr << "[CODA] Unknown error occurred while executing the program." << std::endl;
+			result = EXIT_FAILURE;
+		}
+	}
+	int Application::runnable(int argc, char** argv)
+	{
 		Coda::Utils::ArgParser argParser = Coda::Utils::ArgParser();
 		argParser.parse(argc, argv);
 		std::string filename;
 
-		try {
 #if _DEBUG
-			filename = "Test/debug.coda";
+		filename = "Test/debug.coda";
 #else 
-			filename = argParser.getStandaloneValueAt(0);
+		filename = argParser.getStandaloneValueAt(0);
 #endif
-		}
-		catch (std::out_of_range e) {
+
+		Frontend::Importer importer = Frontend::Importer();
+
+		if (filename.empty()) {
 			return repl();
 		}
-		
-		Frontend::Importer importer = Frontend::Importer();
 
 		std::string source = importer.import(filename);
 
@@ -36,8 +50,9 @@ namespace Coda {
 			std::cin.get();
 		}
 
-		return 0;
+		return EXIT_SUCCESS;
 	}
+
 
 	int Application::repl() {
 		std::cout << "Welcome to Coda REPL!" << std::endl;
@@ -60,28 +75,19 @@ namespace Coda {
 	int Application::execute(std::string source, Coda::Runtime::Environment& env) {
 		int result = EXIT_SUCCESS;
 		if (source.empty()) {
-			result = 1;
+			result = EXIT_FAILURE;
 			std::cerr << "Empty source file.";
 			return result;
 		}
 
-		try {
-			std::vector<Coda::Frontend::Token> tokens = tokenize(source);
+		std::vector<Coda::Frontend::Token> tokens = tokenize(source);
 
-			IF_ERROR_RETURN(1);
-			Coda::Frontend::Program program = parse(tokens);
+		IF_ERROR_RETURN(1);
+		Coda::Frontend::Program program = parse(tokens);
 
-			IF_ERROR_RETURN(1);
-			interpret(program, env);
-		}
-		catch (const std::exception& e) {
-			std::cerr <<"[CODA] A cpp error occurred in the interpreter.\n" << e.what() << std::endl;
-			result = EXIT_FAILURE;
-		}
-		catch (...) {
-			std::cerr << "[CODA] Unknown error occurred while executing the program." << std::endl;
-			result = EXIT_FAILURE;
-		}
+		IF_ERROR_RETURN(1);
+		interpret(program, env);
+
 
 		return result;
 	}
@@ -105,4 +111,4 @@ namespace Coda {
 		Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
 		return inter.evaluateProgram(program, env);
 	}
-} 
+}

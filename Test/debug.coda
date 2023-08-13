@@ -1,5 +1,6 @@
 // Login system
-
+import func
+import func
 adminName = "Sujal";
 adminPassword = "1234";
 

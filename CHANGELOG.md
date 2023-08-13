@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - function parameters are constants (can't be changed)
-- functions create a seperate scope for themselves, hence variables declared inside a function are not accessible outside the function. Function body `<block>` is a seperate scope.
+- functions create a seperate scope for themselves, hence variables declared inside a function are not accessible outside the function. Function body `<block>` is a seperate scope.- Each imported file is imported only once, hence if a file is imported twice, it will be imported only once.
 
 
 ## [0.0.8] - 12-8-2023

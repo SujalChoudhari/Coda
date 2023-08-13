@@ -2,7 +2,7 @@
 
 #include <string>
 #include "../../Utils/FileReader.h"
-
+#include <unordered_set>
 namespace Coda {
 	namespace Frontend {
 
@@ -10,6 +10,8 @@ namespace Coda {
 		public:
 			std::string import(const std::string& filepath);
 
+		private:
+			std::unordered_set<std::string> mImportedFiles;
 		private:
 			size_t findNextImport(const std::string& sourceCode, size_t startIndex);
 			size_t findImportEnd(const std::string& sourceCode, size_t importIndex);

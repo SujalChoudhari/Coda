@@ -4,7 +4,6 @@
 
 namespace Coda {
 	namespace Frontend {
-
 		std::string Importer::import(const std::string& filepath) {
 			Coda::Utils::FileReader fileReader(filepath);
 			std::string sourceCode = fileReader.readToString();
@@ -15,8 +14,15 @@ namespace Coda {
 				size_t importEndIndex = findImportEnd(sourceCode, importIndex);
 				std::string importString = extractImportString(sourceCode, importIndex, importEndIndex);
 				std::string modulePath = getAbsImportPath(filepath, importString);
+				
 				std::string moduleSource = import(modulePath);
-				replaceImport(sourceCode, importIndex, importEndIndex, moduleSource);
+				if (mImportedFiles.find(modulePath) == mImportedFiles.end()) {
+					replaceImport(sourceCode, importIndex, importEndIndex, moduleSource);
+					mImportedFiles.insert(modulePath);
+				}
+				else {
+					replaceImport(sourceCode, importIndex, importEndIndex, "");
+				}
 				importIndex = findNextImport(sourceCode, importIndex);
 			}
 
