@@ -161,10 +161,6 @@ namespace Coda {
 				}
 				break;
 
-			case TokenType::RETURN:
-				parseReturnExpression();
-				break;
-
 			case TokenType::OPEN_PAREN:
 				advance();
 				expression = parseExpression();
@@ -194,24 +190,6 @@ namespace Coda {
 			advance();
 		}
 
-		void Parser::parseReturnExpression() {
-			advance();
-		}
-
-		void Parser::parseJumpExpression(Node& expression) {
-			expression.value = mCurrentToken->value;
-			expression.type = NodeType::JUMP_EXPRESSION;
-			if (mCurrentToken->value == "return") {
-				advance();
-				expression.left = std::make_shared<Node>(parseExpression());
-				if (expression.left->type == NodeType::INVALID) {
-					expression.left = nullptr;
-				}
-			}
-			else {
-				advance();
-			}
-		}
 
 		void Parser::handleInvalidToken() {
 			Node expression;

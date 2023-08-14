@@ -18,7 +18,7 @@ namespace Coda {
 			A new environment is created for every function call.
 			Environment is responsible for variable lookup and assignment.
 		*/
-
+		
 		class Environment {
 			// A function is a callable object.
 		public:
@@ -26,6 +26,8 @@ namespace Coda {
 
 			// <name, declaration environment, body (AST)>
 			typedef std::tuple<std::string, Coda::Runtime::Environment, Coda::Frontend::Node> UserDefinedFunction;
+
+
 
 		public:
 
@@ -107,16 +109,22 @@ namespace Coda {
 			void remove(const std::string& name);
 
 
+			void addScope(const std::string& name, std::shared_ptr<Environment> env);
+			std::shared_ptr<Environment> getScope(const std::string& name);
+			std::shared_ptr<Environment> getScopeForFunctionInScope(const std::string& name);
+
+
 		private:
-			Environment* parent;
-			std::map<std::string, ValuePtr> symbols;
-			std::map<std::string, Function> functions;
-			std::set<std::string> constants;
-			std::vector<UserDefinedFunction> userDefinedFunctions;
+			Environment* mParent;
+			std::map<std::string, ValuePtr> mSymbols;
+			std::map<std::string, Function> mFunctions;
+			std::set<std::string> mConstants;
+			std::vector<UserDefinedFunction> mUserDefinedFunctions;
+			std::map<std::string, std::shared_ptr<Environment>> mScopes;
 
 		private:
 			Environment* resolve(std::string name);
-			
+
 			// Creates a new environment.
 			Environment();
 

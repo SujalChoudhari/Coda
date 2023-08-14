@@ -17,7 +17,7 @@ namespace Coda {
 			size_t findImportEnd(const std::string& sourceCode, size_t importIndex);
 			std::string extractImportString(const std::string& sourceCode, size_t importIndex, size_t importEndIndex);
 			void replaceImport(std::string& sourceCode, size_t importIndex, size_t importEndIndex, const std::string& moduleSource);
-			std::string getAbsImportPath(const std::string& filename, const std::string& importString);
+			std::string getAbsImportPath(const std::string& filename, std::string& importString);
 		};
 	}
 }

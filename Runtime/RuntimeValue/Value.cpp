@@ -30,6 +30,7 @@ namespace Coda {
 				"<float>",
 				"<double>",
 				"<string>",
+				"<scope>",
 				"<object>",
 				"<list>",
 				"<native_function>",

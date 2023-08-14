@@ -1,15 +1,1 @@
-// Login system
-import func
-import func
-adminName = "Sujal";
-adminPassword = "1234";
-
-
-let userName = input("Enter your Username: ");
-let userPassword = input("Enter your Password: ");
-
-if (userName == adminName && userPassword == adminPassword) {
-	println("Welcome to the admin panel");
-} else {
-	println("Invalid Username or Password");
-}
+import dir.func

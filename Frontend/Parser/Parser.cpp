@@ -4,11 +4,14 @@
 
 namespace Coda {
 	namespace Frontend {
-		Parser::Parser()
+		Parser::Parser(std::string filePath)
 		{
 			mCurrentIndex = -1;
 			mCurrentToken = nullptr;
 			mTokens = nullptr;
+			mMainFilePath = filePath;
+			size_t lastSlashIndex = filePath.find_last_of("/\\");
+			mMainDir = filePath.substr(0, lastSlashIndex + 1);
 		}
 
 		void Parser::advance()
@@ -76,6 +79,8 @@ namespace Coda {
 				return parseWhileExpression();
 			case TokenType::DO:
 				return parseDoWhileExpression();
+			case TokenType::SCOPE:
+				return parseScopeExpression();
 			default:
 				return parseExpression();
 			}

@@ -17,26 +17,27 @@ namespace Coda {
 			std::cerr << "[CODA] Unknown error occurred while executing the program." << std::endl;
 			result = EXIT_FAILURE;
 		}
+		return EXIT_FAILURE;
 	}
+
 	int Application::runnable(int argc, char** argv)
 	{
 		Coda::Utils::ArgParser argParser = Coda::Utils::ArgParser();
 		argParser.parse(argc, argv);
-		std::string filename;
 
 #if _DEBUG
-		filename = "Test/debug.coda";
+		mMainFileName = "Test/debug.coda";
 #else 
-		filename = argParser.getStandaloneValueAt(0);
+		mMainFileName = argParser.getStandaloneValueAt(0);
 #endif
 
-		Frontend::Importer importer = Frontend::Importer();
 
-		if (filename.empty()) {
+		if (mMainFileName.empty()) {
 			return repl();
 		}
 
-		std::string source = importer.import(filename);
+		Frontend::Importer importer = Frontend::Importer();
+		std::string source = importer.import(mMainFileName);
 
 		Runtime::Environment env = Runtime::Environment::root();
 		if (source.empty()) {
@@ -101,7 +102,7 @@ namespace Coda {
 
 	Frontend::Program Application::parse(std::vector<Coda::Frontend::Token>& tokens) {
 		IF_ERROR_RETURN(Frontend::Program());
-		Coda::Frontend::Parser parser = Coda::Frontend::Parser();
+		Coda::Frontend::Parser parser = Coda::Frontend::Parser(mMainFileName);
 		return parser.parse(tokens);
 	}
 

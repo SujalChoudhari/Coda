@@ -15,6 +15,7 @@ namespace Coda {
 			{"while",TokenType::WHILE},
 			{"break",TokenType::JUMP},
 			{"return",TokenType::JUMP},
+			{"scope",TokenType::SCOPE},
 			{"continue",TokenType::JUMP},
 			{"typeof",TokenType::UNARY_OPERATOR},
 			{"sizeof",TokenType::UNARY_OPERATOR},
@@ -29,6 +30,7 @@ namespace Coda {
 			{"double",TokenType::TYPE},
 			{"string",TokenType::TYPE},
 			{"long",TokenType::TYPE},
+
 		};
 
 		std::string DIGITS = "0123456789";

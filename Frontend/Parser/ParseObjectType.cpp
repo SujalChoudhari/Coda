@@ -55,6 +55,20 @@ namespace Coda {
 			return block;
 		}
 
+		Node Parser::parseScopeExpression() {
+			advance();
+			Node name = Node(NodeType::IDENTIFIER, mCurrentToken->value);
+			expect(TokenType::IDENTIFIER, "Expected an identifier for scope declaration");
+			IF_ERROR_RETURN_NODE;
+
+			Node block = parseBlockExpression();
+			Node scope = Node(NodeType::SCOPE_LITERAL, "<scope>");
+			scope.left = std::make_shared<Node>(name);
+			scope.right = std::make_shared<Node>(block);
+
+			return scope;
+		}
+
 		Node Parser::parseObjectExpression()
 		{
 			IF_ERROR_RETURN_NODE;

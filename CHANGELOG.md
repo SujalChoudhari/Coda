@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.10] - 14-8-2023
+
+### Added
+- `scope` keyword
+- Scopes, ability to create a new scope and access the parent scope. `scope <name> { <block of code> }`
+- functions no longer return the last evaluated value, use `return` instead.
+
 
 ## [0.0.9] - 13-8-2023
 
@@ -15,7 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - function parameters are constants (can't be changed)
-- functions create a seperate scope for themselves, hence variables declared inside a function are not accessible outside the function. Function body `<block>` is a seperate scope.- Each imported file is imported only once, hence if a file is imported twice, it will be imported only once.
+- functions create a seperate scope for themselves, hence variables declared inside a function are not accessible outside the function. Function body `<block>` is a seperate scope.
+- Each imported file is imported only once, hence if a file is imported twice, it will be imported only once.
 
 
 ## [0.0.8] - 12-8-2023

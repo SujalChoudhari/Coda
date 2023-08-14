@@ -16,6 +16,7 @@ namespace Coda {
 			DOUBLE,
 			STRING,
 
+			SCOPE,
 			OBJECT,
 			LIST,
 			NATIVE_FUNCTION,

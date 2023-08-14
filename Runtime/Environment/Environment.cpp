@@ -8,11 +8,11 @@ namespace Coda {
 
 		Environment::Environment()
 		{
-			parent = nullptr;
+			mParent = nullptr;
 		}
 		Environment::Environment(Environment* parentEnvironment)
 		{
-			this->parent = parentEnvironment;
+			this->mParent = parentEnvironment;
 		}
 
 		Environment Environment::root()
@@ -45,27 +45,28 @@ namespace Coda {
 		}
 
 		ValuePtr Environment::declareFunctionParameter(const std::string name, const ValuePtr& value) {
-			auto symbolIt = symbols.find(name);
-			if (symbolIt != symbols.end()) { // Prameters cannot exist with same name
+			auto symbolIt = mSymbols.find(name);
+			if (symbolIt != mSymbols.end()) { // Prameters cannot exist with same name
 				Error::Runtime::raise("Parameter with same name already exists, at ", value->endPosition);
 				return nullptr;
 			}
 			else {
-				symbols.emplace(name, value);
-				constants.insert(name);
+				mSymbols.emplace(name, value);
+				mConstants.insert(name);
+				return value;
 			}
 		}
 
 		ValuePtr Environment::declareOrAssignVariable(const std::string& name, const ValuePtr& value, bool isConstant)
 		{
-			auto symbolIt = symbols.find(name);
-			if (symbolIt != symbols.end()) {
+			auto symbolIt = mSymbols.find(name);
+			if (symbolIt != mSymbols.end()) {
 				// Variable already exists, assign to it
 				if (isConstant) {
 					Error::Runtime::raise("Reassignment of constant is not allowed, at ", value->endPosition);
 					return nullptr;
 				}
-				else if (constants.find(name) != constants.end()) {
+				else if (mConstants.find(name) != mConstants.end()) {
 					// Trying to assign to a constant variable
 					Error::Runtime::raise("Assignment to constant variable is not allowed, at ", value->endPosition);
 					return nullptr;
@@ -74,17 +75,17 @@ namespace Coda {
 			}
 			else {
 				// Variable does not exist, check in parent environment
-				if (parent != nullptr) {
+				if (mParent != nullptr) {
 					Environment* env = resolve(name);
 					if (env != nullptr)
-						return parent->declareOrAssignVariable(name, value, isConstant);
+						return mParent->declareOrAssignVariable(name, value, isConstant);
 				}
 
 				// Variable does not exist in parent environment, declare it
 				if (isConstant) {
-					constants.insert(name);
+					mConstants.insert(name);
 				}
-				symbols.emplace(name, value);
+				mSymbols.emplace(name, value);
 
 			}
 			return value;
@@ -111,7 +112,7 @@ namespace Coda {
 
 			std::reverse(identifierChain.begin(), identifierChain.end());
 			ValuePtr variableValue;
-			variableValue = symbols[current->value];
+			variableValue = mSymbols[current->value];
 
 			for (int i = 0; i < identifierChain.size() - 1; i++) {
 				variableValue = variableValue->properties[identifierChain[i]];
@@ -124,7 +125,7 @@ namespace Coda {
 		ValuePtr Environment::declareNativeFunction(const std::string& name, Function function)
 		{
 			declareOrAssignVariable(name, std::make_shared<Value>(Type::NATIVE_FUNCTION, name), true);
-			functions.emplace(name, function);
+			mFunctions.emplace(name, function);
 			return nullptr;
 		}
 
@@ -136,13 +137,13 @@ namespace Coda {
 		}
 
 		ValuePtr Environment::callFunction(const std::string& name, const ValuePtr& args, Environment& env) {
-			auto it = functions.find(name);
-			if (it != functions.end()) {
+			auto it = mFunctions.find(name);
+			if (it != mFunctions.end()) {
 
 				return it->second(args, env);
 			}
-			else if (parent != nullptr) {
-				return parent->callFunction(name, args, env);
+			else if (mParent != nullptr) {
+				return mParent->callFunction(name, args, env);
 			}
 			else {
 				Error::Runtime::raise("Function '" + name + "' does not exist in the scope.");
@@ -154,7 +155,7 @@ namespace Coda {
 		{
 			Environment* env = resolve(name);
 			if (env != nullptr)
-				return env->symbols[name];
+				return env->mSymbols[name];
 			else
 				Error::Runtime::raise("Symbol '" + name + "' does not exist");
 			return nullptr;
@@ -162,31 +163,42 @@ namespace Coda {
 
 		Environment* Environment::resolve(std::string name)
 		{
-			auto it = symbols.find(name);
-			if (it != symbols.end()) {
+			auto it = mSymbols.find(name);
+			if (it != mSymbols.end()) {
 				return this;
 			}
 
-			if (parent == nullptr) {
+			for (auto& it : mScopes) {
+				Environment* scope = it.second->resolve(name);
+				if (scope != nullptr)
+					return scope;
+			}
+
+			if (mParent == nullptr) {
 				return nullptr;
 			}
 
-			return parent->resolve(name);
+			return mParent->resolve(name);
 		}
 
 		Environment::UserDefinedFunction* Environment::getFunction(const std::string& name) {
-			auto it = std::find_if(userDefinedFunctions.begin(), userDefinedFunctions.end(),
+			auto it = std::find_if(mUserDefinedFunctions.begin(), mUserDefinedFunctions.end(),
 				[&](auto func) {
 					return std::get<0>(func) == name;
 				});
 
-			if (it != userDefinedFunctions.end()) {
+			if (it != mUserDefinedFunctions.end()) {
 				return &(*it);
 			}
 
+			for (auto& it : mScopes) {
+				Environment::UserDefinedFunction* func = it.second->getFunction(name);
+				if (func != nullptr)
+					return func;
+			}
 
-			if (this->parent) {
-				auto func = this->parent->getFunction(name);
+			if (this->mParent) {
+				auto func = this->mParent->getFunction(name);
 				return func;
 			}
 			Error::Runtime::raise("Function '" + name + "' does not exist");
@@ -195,46 +207,75 @@ namespace Coda {
 
 		ValuePtr Environment::addFunction(const std::string& name, const Frontend::Node& astNode, Environment& env)
 		{
-			userDefinedFunctions.push_back(UserDefinedFunction(astNode.value, env, astNode));
+			mUserDefinedFunctions.push_back(UserDefinedFunction(astNode.value, env, astNode));
 			return env.declareUserDefinedFunction(astNode.value, astNode);
 		}
 
 		void Environment::remove(const std::string& name)
 		{
 			//find in functions
-			auto itF = functions.find(name);
-			if (itF != functions.end()) {
+			auto itF = mFunctions.find(name);
+			if (itF != mFunctions.end()) {
 				Error::Runtime::raise("Cannot remove native function");
 				return;
 			}
 
 			// find the symbol
-			auto itS = symbols.find(name);
-			if (itS != symbols.end()) {
-				symbols.erase(itS);
+			auto itS = mSymbols.find(name);
+			if (itS != mSymbols.end()) {
+				mSymbols.erase(itS);
 				return;
 			}
 
 			// find the constant
-			auto itC = constants.find(name);
-			if (itC != constants.end()) {
+			auto itC = mConstants.find(name);
+			if (itC != mConstants.end()) {
 				Error::Runtime::raise("Cannot remove constant");
 				return;
 			}
 
 			// find the user defined function
-			auto itU = std::find_if(userDefinedFunctions.begin(), userDefinedFunctions.end(),
+			auto itU = std::find_if(mUserDefinedFunctions.begin(), mUserDefinedFunctions.end(),
 				[&](auto func) {
 					return std::get<0>(func) == name;
 				});
 
-			if (itU != userDefinedFunctions.end()) {
-				userDefinedFunctions.erase(itU);
+			if (itU != mUserDefinedFunctions.end()) {
+				mUserDefinedFunctions.erase(itU);
 				return;
 			}
 
-			// does not exist
 			Error::Runtime::raise("Symbol '" + name + "' does not exist");
+		}
+		void Environment::addScope(const std::string& name, std::shared_ptr<Environment> env)
+		{
+			if (mScopes.find(name) != mScopes.end()) {
+				Error::Runtime::raise("Scope '" + name + "' already exists, cannot have scopes with same name.");
+				return;
+			}
+			mScopes[name] = env;
+			mSymbols[name] = std::make_shared<Value>(Type::SCOPE, name);
+		}
+
+		std::shared_ptr<Environment> Environment::getScopeForFunctionInScope(const std::string& name)
+		{
+			for (auto it : mScopes) {
+				if (it.second->lookupSymbol(name) != nullptr) {
+					std::shared_ptr<Environment> env = it.second;
+					return env;
+				}
+			}
+		}
+
+		std::shared_ptr<Environment> Environment::getScope(const std::string& name) {
+			std::shared_ptr<Environment> env = mScopes[name];
+			if (env != nullptr)
+				return env;
+
+			if (mParent != nullptr) {
+				env = mParent->getScope(name);
+			}
+			return env;
 		}
 	}
 }

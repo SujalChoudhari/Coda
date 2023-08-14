@@ -198,7 +198,7 @@
     </None>
     <None Include="Test\test.coda" />
     <None Include="CHANGELOG.md" />
-    <None Include="Test\func.coda" />
+    <None Include="Test\dir\func.coda" />
     <None Include="Test\debug.coda" />
     <None Include="LICENSE" />
     <None Include="CODE_OF_CONDUCT.md" />

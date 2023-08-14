@@ -45,6 +45,9 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::OBJECT_LITERAL) {
 				return evaluateObjectExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::SCOPE_LITERAL) {
+				return evaluateScopeExpression(astNode, env);
+			}
 			else if (astNode.type == Frontend::NodeType::LIST_LITERAL) {
 				return evaluateListExpression(astNode, env);
 			}

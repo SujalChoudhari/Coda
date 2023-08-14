@@ -4,6 +4,7 @@
 #include "../Tokens/Token.h"
 #include "../Tokens/TokenType.h"
 #include "../Lexer/Lexer.h"
+#include "../../Utils/FileReader.h"
 
 #define IF_ERROR_RETURN_NODE if (!Error::Manager::isSafe()) return Node()
 #define IF_ERROR_RETURN_PROGRAM if (!Error::Manager::isSafe()) return Program()
@@ -18,7 +19,7 @@ namespace Coda {
 		{
 		public:
 			// Create a parser.
-			Parser();
+			Parser(std::string mainFilePath);
 			// Parse a vector of tokens into a program.
 			Program parse(std::vector<Token> tokens);
 
@@ -34,6 +35,7 @@ namespace Coda {
 			Node parseFunctionExpression(std::string name);
 			Node parseAssignmentExpression();
 			Node parseBlockExpression();
+			Node parseScopeExpression();
 			Node parseObjectExpression();
 			Node parseListExpression();
 			Node parseLogicalOperatorExpression();
@@ -54,7 +56,6 @@ namespace Coda {
 			Node parseDeclaration(bool isConstant);
 
 			void parseLiteralExpression(Node& expression, TokenType type);
-			void parseReturnExpression();
 			void parseJumpExpression(Node& expression);
 			bool isBinaryOperatorToken(const std::string& op);
 			NodeType getTokenTypeAsNodeType(TokenType tokenType);
@@ -62,6 +63,8 @@ namespace Coda {
 
 
 		private:
+			std::string mMainFilePath;
+			std::string mMainDir;
 			std::vector<Token>* mTokens;
 			Token* mCurrentToken;
 			int mCurrentIndex = -1;

@@ -30,6 +30,13 @@ namespace Coda {
 			return object;
 		}
 
+		ValuePtr Interpreter::evaluateScopeExpression(const Frontend::Node& astNode, Environment& env) {
+			Environment scope = Environment(&env);
+			ValuePtr result = interpret(*astNode.right.get(), scope);
+			env.addScope(astNode.left->value, std::make_shared<Environment>(scope));
+			return result;
+		}
+
 		ValuePtr Interpreter::evaluateListExpression(const Frontend::Node& list, Environment& env)
 		{
 			Value listValue = Value();
@@ -71,7 +78,6 @@ namespace Coda {
 				else {
 					functionContent = env.getFunction(function->value);
 				}
-				//Environment scope = Environment(std::get<1>(*functionContent));
 				Environment scope = Environment(&env);
 
 				// create variables for each parameter
@@ -101,10 +107,16 @@ namespace Coda {
 		ValuePtr Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
+			ValuePtr res;
 			ValuePtr left = interpret(*astNode.left.get(), env);
-			Value res = *left->properties[astNode.right->value].get();
-
-			return std::make_shared<Value>(res);
+			if (left->type == Type::SCOPE) {
+				Environment& scope = *env.getScope(left->value).get();
+				res = interpret(*astNode.right.get(), scope);
+			}
+			else if (left != nullptr) {
+				res = left->properties[astNode.right->value];
+			}
+			return res;
 		}
 
 

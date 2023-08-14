@@ -90,5 +90,20 @@ namespace Coda {
 			return doWhileExpressionNode;
 		}
 
+		void Parser::parseJumpExpression(Node& expression) {
+			expression.value = mCurrentToken->value;
+			expression.type = NodeType::JUMP_EXPRESSION;
+			if (mCurrentToken->value == "return") {
+				advance();
+				expression.left = std::make_shared<Node>(parseExpression());
+				if (expression.left->type == NodeType::INVALID) {
+					expression.left = nullptr;
+				}
+			}
+			else {
+				advance();
+			}
+		}
+
 	}	// namespace Frontend
 }	// namespace Coda

@@ -45,11 +45,18 @@ namespace Coda {
 			sourceCode.replace(importIndex, importEndIndex - importIndex + 1, moduleSource);
 		}
 
-		std::string Importer::getAbsImportPath(const std::string& filename, const std::string& importString) {
+		std::string Importer::getAbsImportPath(const std::string& filename, std::string& importString) {
 			size_t lastSlashIndex = filename.rfind("/");
 			if (lastSlashIndex == std::string::npos) {
 				Error::Importer::raise("Invalid file path: " + filename);
 			}
+
+			for(int i = 0; i < importString.size(); i++) {
+				if (importString[i] == '.') {
+					importString[i] = '/';
+				}
+			}
+
 			std::string modulePath = filename.substr(0, lastSlashIndex + 1) + importString + ".coda";
 			return modulePath;
 		}

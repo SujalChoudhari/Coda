@@ -20,13 +20,13 @@ namespace Coda {
 			@param argc - The number of arguments passed to the program.
 			@param argv - The arguments passed to the program.
 		*/
-		static int run(int argc, char** argv);
+		int run(int argc, char** argv);
 
 		/*
 			A Read-Eval-Print-Loop that allows the user to execute Coda code line by line. 
 			There is no need of file to be passed to the program.
 		*/
-		static int repl();
+		int repl();
 
 		/*
 			Combines the three steps of the interpreter - tokenization, parsing and interpretation.
@@ -34,7 +34,7 @@ namespace Coda {
 			@param env - The environment in which the code will be executed.
 			@return - 0 if the execution was successful, 1 otherwise.
 		*/
-		static int execute(std::string sourc, Coda::Runtime::Environment& env);
+		int execute(std::string sourc, Coda::Runtime::Environment& env);
 
 		/*
 			Tokenizes the source code.
@@ -42,7 +42,7 @@ namespace Coda {
 			@param source - The source code to be tokenized.
 			@return - A vector of tokens.
 		*/
-		static std::vector<Coda::Frontend::Token> tokenize(std::string source);
+		std::vector<Coda::Frontend::Token> tokenize(std::string source);
 
 		/*
 			Parses the tokens.
@@ -50,7 +50,7 @@ namespace Coda {
 			@param tokens - The tokens to be parsed.
 			@return - A Program object.
 		*/
-		static Frontend::Program parse(std::vector<Coda::Frontend::Token>& tokens);
+		Frontend::Program parse(std::vector<Coda::Frontend::Token>& tokens);
 
 		/*
 			Interprets the program.
@@ -59,9 +59,12 @@ namespace Coda {
 			@param env - The environment in which the program will be interpreted.
 			@return - The last calculated value.
 		*/
-		static Runtime::ValuePtr interpret(Frontend::Program& program, Runtime::Environment& env);
+		Runtime::ValuePtr interpret(Frontend::Program& program, Runtime::Environment& env);
 
 	private:
-		static int runnable(int argc, char** argv);
+		std::string mMainFileName;
+
+	private:
+		int runnable(int argc, char** argv);
 	};
 } // namespace Coda

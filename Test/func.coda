@@ -1,5 +1,0 @@
-def funcMethod(x,y){
-	println("X is",x,"Y is",y);
-}
-
-import test

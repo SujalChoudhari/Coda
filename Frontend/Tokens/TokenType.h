@@ -8,6 +8,7 @@ namespace Coda {
 		enum class TokenType {
 			INVALID,
 			
+			
 			// Literal Types
 			BOOL,
 			BYTE,
@@ -20,12 +21,14 @@ namespace Coda {
 			IDENTIFIER,
 
 			// Keywords
+			IMPORT,
 			LET,
 			CONST,
 			TYPE,
 			JUMP,
 			DEF,
 			RETURN,
+			SCOPE,
 			IF,
 			ELIF,
 			ELSE,
