@@ -41,11 +41,14 @@ namespace Coda {
 			Position mCurrentPosition;
 
 		private:
-			//	Go to the next character in the source code.
-			//	Used when the current character has been processed completely.
+			/*
+				Go to the next character in the source code.
+				Used when the current character has been processed completely.
+			*/
 			void advance();
 
 			//	Handlers for different types of characters.
+
 			void handleNewLine();
 			void handleWhitespace();
 			void handleSymbol();

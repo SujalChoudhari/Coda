@@ -18,7 +18,7 @@ namespace Coda {
 			A new environment is created for every function call.
 			Environment is responsible for variable lookup and assignment.
 		*/
-		
+
 		class Environment {
 			// A function is a callable object.
 		public:
@@ -103,26 +103,47 @@ namespace Coda {
 			ValuePtr addFunction(const std::string& name, const Frontend::Node& astNode, Environment& env);
 
 			/*
-				Looks for variables, functions and constants with the given name and removes them.
-				@param name - The name of the variable, function or constant.
+				removes a symbol
 			*/
 			void remove(const std::string& name);
 
-
+			/*
+				Add a scope as a child of the current environment
+			*/
 			void addScope(const std::string& name, std::shared_ptr<Environment> env);
+
+			/*
+				Gets a Scope with the given name
+			*/
 			std::shared_ptr<Environment> getScope(const std::string& name);
+
+			/*
+				Gets the scope which contains the given function name
+			*/
 			std::shared_ptr<Environment> getScopeForFunctionInScope(const std::string& name);
 
 
 		private:
+			// Parent environment
 			Environment* mParent;
+
+			// variables declared in this scope
 			std::map<std::string, ValuePtr> mSymbols;
+
+			// functions declared in this scope
 			std::map<std::string, Function> mFunctions;
+
+			// constants declared in this scope
 			std::set<std::string> mConstants;
+			
+			// user defined functions declared in this scope
 			std::vector<UserDefinedFunction> mUserDefinedFunctions;
+
+			// child scopes declared in the current scope
 			std::map<std::string, std::shared_ptr<Environment>> mScopes;
 
 		private:
+			// gets the environment with the given function name
 			Environment* resolve(std::string name);
 
 			// Creates a new environment.

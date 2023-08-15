@@ -1,1 +1,13 @@
-import dir.func
+
+
+size = input("Enter size");
+
+for(i=0;i<size;i++){
+	for(j=0;j<i;j++){
+		print(" ")
+	}
+	for(k=parseInt(i)+1;k<size;k++){
+		print("*")
+	}
+	println("")
+}

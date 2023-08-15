@@ -41,6 +41,9 @@ namespace Coda {
 			ValuePtr evaluateProgram(const Frontend::Program& program, Environment& env);
 
 		private:
+			/*
+				Evaluation code for Parsed nodes
+			*/
 			ValuePtr evaluateBinaryExpression(const Frontend::Node& binop, Environment& env);
 			ValuePtr evaluateUnaryExpression(const Frontend::Node& op, Environment& env);
 			ValuePtr evaluateNumericBinaryExpression(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
@@ -62,6 +65,9 @@ namespace Coda {
 			ValuePtr evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant = false);
 			ValuePtr evaluateFunctionDeclaration(const Frontend::Node& astNode, Environment& env);
 
+			/*
+				Helper functions
+			*/
 			bool isNumericType(Type type);
 			bool isStringType(Type type);
 			bool isUndefinedType(Type type);
@@ -69,6 +75,9 @@ namespace Coda {
 			bool isLogical(std::string type);
 
 
+			/*
+				Handlers
+			*/
 			template <typename T>
 			void handleArithmeticOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right, ValuePtr& result);
 			ValuePtr handleModulusOperation(const ValuePtr& left, const ValuePtr& right);
@@ -76,9 +85,8 @@ namespace Coda {
 			ValuePtr handleStringRelationalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
 			ValuePtr handleLogicalOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right);
 			ValuePtr performAssignmentOperation(ValuePtr left, const ValuePtr& interpreted, const std::function<double(double, double)>& operation);
-
 			// TODO: Shift,  Ternary
-			
+
 			template <typename T>
 			T getValue(const std::string& str);
 

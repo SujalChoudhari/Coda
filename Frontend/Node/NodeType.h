@@ -7,7 +7,6 @@ namespace Coda {
 			// Statements
 			INVALID,
 			ARGUMENT_LIST,
-
 			VARIABLE_DECLARATION,
 			CONSTANT_DECLARATION,
 			BLOCK_STATEMENT,

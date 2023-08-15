@@ -23,9 +23,21 @@ namespace Coda {
 			// Parse a vector of tokens into a program.
 			Program parse(std::vector<Token> tokens);
 
-		private: // in the order of precedence
+		private:
+			/*
+				increments to the next token
+				updates current postion
+			*/
 			void advance();
+
+			/*
+				if next token is not of the given token type,
+				it throws an error
+			*/
 			Token expect(TokenType type, std::string error);
+
+			//	parse methods
+			//	in order of precedance (reverse)			
 			Node parseStatement();
 			Node parseExpression();
 			Node parseIfExpression();
@@ -42,10 +54,11 @@ namespace Coda {
 			Node parseRelationalOperatorExpression();
 			Node parseAdditiveExpression();
 			Node parseMultiplicativeExpression();
-			Node parseUnaryOperatorExpression();
 
+			// combined handler for all the binary type handlers
 			Node parseBinaryOperatorExpression(Node(Parser::* parseSubExpression)(), const std::vector<std::string>& operators);
-
+			
+			Node parseUnaryOperatorExpression();
 			Node parseUnaryExpression();
 			Node parseCallMemberExpression();
 			Node parseCallExpression(const Node& caller);
@@ -55,6 +68,7 @@ namespace Coda {
 			Node parsePrimaryExpression();
 			Node parseDeclaration(bool isConstant);
 
+			// helper handlers for parse methods
 			void parseLiteralExpression(Node& expression, TokenType type);
 			void parseJumpExpression(Node& expression);
 			bool isBinaryOperatorToken(const std::string& op);
@@ -63,10 +77,25 @@ namespace Coda {
 
 
 		private:
+			/*
+				main file of the current interpretation
+			*/
 			std::string mMainFilePath;
 			std::string mMainDir;
+
+			/*
+				tokens to parse from
+			*/
 			std::vector<Token>* mTokens;
+			
+			/*
+				current token pointer for parsing
+			*/
 			Token* mCurrentToken;
+
+			/*
+				current token index for parsing
+			*/
 			int mCurrentIndex = -1;
 		};
 	} // namespace Frontend

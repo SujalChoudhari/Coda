@@ -6,6 +6,10 @@
 	This Sub package is used tokenize, parse and generate the AST.
 	Classes such as Node, Token, TokenType, Lexer, Parser, Program are defined here.
 
+	Importer:
+	Importer is used to handle import statements. 
+	Order of execution: Importer -> Lexer -> Parser -> Interpreter
+
 	Tokens:
 	A Token is a single unit of the source code. It is used to tokenize the source code.
 

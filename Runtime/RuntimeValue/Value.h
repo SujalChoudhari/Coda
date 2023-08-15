@@ -39,7 +39,15 @@ namespace Coda {
 				: type(type), value(value), startPosition(start), endPosition(end) {}
 
 		public:
+			/*
+				Check if the given value is truthy.
+				"1", true, non zero string are truthy
+			*/
 			static bool isTruthy(const Value& value);
+
+			/*
+				
+			*/
 			static std::string getTypeAsString(Type type);
 
 		public:

@@ -1,15 +1,19 @@
 
+
+scope func {
+	let size
 	
-const PI = 3.14;
-
-def add(x,y){
-	return x+y;
-}
-
-def sub(x,y){
-	return x-y;
-}
-
-def degreeToRadian(x){
-	return x*PI/180;
+	
+	def run_for_star(size){
+		for(let i=0;i<size;i++){
+			print("*")
+		}
+		
+	}
+	
+	def run(){
+		size = input("Enter size:")
+	
+		run_for_star(size);
+	}
 }

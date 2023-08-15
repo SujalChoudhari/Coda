@@ -196,7 +196,6 @@
     <None Include="README.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Test\test.coda" />
     <None Include="CHANGELOG.md" />
     <None Include="Test\dir\func.coda" />
     <None Include="Test\debug.coda" />

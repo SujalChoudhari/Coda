@@ -56,25 +56,21 @@ namespace Coda {
 			}
 
 			ValuePtr parseInt(ValuePtr args, Environment env) {
-
 				std::string stringValuePtr = args->properties.begin()->second->value;
 				return std::make_shared<Value>(Type::INT, stringValuePtr);
 			}
 
 			ValuePtr parseFloat(ValuePtr args, Environment env) {
-
 				std::string stringValuePtr = args->properties.begin()->second->value;
 				return std::make_shared<Value>(Type::FLOAT, stringValuePtr);
 			}
 
 			ValuePtr parseDouble(ValuePtr args, Environment env) {
-
 				std::string stringValuePtr = args->properties.begin()->second->value;
 				return std::make_shared<Value>(Type::DOUBLE, stringValuePtr);
 			}
 
 			ValuePtr parseBool(ValuePtr args, Environment env) {
-
 				std::string stringValuePtr = args->properties.begin()->second->value;
 				if (stringValuePtr == "1" || stringValuePtr == "0") {
 					return std::make_shared<Value>(Type::BOOL, stringValuePtr);
@@ -86,7 +82,6 @@ namespace Coda {
 			}
 
 			ValuePtr parseByte(ValuePtr args, Environment env) {
-
 				std::string stringValuePtr = args->properties.begin()->second->value;
 				return std::make_shared<Value>(Type::BYTE, stringValuePtr);
 			}
