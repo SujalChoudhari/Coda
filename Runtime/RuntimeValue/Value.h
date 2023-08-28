@@ -37,6 +37,9 @@ namespace Coda {
 				: type(type), value(), startPosition(start), endPosition(end) {}
 			Value(Type type, std::string value = "", Error::Position start = Error::Position(), Error::Position end = Error::Position())
 				: type(type), value(value), startPosition(start), endPosition(end) {}
+			Value(const Value& other) = default;
+
+			Value copy() const;
 
 		public:
 			/*
@@ -46,7 +49,7 @@ namespace Coda {
 			static bool isTruthy(const Value& value);
 
 			/*
-				
+				Converts the type to a string.
 			*/
 			static std::string getTypeAsString(Type type);
 

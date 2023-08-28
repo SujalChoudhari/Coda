@@ -103,6 +103,10 @@ namespace Coda {
 				declaration.value = type;
 				declaration.left = std::make_shared<Node>(NodeType::IDENTIFIER, identifier);
 
+				if (mCurrentToken->value == ":=") {
+					declaration.properties["copy"] = std::make_shared<Node>(NodeType::INVALID, "true");
+				}
+
 				advance();
 				declaration.right = std::make_shared<Node>(parseExpression());
 			}

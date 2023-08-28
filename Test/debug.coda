@@ -1,13 +1,7 @@
 
+let i = 0;
+let j = i;
 
-size = input("Enter size");
+i++;
 
-for(i=0;i<size;i++){
-	for(j=0;j<i;j++){
-		print(" ")
-	}
-	for(k=parseInt(i)+1;k<size;k++){
-		print("*")
-	}
-	println("")
-}
+println(j)

@@ -3,6 +3,14 @@
 #include <string>
 #include <unordered_map>
 
+
+/*
+	Flags:
+	-h : Prints the help message.
+	-w : Waits for the user to press key before exiting.
+
+*/
+
 namespace Coda {
 	namespace Utils {
 		/*

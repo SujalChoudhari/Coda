@@ -85,7 +85,8 @@ namespace Coda {
 			if (astNode.value == "=") {
 				if (astNode.left->type == Frontend::NodeType::IDENTIFIER) {
 					if (astNode.right->type == Frontend::NodeType::JUMP_EXPRESSION) {
-						env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
+						ValuePtr assignable = interpret(*astNode.right.get(), env);
+						env.declareOrAssignVariable(astNode.left->value, assignable);
 						return std::make_shared<Value>(Type::NONE, "");
 					}
 					else {
@@ -94,7 +95,8 @@ namespace Coda {
 				}
 				else if (astNode.left->type == Frontend::NodeType::MEMBER_EXPRESSION) {
 					if (astNode.right->type == Frontend::NodeType::JUMP_EXPRESSION) {
-						env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
+						ValuePtr assignable = interpret(*astNode.right.get(), env);
+						env.declareOrAssignVariable(astNode.left->value, assignable);
 						return std::make_shared<Value>(Type::NONE, "");
 					}
 					else {
@@ -134,7 +136,13 @@ namespace Coda {
 		ValuePtr Interpreter::evaluateVariableDeclaration(const Frontend::Node& astNode, Environment& env, bool isConstant)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
-			return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env), isConstant);
+
+			ValuePtr rhs = interpret(*astNode.right.get(), env);
+			if (astNode.properties.size() > 0 && astNode.properties.at("copy") != nullptr) {
+				rhs = std::make_shared<Value>(rhs->copy());
+			}
+
+			return env.declareOrAssignVariable(astNode.left->value, rhs, isConstant);
 		}
 	} // namespace Frontend
 } // namespace Coda

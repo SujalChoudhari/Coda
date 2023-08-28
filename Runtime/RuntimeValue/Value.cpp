@@ -7,6 +7,10 @@ namespace Coda {
 			return os;
 		}
 
+		Value Value::copy() const {
+			return Value( Type(type), std::string(value),Error::Position(startPosition), Error::Position(endPosition));
+		}
+
 		bool Value::isTruthy(const Value& value) {
 			if (value.type == Type::BOOL
 				&& (value.value == "true" || value.value == "1")) {

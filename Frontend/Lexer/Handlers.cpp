@@ -38,8 +38,14 @@ namespace Coda {
 		}
 
 		void Lexer::handleColon() {
-			mTokens.emplace_back(TokenType::COLON, ":", mCurrentPosition);
 			advance();
+			if (mCurrentChar == '=') {
+				mTokens.emplace_back(TokenType::ASSIGN, ":=", mCurrentPosition);
+				advance();
+			}
+			else {
+				mTokens.emplace_back(TokenType::COLON, ":", mCurrentPosition);
+			}
 		}
 
 		void Lexer::handleComma() {
