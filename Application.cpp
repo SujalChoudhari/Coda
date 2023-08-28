@@ -25,8 +25,11 @@ namespace Coda {
 		Coda::Utils::ArgParser argParser = Coda::Utils::ArgParser();
 		argParser.parse(argc, argv);
 
-		if (argParser.getFlag("-h"))
+		if (argParser.getFlag("-h")) {
 			printHelpMessage();
+			std::cin.get();
+			return EXIT_SUCCESS;
+		}
 
 #if _DEBUG
 		mMainFileName = "Test/debug.coda";

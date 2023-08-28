@@ -15,10 +15,10 @@ namespace Coda {
 
 	public:
 		const std::string title = "\033[1;96m\n\
-                                                  dddddddd                  \n\
+                                                  dddddddd                 \n\
         CCCCCCCCCCCCC                             d::::::d                  \n\
      CCC::::::::::::C                             d::::::d                  \n\
-   CC:::::::::::::::C                             d::::::d                  \n\
+   CC:::::::::::::::C                             d::::::d          \033[0mv0.1\033[1;96m        \n\
   C:::::CCCCCCCC::::C                             d:::::d                   \n\
  C:::::C       CCCCCC   ooooooooooo       ddddddddd:::::d   aaaaaaaaaaaaa   \n\
 C:::::C               oo:::::::::::oo   dd::::::::::::::d   a::::::::::::a  \n\
