@@ -1,6 +1,5 @@
 #include "FileReader.h"
 #include "../Error/Error.h"
-
 namespace Coda {
 	namespace Utils {
 
@@ -18,6 +17,8 @@ namespace Coda {
 
 		std::string FileReader::readToString()
 		{
+			if (!Error::Manager::isSafe())
+				return "";
 			if (!mFile)
 				Error::Importer::raise("File not open.");
 			std::string content;

@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0] - 28-8-2023
+
+### Changed
+- Application shows `title` in repl
+- Added `-h` flag for help
+
+
 ## [0.0.11] - 28-8-2023
 
 ### Added
@@ -17,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scope` keyword
 - Scopes, ability to create a new scope and access the parent scope. `scope <name> { <block of code> }`
 - functions no longer return the last evaluated value, use `return` instead.
-
+- added comments. `//` signifies the start of a comment, while a `\n` or a `;` signifies the end of a comment.
 
 ## [0.0.9] - 13-8-2023
 

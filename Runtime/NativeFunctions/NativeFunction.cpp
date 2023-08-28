@@ -89,14 +89,14 @@ namespace Coda {
 
 			ValuePtr quit(ValuePtr args, Environment env) {
 				int exitCode = 0;
-				if (!args->properties.empty() && args->properties.begin()->second->type == Type::INT)
+				if (!args->properties.empty()) {
 					exitCode = std::stoi(args->properties.begin()->second->value);
-				else
-					Error::Runtime::raise("Invalid exit status code. Received '" + args->properties.begin()->second->value + "' expected <int>.",args->endPosition);
+					if (args->properties.begin()->second->type == Type::INT)
+						Error::Runtime::raise("Invalid exit status code. Received '" + args->properties.begin()->second->value + "' expected <int>.", args->endPosition);
+				}
 				std::exit(exitCode); // terminated by user
 				return nullptr;
 			}
 		}
-
 	}
 }

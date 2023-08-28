@@ -6,6 +6,7 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE_PTR;
 			std::string unaryOperator = op.value;
 			ValuePtr value = interpret(*op.left.get(), env);
+			IF_ERROR_RETURN_VALUE_PTR;
 			if (unaryOperator == "-") {
 				value->value = ((value->value[0] == '-') ? value->value.substr(1) : "-" + value->value);
 				value->value.erase(value->value.find_last_not_of('0') + 1, std::string::npos);

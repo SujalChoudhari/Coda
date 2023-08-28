@@ -1,5 +1,5 @@
 ﻿#include "Application.h"
-
+#include "Utils/Colors.h"
 
 
 
@@ -10,11 +10,11 @@ namespace Coda {
 			return runnable(argc, argv);
 		}
 		catch (const std::exception& e) {
-			std::cerr << "[CODA] A fatal error occurred in the interpreter.\n" << e.what() << std::endl;
+			std::cerr << Utils::Colors::ACCENT << "[CODA ]: \033[0;31mA fatal error occurred in the interpreter.\n" << Utils::Colors::RESET << e.what() << std::endl;
 			result = EXIT_FAILURE;
 		}
 		catch (...) {
-			std::cerr << "[CODA] Unknown error occurred while executing the program." << std::endl;
+			std::cerr << Utils::Colors::ACCENT << "[CODA ]: \033[0;31mUnknown error occurred while executing the program." << Utils::Colors::RESET << std::endl;
 			result = EXIT_FAILURE;
 		}
 		return EXIT_FAILURE;
@@ -61,19 +61,22 @@ namespace Coda {
 
 
 	int Application::repl() {
-		std::cout << title << std::endl;
-		std::cout << "Welcome to Coda REPL!" << std::endl;
-		std::cout << "Type :q to exit" << std::endl;
+		std::cout << title << std::endl << std::endl;
+		std::cout << Utils::Colors::WARNING << "==================================================================================" << Utils::Colors::RESET << std::endl;
+		std::cout << Utils::Colors::SUCCESS << "Welcome to Coda REPL!" << Utils::Colors::RESET << std::endl;
+		std::cout << Utils::Colors::ERROR << "Type 'quit' to exit REPL" << Utils::Colors::RESET << std::endl;
 
 		Runtime::Environment env = Runtime::Environment::root();
 		while (1) {
 			Coda::Error::Manager::reset();
 			std::string source;
-			std::cout << ">> ";
+			std::cout << Utils::Colors::ACCENT << ">> " << Utils::Colors::RESET;
 			std::getline(std::cin, source);
 			if (source == ":q" || source == "exit" || source == "quit" || source == "e" || source == "q") break;
 
+			std::cout << Utils::Colors::SUCCESS;
 			execute(source, env);
+			std::cout << Utils::Colors::RESET;
 		}
 		return 0;
 	}
@@ -83,7 +86,6 @@ namespace Coda {
 		int result = EXIT_SUCCESS;
 		if (source.empty()) {
 			result = EXIT_FAILURE;
-			std::cerr << "Empty source file.";
 			return result;
 		}
 

@@ -7,6 +7,9 @@ namespace Coda {
 		std::string Importer::import(const std::string& filepath) {
 			Coda::Utils::FileReader fileReader(filepath);
 			std::string sourceCode = fileReader.readToString();
+			if (!Error::Manager::isSafe()) {
+				Error::Importer::raise("Import failed, either file doesnot exist or circular import detected.");
+			}
 			sourceCode += "\n";
 
 			size_t importIndex = findNextImport(sourceCode, 0);
@@ -14,7 +17,7 @@ namespace Coda {
 				size_t importEndIndex = findImportEnd(sourceCode, importIndex);
 				std::string importString = extractImportString(sourceCode, importIndex, importEndIndex);
 				std::string modulePath = getAbsImportPath(filepath, importString);
-				
+
 				std::string moduleSource = import(modulePath);
 				if (mImportedFiles.find(modulePath) == mImportedFiles.end()) {
 					replaceImport(sourceCode, importIndex, importEndIndex, moduleSource);
@@ -51,7 +54,7 @@ namespace Coda {
 				Error::Importer::raise("Invalid file path: " + filename);
 			}
 
-			for(int i = 0; i < importString.size(); i++) {
+			for (int i = 0; i < importString.size(); i++) {
 				if (importString[i] == '.') {
 					importString[i] = '/';
 				}

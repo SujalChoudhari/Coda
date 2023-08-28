@@ -199,6 +199,7 @@
     <ClInclude Include="Tokens\Token.h" />
     <ClInclude Include="Tokens\TokenType.h" />
     <ClInclude Include="Utils\ArgParser.h" />
+    <ClInclude Include="Utils\Colors.h" />
     <ClInclude Include="Utils\FileReader.h" />
   </ItemGroup>
   <ItemGroup>
