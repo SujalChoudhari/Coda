@@ -31,6 +31,7 @@ namespace Coda {
 		}
 
 		ValuePtr Interpreter::evaluateScopeExpression(const Frontend::Node& astNode, Environment& env) {
+			IF_ERROR_RETURN_VALUE_PTR;
 			Environment scope = Environment(&env);
 			ValuePtr result = interpret(*astNode.right.get(), scope);
 			env.addScope(astNode.left->value, std::make_shared<Environment>(scope));
@@ -39,6 +40,7 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateListExpression(const Frontend::Node& list, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			Value listValue = Value();
 			listValue.value = "<list>";
 			listValue.type = Type::LIST;

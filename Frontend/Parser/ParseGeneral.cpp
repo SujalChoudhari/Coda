@@ -28,6 +28,7 @@ namespace Coda {
 
 		Node Parser::parseUnaryOperatorExpression()
 		{
+			IF_ERROR_RETURN_NODE;
 			std::string unaryOperator = "";
 			Node unaryExpression;
 			unaryExpression.startPosition = mCurrentToken->startPosition;
@@ -68,8 +69,8 @@ namespace Coda {
 
 		Node Parser::parseDeclaration(bool isConstant)
 		{
+			IF_ERROR_RETURN_NODE;
 			advance();
-
 			Node declaration = Node(isConstant ? NodeType::CONSTANT_DECLARATION : NodeType::VARIABLE_DECLARATION);
 			declaration.startPosition = mCurrentToken->startPosition;
 			std::string identifier;

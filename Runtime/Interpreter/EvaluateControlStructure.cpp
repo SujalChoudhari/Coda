@@ -4,6 +4,7 @@ namespace Coda {
 	namespace Runtime {
 		ValuePtr Interpreter::evaluateIfExpression(const Frontend::Node& astNode, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			Environment ifEnviron = Environment(&env);
 			ValuePtr ifCondition = interpret(*astNode.left.get(), ifEnviron);
 
@@ -34,6 +35,7 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateForExpression(const Frontend::Node& astNode, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			Environment forEnv(&env);
 			ValuePtr init = interpret(*astNode.left.get(), forEnv);
 			env.declareOrAssignVariable(astNode.left->value, init, false);
@@ -71,6 +73,7 @@ namespace Coda {
 			Frontend::Node condition = *astNode.left.get();
 			Frontend::Node body = *astNode.right.get();
 			ValuePtr result = std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
+			IF_ERROR_RETURN_VALUE_PTR;
 
 			while (1) {
 				ValuePtr conditionValue = interpret(condition, whileEnv);
@@ -96,10 +99,12 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateDoWhileExpression(const Frontend::Node& astNode, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			Environment whileEnv(&env);
 			Frontend::Node condition = *astNode.left.get();
 			Frontend::Node body = *astNode.right.get();
 			ValuePtr result = std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
+			IF_ERROR_RETURN_VALUE_PTR;
 
 			while (1) {
 				result = interpret(body, whileEnv);
@@ -124,6 +129,7 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateJumpExpression(const Frontend::Node& astNode, Environment& env)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			if (astNode.value == "break") {
 				return std::make_shared<Value>(Type::JUMP, "break", astNode.startPosition, astNode.endPosition);
 			}

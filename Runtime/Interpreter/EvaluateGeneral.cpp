@@ -3,6 +3,7 @@
 namespace Coda {
 	namespace Runtime {
 		ValuePtr Interpreter::evaluateUnaryExpression(const Frontend::Node& op, Environment& env) {
+			IF_ERROR_RETURN_VALUE_PTR;
 			std::string unaryOperator = op.value;
 			ValuePtr value = interpret(*op.left.get(), env);
 			if (unaryOperator == "-") {
@@ -60,6 +61,7 @@ namespace Coda {
 
 		ValuePtr Interpreter::performAssignmentOperation(ValuePtr left, const ValuePtr& interpreted, const std::function<double(double, double)>& operation)
 		{
+			IF_ERROR_RETURN_VALUE_PTR;
 			if (isNumericType(left->type) && isNumericType(interpreted->type)) {
 				double num = std::stod(left->value);
 				double rightNum = std::stod(interpreted->value);

@@ -4,6 +4,7 @@ namespace Coda {
 	namespace Frontend {
 		Node Parser::parseFunctionExpression(std::string name)
 		{
+			IF_ERROR_RETURN_NODE;
 			advance();
 			std::string functionName;
 			if (name.empty()) {
@@ -129,6 +130,7 @@ namespace Coda {
 
 		Node Parser::parseListExpression()
 		{
+			IF_ERROR_RETURN_NODE;
 			if (mCurrentToken->type != TokenType::OPEN_BRACKET) {
 				return parseLogicalOperatorExpression();
 			}

@@ -88,6 +88,7 @@ namespace Coda {
 
 		Node Parser::parseExpression()
 		{
+			IF_ERROR_RETURN_NODE;
 			Node exp = parseAssignmentExpression();
 			if (mCurrentToken->value == ";")
 				advance();

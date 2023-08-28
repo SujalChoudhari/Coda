@@ -33,6 +33,7 @@ namespace Coda {
 
 		Node Parser::parseForExpression()
 		{
+			IF_ERROR_RETURN_NODE;
 			Node forExpressionNode = Node(NodeType::FOR_EXPRESSION, "<for>");
 			advance();
 			expect(TokenType::OPEN_PAREN, "Expected an '(' after for");
@@ -56,6 +57,7 @@ namespace Coda {
 
 		Node Parser::parseWhileExpression()
 		{
+			IF_ERROR_RETURN_NODE;
 			advance();
 			expect(TokenType::OPEN_PAREN, "Expected an '(' after while");
 			Node condition = parseExpression();
@@ -73,8 +75,8 @@ namespace Coda {
 
 		Node Parser::parseDoWhileExpression()
 		{
+			IF_ERROR_RETURN_NODE;
 			advance();
-
 			Node doBlock = parseBlockExpression();
 			expect(TokenType::WHILE, "Expected a 'while' after do block");
 			expect(TokenType::OPEN_PAREN, "Expected an '(' after while");
@@ -91,6 +93,7 @@ namespace Coda {
 		}
 
 		void Parser::parseJumpExpression(Node& expression) {
+			IF_ERROR_RETURN();
 			expression.value = mCurrentToken->value;
 			expression.type = NodeType::JUMP_EXPRESSION;
 			if (mCurrentToken->value == "return") {
