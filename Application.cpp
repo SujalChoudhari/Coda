@@ -1,4 +1,4 @@
-#include "Application.h"
+﻿#include "Application.h"
 
 
 
@@ -25,12 +25,14 @@ namespace Coda {
 		Coda::Utils::ArgParser argParser = Coda::Utils::ArgParser();
 		argParser.parse(argc, argv);
 
+		if (argParser.getFlag("-h"))
+			printHelpMessage();
+
 #if _DEBUG
 		mMainFileName = "Test/debug.coda";
 #else 
 		mMainFileName = argParser.getStandaloneValueAt(0);
 #endif
-
 
 		if (mMainFileName.empty()) {
 			return repl();
@@ -56,6 +58,7 @@ namespace Coda {
 
 
 	int Application::repl() {
+		std::cout << title << std::endl;
 		std::cout << "Welcome to Coda REPL!" << std::endl;
 		std::cout << "Type :q to exit" << std::endl;
 
@@ -91,6 +94,11 @@ namespace Coda {
 
 
 		return result;
+	}
+
+	void Application::printHelpMessage() {
+		std::cout << title << std::endl;
+		std::cout << helpMessage << std::endl;
 	}
 
 
