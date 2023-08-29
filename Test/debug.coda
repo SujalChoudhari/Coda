@@ -1,6 +1,17 @@
-let i = 0;
-let j = i;
+i = 0;
+let j := i;
 
 i++;
 
-println(j)
+
+scope namespace {
+	let x = 6;
+
+	scope another {
+		def f(){
+			return x + 5;
+		}
+	}
+
+}
+

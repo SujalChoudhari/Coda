@@ -268,14 +268,24 @@ namespace Coda {
 		}
 
 		std::shared_ptr<Environment> Environment::getScope(const std::string& name) {
-			std::shared_ptr<Environment> env = mScopes[name];
-			if (env != nullptr)
+			std::shared_ptr<Environment> env;
+			auto it = mScopes.find(name);
+			if (it != mScopes.end()) {
+				env = it->second;
 				return env;
-
-			if (mParent != nullptr) {
-				env = mParent->getScope(name);
 			}
-			return env;
+
+
+			for(auto& scope : mScopes)
+			{
+				auto env = scope.second->getScope(name);
+				if (env != nullptr)
+					return env;
+			}
+
+			// If the scope doesn't exist in current or parent, return nullptr
+			return nullptr;
 		}
+
 	}
 }
