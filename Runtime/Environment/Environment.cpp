@@ -76,7 +76,7 @@ namespace Coda {
 			else {
 				// Variable does not exist, check in parent environment
 				if (mParent != nullptr) {
-					Environment* env = resolve(name);
+					Environment* env = resolveWithParentAndScope(name);
 					if (env != nullptr)
 						return mParent->declareOrAssignVariable(name, value, isConstant);
 				}
@@ -153,7 +153,7 @@ namespace Coda {
 
 		ValuePtr Environment::lookupSymbol(std::string name)
 		{
-			Environment* env = resolve(name);
+			Environment* env = resolveWithParentAndScope(name);
 			if (env != nullptr)
 				return env->mSymbols[name];
 			else
@@ -161,7 +161,7 @@ namespace Coda {
 			return nullptr;
 		}
 
-		Environment* Environment::resolve(std::string name)
+		Environment* Environment::resolveWithParentAndScope(std::string name)
 		{
 			auto it = mSymbols.find(name);
 			if (it != mSymbols.end()) {
@@ -169,7 +169,7 @@ namespace Coda {
 			}
 
 			for (auto& it : mScopes) {
-				Environment* scope = it.second->resolve(name);
+				Environment* scope = it.second->resolveWithScope(name);
 				if (scope != nullptr)
 					return scope;
 			}
@@ -178,7 +178,23 @@ namespace Coda {
 				return nullptr;
 			}
 
-			return mParent->resolve(name);
+			return mParent->resolveWithParentAndScope(name);
+		}
+
+		Environment* Environment::resolveWithScope(std::string name)
+		{
+			auto it = mSymbols.find(name);
+			if (it != mSymbols.end()) {
+				return this;
+			}
+
+			for (auto& it : mScopes) {
+				Environment* scope = it.second->resolveWithParentAndScope(name);
+				if (scope != nullptr)
+					return scope;
+			}
+
+			return nullptr;
 		}
 
 		Environment::UserDefinedFunction* Environment::getFunction(const std::string& name) {

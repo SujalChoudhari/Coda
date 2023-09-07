@@ -3,7 +3,7 @@
 namespace Coda {
 	namespace Runtime {
 
-	
+
 		ValuePtr Interpreter::handleModulusOperation(const ValuePtr& left, const ValuePtr& right)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
@@ -105,9 +105,5 @@ namespace Coda {
 		{
 			return (type == "&&" || type == "||");
 		}
-
-
-
-
 	} // namespace Runtime
 } // namespace Coda

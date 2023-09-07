@@ -191,6 +191,7 @@
     <ClInclude Include="Parser\Parser.h" />
     <ClInclude Include="Runtime\Environment\Environment.h" />
     <ClInclude Include="Runtime\Interpreter\Interpreter.h" />
+    <ClInclude Include="Runtime\MemoryPool\Pool.h" />
     <ClInclude Include="Runtime\NativeFunctions\NativeFunction.h" />
     <ClInclude Include="Runtime\Runtime.h" />
     <ClInclude Include="Runtime\RuntimeValue\Type.h" />

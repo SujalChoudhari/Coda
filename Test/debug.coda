@@ -1,17 +1,3 @@
-i = 0;
-let j := i;
+import dir.func
 
-i++;
-
-
-scope namespace {
-	let x = 6;
-
-	scope another {
-		def f(){
-			return x + 5;
-		}
-	}
-
-}
-
+func.run()

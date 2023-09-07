@@ -144,7 +144,8 @@ namespace Coda {
 
 		private:
 			// gets the environment with the given function name
-			Environment* resolve(std::string name);
+			Environment* resolveWithParentAndScope(std::string name);
+			Environment* resolveWithScope(std::string name);
 
 			// Creates a new environment.
 			Environment();
