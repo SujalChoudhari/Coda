@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Coda.h"
 #include "Utils/FileReader.h"
 #include"Utils/ArgParser.h"
@@ -42,16 +42,17 @@ C:::::C              o::::o     o::::od:::::d     d:::::d  a::::aaaa::::::a \n\
    \n\
    Documentation: \033[4;34mhttps://github.com/SujalChoudhari/Coda/wiki\033[0m\n\
    Issue Tracker: \033[4;34mhttps://github.com/SujalChoudhari/Coda/issues\033[0m\n\
-   Repository: \033[4;34mhttps://github.com/SujalChoudhari/Coda\033[0m\n\
-\n\
-   \033[1;36m.-=[ Common Usage ]=-.\033[0m\n\
-   \n\
-   - \033[1;32mcoda <file>\033[0m           : Run a Coda source file\n\
-   - \033[1;32mcoda -h\033[0m               : Display this help message\n\
-   - Visit the wiki for more commands and information: \033[4;34mhttps://github.com/SujalChoudhari/Coda/wiki\033[0m\n\
+   Repository: \033[4;34mhttps://github.com/SujalChoudhari/Coda\033[0m\n\n\
+   View command list: \033[36mCoda commands\033[0m\n\
+   Visit the wiki for more information: \033[4;34mhttps://github.com/SujalChoudhari/Coda/wiki\033[0m\n\
 \n\
 \033[0;33m========================================\033[0m\n";
 
+		const std::map<std::string, std::string> commandsMap = {
+			{"run","Run a Coda program from a specified file.\nExample: run <filename> -w(Optional : -w to wait)"},
+			{"help","Display this help message."},
+			{"repl","Start a terminal-based REPL for the Coda language."}
+		};
 
 
 	public:
@@ -65,7 +66,7 @@ C:::::C              o::::o     o::::od:::::d     d:::::d  a::::aaaa::::::a \n\
 		int run(int argc, char** argv);
 
 		/*
-			A Read-Eval-Print-Loop that allows the user to execute Coda code line by line. 
+			A Read-Eval-Print-Loop that allows the user to execute Coda code line by line.
 			There is no need of file to be passed to the program.
 		*/
 		int repl();
@@ -105,6 +106,7 @@ C:::::C              o::::o     o::::od:::::d     d:::::d  a::::aaaa::::::a \n\
 
 
 		void printHelpMessage();
+		void printCommandMessage();
 
 	private:
 		std::string mMainFileName;

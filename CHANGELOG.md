@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 29-8-2023
 
 ### Added
-- nested scopes- colors to console output
+- nested scopes
+- colors to console output
+- added subcommands `help`, `commands`, `run` and `repl`
 
 ## [0.1.0] - 28-8-2023
 

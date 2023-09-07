@@ -61,8 +61,15 @@ namespace Coda {
 
 			*/
 			std::string getStandaloneValueAt(int index);
-		
+			
+			/*
+				Get the sub command from the cli input.
+				@return The string value of the command.
+			*/
+			std::string getSubCommand();
+
 		private:
+			std::string mSubCommand;
 			std::vector<std::string> mStandaloneValues;
 			std::unordered_map<std::string, std::string> mValues;
 			std::unordered_map<std::string, bool> mFlags;

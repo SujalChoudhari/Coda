@@ -25,38 +25,35 @@ namespace Coda {
 		Coda::Utils::ArgParser argParser = Coda::Utils::ArgParser();
 		argParser.parse(argc, argv);
 
-		if (argParser.getFlag("-h")) {
+		std::string subCommand = argParser.getSubCommand();
+
+		if (subCommand == "run" || _DEBUG) {
+			mMainFileName = _DEBUG ? "./Test/debug.coda" : argParser.getStandaloneValueAt(0);
+			Frontend::Importer importer = Frontend::Importer();
+			std::string source = importer.import(mMainFileName);
+
+			Runtime::Environment env = Runtime::Environment::root();
+			execute(source, env);
+
+			if (argParser.getFlag("-w")) {
+				std::cout << std::endl << "Press any key to continue...";
+				std::cin.get();
+			}
+			return EXIT_SUCCESS;
+		}
+		else if (subCommand == "repl") {
+			return repl();
+		}
+		else if (subCommand == "help" || subCommand == "none") {
 			printHelpMessage();
 			std::cin.get();
 			return EXIT_SUCCESS;
 		}
-
-#if _DEBUG
-		mMainFileName = "Test/debug.coda";
-#else 
-		mMainFileName = argParser.getStandaloneValueAt(0);
-#endif
-
-		if (mMainFileName.empty()) {
-			return repl();
-		}
-
-		Frontend::Importer importer = Frontend::Importer();
-		std::string source = importer.import(mMainFileName);
-
-		Runtime::Environment env = Runtime::Environment::root();
-		if (source.empty()) {
-			std::cout << "Source file is empty.\nOpening REPL...\n+------------------------+" << std::endl;
-			return repl();
-		}
-		execute(source, env);
-
-		if (argParser.getFlag("-w")) {
-			std::cout << std::endl << "Press any key to continue...";
+		else if (subCommand == "commands") {
+			printCommandMessage();
 			std::cin.get();
+			return EXIT_SUCCESS;
 		}
-
-		return EXIT_SUCCESS;
 	}
 
 
@@ -104,6 +101,31 @@ namespace Coda {
 	void Application::printHelpMessage() {
 		std::cout << title << std::endl;
 		std::cout << helpMessage << std::endl;
+	}
+
+	void Application::printCommandMessage()
+	{
+
+
+		std::cout << Utils::Colors::ACCENT << "\n"
+			<< "   \n"
+			<< Utils::Colors::ACCENT << ".-=[ Commands ]=-." << Utils::Colors::RESET << "\n"
+			<< "\n"
+			<< Utils::Colors::ACCENT << "Usage:" << Utils::Colors::RESET << "\n";
+
+		for (const auto& entry : commandsMap) {
+			std::cout << " - " << Utils::Colors::ACCENT << entry.first << Utils::Colors::RESET << "\n   " << entry.second << "\n";
+		}
+
+		std::cout << "\n"
+			<< Utils::Colors::ACCENT << "Additional Resources:" << Utils::Colors::RESET << "\n"
+			<< "   - Documentation: " << Utils::Colors::ACCENT << "\033[4;34mhttps://github.com/SujalChoudhari/Coda/wiki" << Utils::Colors::RESET << "\n"
+			<< "   - Issue Tracker: " << Utils::Colors::ACCENT << "\033[4;34mhttps://github.com/SujalChoudhari/Coda/issues" << Utils::Colors::RESET << "\n"
+			<< "   - Repository: " << Utils::Colors::ACCENT << "\033[4;34mhttps://github.com/SujalChoudhari/Coda" << Utils::Colors::RESET << "\n"
+			<< "   - View more commands: " << Utils::Colors::ACCENT << "\033[36mCoda commands" << Utils::Colors::RESET << "\n"
+			<< "   - Visit the wiki for detailed information: " << Utils::Colors::ACCENT << "\033[4;34mhttps://github.com/SujalChoudhari/Coda/wiki" << Utils::Colors::RESET << "\n"
+			<< "\n"
+			<< Utils::Colors::WARNING << "========================================" << Utils::Colors::RESET << "\n";
 	}
 
 

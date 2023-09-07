@@ -4,8 +4,6 @@
 Coda::Utils::ArgParser::ArgParser()
 {
 	mFlags.insert_or_assign("-w", false);
-	mFlags.insert_or_assign("-e", false);
-	mFlags.insert_or_assign("-h", false);
 }
 
 void Coda::Utils::ArgParser::parse(int argc, char** argv)
@@ -16,7 +14,10 @@ void Coda::Utils::ArgParser::parse(int argc, char** argv)
 
 		if (arg[0] != '-')
 		{
-			mStandaloneValues.push_back(arg);
+			if (mSubCommand.empty())
+				mSubCommand = arg;
+			else
+				mStandaloneValues.push_back(arg);
 		}
 		else
 		{
@@ -53,4 +54,9 @@ std::string Coda::Utils::ArgParser::getStandaloneValueAt(int i)
 	if (i >= mStandaloneValues.size())
 		return "";
 	return mStandaloneValues.at(i);
+}
+
+std::string Coda::Utils::ArgParser::getSubCommand()
+{
+	return mSubCommand.empty() ? "none" : mSubCommand;
 }
