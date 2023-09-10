@@ -1,3 +1,1 @@
-import dir.func
-
-func.run()
+let x = "Hello \" I am sujal "

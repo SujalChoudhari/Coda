@@ -276,20 +276,41 @@ namespace Coda {
 		}
 
 		std::string Lexer::handleEscapeSequence() {
+			std::string res = "";
 			advance(); // Skip the backslash
 			switch (mCurrentChar) {
-			case 'n':  return "\n";
-			case 't':  return "\t";
-			case '\"': return "\"";
-			case '\'': return "\'";
-			case 'r':  return "\r";
-			case 'b':  return "\b";
-			case 'f':  return "\f";
-			case '/':  return "/";
-			case '\\': return "\\";
+			case 'n':
+				res = "\n";
+				break;
+			case 't':
+				res = "\t";
+				break;
+			case '\"':
+				res = "\"";
+				break;
+			case '\'':
+				res = "\'";
+				break;
+			case 'r':
+				res = "\r";
+				break;
+			case 'b':
+				res = "\b";
+				break;
+			case 'f':
+				res = "\f";
+				break;
+			case '/':
+				res = "/";
+				break;
+			case '\\':
+				res = "\\";
+				break;
 			default:
-				return "\\" + std::string(1, mCurrentChar);
+				res =  "\\" + std::string(1, mCurrentChar);
 			}
+			advance();
+			return res;
 		}
 
 		void Lexer::handleNumbers() {

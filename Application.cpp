@@ -27,8 +27,18 @@ namespace Coda {
 
 		std::string subCommand = argParser.getSubCommand();
 
-		if (subCommand == "run" || _DEBUG) {
-			mMainFileName = _DEBUG ? "./Test/debug.coda" : argParser.getStandaloneValueAt(0);
+#if _DEBUG
+		mMainFileName = "./Test/debug.coda";
+		Frontend::Importer importer = Frontend::Importer();
+		std::string source = importer.import(mMainFileName);
+
+		Runtime::Environment env = Runtime::Environment::root();
+		execute(source, env);
+		return EXIT_SUCCESS;
+
+#else
+		if (subCommand == "run") {
+			mMainFileName = argParser.getStandaloneValueAt(0);
 			Frontend::Importer importer = Frontend::Importer();
 			std::string source = importer.import(mMainFileName);
 
@@ -54,6 +64,7 @@ namespace Coda {
 			std::cin.get();
 			return EXIT_SUCCESS;
 		}
+#endif
 	}
 
 
@@ -105,7 +116,6 @@ namespace Coda {
 
 	void Application::printCommandMessage()
 	{
-
 
 		std::cout << Utils::Colors::ACCENT << "\n"
 			<< "   \n"
