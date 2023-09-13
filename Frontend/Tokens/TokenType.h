@@ -36,6 +36,7 @@ namespace Coda {
 			WHILE,
 			DO,
 			IN,
+			NATIVE,
 
 			// Operators
 			ASSIGN,

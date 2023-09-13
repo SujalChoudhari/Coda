@@ -38,6 +38,7 @@ namespace Coda {
 			ASSIGNMENT_EXPRESSION,
 			MEMBER_EXPRESSION,
 			CALL_EXPRESSION,
+			NATIVE_CALL_EXPRESSION,
 		};
 
 	} // namespace Frontend

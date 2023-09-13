@@ -21,6 +21,7 @@ namespace Coda {
 			{"sizeof",TokenType::UNARY_OPERATOR},
 			{"do",TokenType::DO},
 			{"in",TokenType::IN},
+			{"native",TokenType::NATIVE},
 			{"int",TokenType::TYPE},
 			{"bool",TokenType::TYPE},
 			{"byte",TokenType::TYPE},

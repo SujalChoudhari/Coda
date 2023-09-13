@@ -187,7 +187,6 @@ namespace Coda {
 			return callExpression;
 		}
 
-
 		Node Parser::parseArguments()
 		{
 			IF_ERROR_RETURN_NODE;

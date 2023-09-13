@@ -105,7 +105,34 @@ namespace Coda {
 			}
 		}
 
+		ValuePtr Interpreter::evaluateNativeCallExpression(const Frontend::Node& callExpression, Environment& env)
+		{
+			
+			std::string dllFilename = callExpression.left->value;
+			std::string functionName = callExpression.right->left->value;
 
+			Value args = Value();
+			unsigned int argCount = 1;
+			for (auto& arg : callExpression.right->properties) {
+				ValuePtr value = interpret(*std::dynamic_pointer_cast<Node>(arg.second).get(), env);
+				IF_ERROR_RETURN_VALUE_PTR;
+				args.properties.insert({ std::to_string(argCount), value });
+				argCount++;
+			}
+
+			/*
+				TODO: 
+				1. Load dll file with name `dllFilename`.
+				2. Get function pointer to the `functionName` function
+				3. Call function inside try-catch with args same as `/Runtime/NativeFunctions`.
+					using IValue and IEnvironment Interfaces inside FFI
+				4. Return the generated response.
+			*/
+			
+			return ValuePtr();
+		}
+
+			
 		ValuePtr Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;

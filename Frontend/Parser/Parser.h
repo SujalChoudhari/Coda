@@ -62,6 +62,7 @@ namespace Coda {
 			Node parseUnaryExpression();
 			Node parseCallMemberExpression();
 			Node parseCallExpression(const Node& caller);
+			Node parseNativeCallExpression();
 			Node parseArguments();
 			Node parseArgumentList();
 			Node parseMemberExpression();

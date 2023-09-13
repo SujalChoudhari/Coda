@@ -179,7 +179,8 @@ namespace Coda {
 			case TokenType::JUMP:
 				parseJumpExpression(expression);
 				break;
-
+			case TokenType::NATIVE:
+				return parseNativeCallExpression();
 			default:
 				handleInvalidToken();
 				break;
@@ -193,6 +194,21 @@ namespace Coda {
 			expression.type = getTokenTypeAsNodeType(type);
 			expression.value = mCurrentToken->value;
 			advance();
+		}
+
+		Node Parser::parseNativeCallExpression()
+		{
+			mCurrentToken;
+			advance();
+			std::string filename = mCurrentToken->value;
+			advance();
+			Node nativeCallExpression = Node(NodeType::NATIVE_CALL_EXPRESSION);
+			nativeCallExpression.value = "<native>";
+			nativeCallExpression.startPosition = mCurrentToken->startPosition;
+			nativeCallExpression.left = std::make_shared<Node>(NodeType::STRING_LITERAL, filename);
+			nativeCallExpression.right = std::make_shared<Node>(parseExpression());
+			nativeCallExpression.endPosition = mCurrentToken->endPosition;
+			return nativeCallExpression;
 		}
 
 

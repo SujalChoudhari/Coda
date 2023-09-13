@@ -1,6 +1,5 @@
-let int x = 100;
+def add(x,y){
+	return native filename function_name(x,y);
+}
 
-
-let int y = parseInt(input("Enter a number: "));
-
-println("Y^2 is :",y * y);
+add(9,0);

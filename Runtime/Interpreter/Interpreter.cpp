@@ -54,6 +54,9 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::CALL_EXPRESSION) {
 				return evaluateCallExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::NATIVE_CALL_EXPRESSION) {
+				return evaluateNativeCallExpression(astNode, env);
+			}
 			else if (astNode.type == Frontend::NodeType::BLOCK_STATEMENT) {
 				return evaluateBlockExpression(astNode, env);
 			}

@@ -53,6 +53,7 @@ namespace Coda {
 			ValuePtr evaluateScopeExpression(const Frontend::Node& object, Environment& env);
 			ValuePtr evaluateListExpression(const Frontend::Node& list, Environment& env);
 			ValuePtr evaluateCallExpression(const Frontend::Node& callexp, Environment& env);
+			ValuePtr evaluateNativeCallExpression(const Frontend::Node& callexp, Environment& env);
 			
 			ValuePtr evaluateAssignmentExpression(const Frontend::Node& astNode, Environment& env);
 			ValuePtr evaluateBlockExpression(const Frontend::Node& astNode, Environment& env);

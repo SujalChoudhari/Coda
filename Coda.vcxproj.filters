@@ -185,9 +185,6 @@
     <ClInclude Include="Utils\Colors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Runtime\MemoryPool\Pool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FFI\IValue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
