@@ -1,7 +1,7 @@
 #pragma once
 namespace Coda {
 	namespace Frontend {
-		// The type of the node.
+		// The type of the node. // DUPLICATION FROM FFI/NodeTypes.h
 		enum class NodeType {
 
 			// Statements
@@ -38,7 +38,6 @@ namespace Coda {
 			ASSIGNMENT_EXPRESSION,
 			MEMBER_EXPRESSION,
 			CALL_EXPRESSION,
-
 		};
 
 	} // namespace Frontend

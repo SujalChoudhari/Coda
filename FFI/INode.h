@@ -2,8 +2,17 @@
 #include <memory>
 #include <string>
 #include <map>
-#include "../Error/Position.h"
-#include "../Frontend/Node/NodeType.h"
+
+namespace Coda {
+    namespace Frontend {
+        enum class NodeType;
+    }
+
+    namespace Error {
+        class Position;
+    }
+}
+
 using namespace Coda::Frontend;
 using namespace Coda::Error;
 
