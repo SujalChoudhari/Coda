@@ -18,7 +18,7 @@ namespace Coda {
 			}
 			else if (unaryOperator == "!") {
 				Value booleanValue = Value(Type::BOOL, "false", op.startPosition, op.endPosition);
-				if (!Value::isTruthy(value))
+				if (!Value::isTruthy(*(std::shared_ptr<IValue>)value))
 					booleanValue.value = "true";
 				return std::make_shared<Value>(booleanValue);
 			}
@@ -57,7 +57,7 @@ namespace Coda {
 		ValuePtr Interpreter::evaluateIdentifier(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
-			return env.lookupSymbol(astNode.value);
+			return IVALUE_TO_VALUE(env.lookupSymbol(astNode.value));
 		}
 
 		ValuePtr Interpreter::performAssignmentOperation(ValuePtr left, const ValuePtr& interpreted, const std::function<double(double, double)>& operation)
@@ -91,7 +91,7 @@ namespace Coda {
 						return std::make_shared<Value>(Type::NONE, "");
 					}
 					else {
-						return env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env));
+						return IVALUE_TO_VALUE(env.declareOrAssignVariable(astNode.left->value, interpret(*astNode.right.get(), env)));
 					}
 				}
 				else if (astNode.left->type == Frontend::NodeType::MEMBER_EXPRESSION) {
@@ -101,7 +101,7 @@ namespace Coda {
 						return std::make_shared<Value>(Type::NONE, "");
 					}
 					else {
-						return env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env));
+						return IVALUE_TO_VALUE(env.declareOrAssignVariable(*astNode.left.get(), interpret(*astNode.right.get(), env)));
 					}
 				}
 				else {
@@ -110,22 +110,22 @@ namespace Coda {
 				}
 			}
 			else if (astNode.value == "+=") {
-				ValuePtr left = env.lookupSymbol(astNode.left->value);
+				ValuePtr left = IVALUE_TO_VALUE(env.lookupSymbol(astNode.left->value));
 				ValuePtr interpreted = interpret(*astNode.right.get(), env);
 				return performAssignmentOperation(left, interpreted, [](double a, double b) { return a + b; });
 			}
 			else if (astNode.value == "-=") {
-				ValuePtr left = env.lookupSymbol(astNode.left->value);
+				ValuePtr left = IVALUE_TO_VALUE(env.lookupSymbol(astNode.left->value));
 				ValuePtr interpreted = interpret(*astNode.right.get(), env);
 				return performAssignmentOperation(left, interpreted, [](double a, double b) { return a - b; });
 			}
 			else if (astNode.value == "*=") {
-				ValuePtr left = env.lookupSymbol(astNode.left->value);
+				ValuePtr left = IVALUE_TO_VALUE(env.lookupSymbol(astNode.left->value));
 				ValuePtr interpreted = interpret(*astNode.right.get(), env);
 				return performAssignmentOperation(left, interpreted, [](double a, double b) { return a * b; });
 			}
 			else if (astNode.value == "/=") {
-				ValuePtr left = env.lookupSymbol(astNode.left->value);
+				ValuePtr left = IVALUE_TO_VALUE(env.lookupSymbol(astNode.left->value));
 				ValuePtr interpreted = interpret(*astNode.right.get(), env);
 				return performAssignmentOperation(left, interpreted, [](double a, double b) { return a / b; });
 			}
@@ -143,7 +143,7 @@ namespace Coda {
 				rhs = std::make_shared<Value>(rhs->copy());
 			}
 
-			return env.declareOrAssignVariable(astNode.left->value, rhs, isConstant);
+			return IVALUE_TO_VALUE(env.declareOrAssignVariable(astNode.left->value, rhs, isConstant));
 		}
 	} // namespace Frontend
 } // namespace Coda

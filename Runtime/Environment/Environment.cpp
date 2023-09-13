@@ -44,10 +44,10 @@ namespace Coda {
 			return env;
 		}
 
-		ValuePtr Environment::declareFunctionParameter(const std::string name, const ValuePtr& value) {
+		IValuePtr Environment::declareFunctionParameter(const std::string name, const IValuePtr& value) {
 			auto symbolIt = mSymbols.find(name);
 			if (symbolIt != mSymbols.end()) { // Prameters cannot exist with same name
-				Error::Runtime::raise("Parameter with same name already exists, at ", value->endPosition);
+				Error::Runtime::raise("Parameter with same name already exists, at ", value->getEndPosition());
 				return nullptr;
 			}
 			else {
@@ -57,21 +57,21 @@ namespace Coda {
 			}
 		}
 
-		ValuePtr Environment::declareOrAssignVariable(const std::string& name, const ValuePtr& value, bool isConstant)
+		IValuePtr Environment::declareOrAssignVariable(const std::string& name, const IValuePtr& value, bool isConstant)
 		{
 			auto symbolIt = mSymbols.find(name);
 			if (symbolIt != mSymbols.end()) {
 				// Variable already exists, assign to it
 				if (isConstant) {
-					Error::Runtime::raise("Reassignment of constant is not allowed, at ", value->endPosition);
+					Error::Runtime::raise("Reassignment of constant is not allowed, at ", value->getEndPosition());
 					return nullptr;
 				}
 				else if (mConstants.find(name) != mConstants.end()) {
 					// Trying to assign to a constant variable
-					Error::Runtime::raise("Assignment to constant variable is not allowed, at ", value->endPosition);
+					Error::Runtime::raise("Assignment to constant variable is not allowed, at ", value->getEndPosition());
 					return nullptr;
 				}
-				symbolIt->second = value;
+				symbolIt->second = std::dynamic_pointer_cast<Value>(value);
 			}
 			else {
 				// Variable does not exist, check in parent environment
@@ -91,7 +91,7 @@ namespace Coda {
 			return value;
 		}
 
-		ValuePtr Environment::declareOrAssignVariable(const Frontend::Node& name, const ValuePtr& value, bool isConstant)
+		IValuePtr Environment::declareOrAssignVariable(const Frontend::Node& name, const IValuePtr& value, bool isConstant)
 		{
 			if (name.type != Frontend::NodeType::MEMBER_EXPRESSION) {
 				Error::Runtime::raise("Invalid variable name");
@@ -112,35 +112,34 @@ namespace Coda {
 
 			std::reverse(identifierChain.begin(), identifierChain.end());
 			ValuePtr variableValue;
-			variableValue = mSymbols[current->value];
+			variableValue = std::dynamic_pointer_cast<Value>(mSymbols[current->value]);
 
 			for (int i = 0; i < identifierChain.size() - 1; i++) {
-				variableValue = variableValue->properties[identifierChain[i]];
+				variableValue = std::dynamic_pointer_cast<Value>(variableValue->properties[identifierChain[i]]);
 			}
 
 			variableValue->properties[identifierChain.back()] = std::make_shared<Value>(value);
 			return value;
 		}
 
-		ValuePtr Environment::declareNativeFunction(const std::string& name, Function function)
+		IValuePtr Environment::declareNativeFunction(const std::string& name,IEnvironment::Function function)
 		{
 			declareOrAssignVariable(name, std::make_shared<Value>(Type::NATIVE_FUNCTION, name), true);
 			mFunctions.emplace(name, function);
 			return nullptr;
 		}
 
-		ValuePtr Environment::declareUserDefinedFunction(const std::string& name, Frontend::Node astNode)
+		IValuePtr Environment::declareUserDefinedFunction(const std::string& name, const INode& astNode)
 		{
-			ValuePtr function = std::make_shared<Value>(Type::FUNCTION, astNode.value);
+			ValuePtr function = std::make_shared<Value>(Type::FUNCTION, astNode.getValue());
 			this->declareOrAssignVariable(name, function, false);
 			return function;
 		}
 
-		ValuePtr Environment::callFunction(const std::string& name, const ValuePtr& args, Environment& env) {
+		IValuePtr Environment::callFunction(const std::string& name, IValuePtr args, IEnvironment& env) {
 			auto it = mFunctions.find(name);
 			if (it != mFunctions.end()) {
-
-				return it->second(args, env);
+				return it->second(args, &env);
 			}
 			else if (mParent != nullptr) {
 				return mParent->callFunction(name, args, env);
@@ -151,7 +150,7 @@ namespace Coda {
 			}
 		}
 
-		ValuePtr Environment::lookupSymbol(std::string name)
+		IValuePtr Environment::lookupSymbol(std::string name)
 		{
 			Environment* env = resolveWithParentAndScope(name);
 			if (env != nullptr)
@@ -224,7 +223,7 @@ namespace Coda {
 		ValuePtr Environment::addFunction(const std::string& name, const Frontend::Node& astNode, Environment& env)
 		{
 			mUserDefinedFunctions.push_back(UserDefinedFunction(astNode.value, env, astNode));
-			return env.declareUserDefinedFunction(astNode.value, astNode);
+			return std::dynamic_pointer_cast<Value>(env.declareUserDefinedFunction(astNode.value, astNode));
 		}
 
 		void Environment::remove(const std::string& name)

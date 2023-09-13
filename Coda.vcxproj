@@ -176,6 +176,9 @@
     <ClInclude Include="Error\Raiser.h" />
     <ClInclude Include="Error\Manager.h" />
     <ClInclude Include="Error\Position.h" />
+    <ClInclude Include="FFI\IEnvironment.h" />
+    <ClInclude Include="FFI\INode.h" />
+    <ClInclude Include="FFI\IValue.h" />
     <ClInclude Include="Frontend\Frontend.h" />
     <ClInclude Include="Frontend\Importer\Importer.h" />
     <ClInclude Include="Frontend\Lexer\Lexer.h" />

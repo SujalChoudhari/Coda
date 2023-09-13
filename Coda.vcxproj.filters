@@ -188,6 +188,15 @@
     <ClInclude Include="Runtime\MemoryPool\Pool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FFI\IValue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FFI\IEnvironment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FFI\INode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes">

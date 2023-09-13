@@ -96,7 +96,9 @@ namespace Coda {
 		template<typename T>
 		inline void Interpreter::handleArithmeticOperation(const ValuePtr& left, const std::string& functor, const ValuePtr& right, ValuePtr& result)
 		{
-			IF_ERROR_RETURN();
+			if (!Error::Manager::isSafe())
+				return;
+
 			T typeLeft = getValue<T>(left->value);
 			T typeRight = getValue<T>(right->value);
 

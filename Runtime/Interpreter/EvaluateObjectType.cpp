@@ -14,12 +14,12 @@ namespace Coda {
 
 			for (const auto& entry : astNode.properties) {
 				const std::string& key = entry.first;
-				const std::shared_ptr<Frontend::Node>& value = entry.second;
+				const std::shared_ptr<Frontend::Node>& value = std::dynamic_pointer_cast<Node>(entry.second);
 
 				ValuePtr runtimeValue;
 
 				if (value.get()->type == Frontend::NodeType::PROPERTY) {
-					runtimeValue = env.lookupSymbol(key);
+					runtimeValue = IVALUE_TO_VALUE(env.lookupSymbol(key));
 				}
 				else {
 					runtimeValue = interpret(*value.get(), env);
@@ -46,7 +46,7 @@ namespace Coda {
 			listValue.type = Type::LIST;
 
 			for (auto& it : list.properties) {
-				listValue.properties.insert({ std::to_string(listValue.properties.size()), interpret(*it.second.get(), env) });
+				listValue.properties.insert({ std::to_string(listValue.properties.size()), interpret(*std::dynamic_pointer_cast<Node>(it.second).get(), env) });
 			}
 
 			env.declareOrAssignVariable("name", std::make_shared<Value>(listValue), false);
@@ -62,17 +62,17 @@ namespace Coda {
 
 			unsigned int argCount = 1;
 			for (auto& arg : callexp.properties) {
-				ValuePtr value = interpret(*arg.second.get(), env);
+				ValuePtr value = interpret(*std::dynamic_pointer_cast<Node>(arg.second).get(), env);
 				IF_ERROR_RETURN_VALUE_PTR;
 				args.properties.insert({ std::to_string(argCount), value });
 				argCount++;
 			}
 
 			if (name->type == Type::NATIVE_FUNCTION) {
-				return env.callFunction(name->value, std::make_shared<Value>(args), env);
+				return IVALUE_TO_VALUE(env.callFunction(name->value, std::make_shared<Value>(args), env));
 			}
 			else if (name->type == Type::FUNCTION) {
-				ValuePtr function = env.lookupSymbol(name->value);
+				ValuePtr function = IVALUE_TO_VALUE(env.lookupSymbol(name->value));
 				Environment::UserDefinedFunction* functionContent;
 				if (function->type == Type::OBJECT) {
 					functionContent = env.getFunction(name->value);
@@ -90,8 +90,8 @@ namespace Coda {
 
 				for (int i = 0; i < std::get<2>(*functionContent).left->properties.size(); i++) {
 					auto& it = std::get<2>(*functionContent).left->properties[std::to_string(i)];
-					const std::string& name = it->value;
-					scope.declareFunctionParameter(name, args.properties[std::to_string(i + 1)]);
+					const std::string& name = it->getValue();
+					scope.declareFunctionParameter(name, std::dynamic_pointer_cast<Value>(args.properties[std::to_string(i + 1)]));
 				}
 
 				// Run the function
@@ -116,7 +116,7 @@ namespace Coda {
 				res = interpret(*astNode.right.get(), scope);
 			}
 			else if (left != nullptr) {
-				res = left->properties[astNode.right->value];
+				res = std::dynamic_pointer_cast<Value>(left->properties[astNode.right->value]);
 			}
 			return res;
 		}
@@ -126,11 +126,11 @@ namespace Coda {
 		{
 			ValuePtr result;
 			for (auto& it : astNode.properties) {
-				result = interpret(*it.second.get(), env);
+				result = interpret(*std::dynamic_pointer_cast<Node>(it.second).get(), env);
 				IF_ERROR_RETURN_VALUE_PTR;
 				if (result->type == Type::JUMP) {
 					if (result->value == "return")
-						return result->properties["returnable"];
+						return std::dynamic_pointer_cast<Value>(result->properties["returnable"]);
 					else
 						return result;
 				}

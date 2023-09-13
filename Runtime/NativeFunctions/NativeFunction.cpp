@@ -3,34 +3,35 @@
 #include <thread>
 #include "../RuntimeValue/Value.h"
 #include "../Runtime.h"
+#include "NativeFunction.h"
 #include "../../Error/Raiser.h"
 
 namespace Coda {
 	namespace Runtime {
 		namespace Native {
-			ValuePtr println(ValuePtr args, Environment env) {
+			IValuePtr println(IValuePtr args, IEnvironment* env) {
 				auto argv = print(args, env);
 				std::cout << std::endl;
 				return argv;
 			}
-			ValuePtr print(ValuePtr args, Environment env) {
-				for (auto& it : args->properties) {
-					if (it.second->type == Type::BOOL) {
-						if (it.second->value == "0" || it.second->value == "false")
+			IValuePtr print(IValuePtr args, IEnvironment* env) {
+				for (auto& it : args->getProperties()) {
+					if (it.second->getType() == Type::BOOL) {
+						if (it.second->getValue() == "0" || it.second->getValue() == "false")
 							std::cout << "false ";
 						else std::cout << "true ";
 					}
-					else if (it.second->type == Type::CHAR) {
-						std::cout << (char)std::stoi(it.second->value) << " ";
+					else if (it.second->getType() == Type::CHAR) {
+						std::cout << (char)std::stoi(it.second->getValue()) << " ";
 					}
 					else {
-						std::cout << it.second->value << " ";
+						std::cout << it.second->getValue() << " ";
 					}
 				}
 				return args;
 			}
 
-			ValuePtr input(ValuePtr args, Environment env) {
+			IValuePtr input(IValuePtr args, IEnvironment* env) {
 				print(args, env);
 				std::string input_str;
 				std::getline(std::cin, input_str);
@@ -38,10 +39,10 @@ namespace Coda {
 			}
 
 
-			ValuePtr sleep(ValuePtr args, Environment env) {
-				if (!args->properties.empty()) {
-					if (args->properties.begin()->second->type == Type::INT) {
-						int seconds = std::stoi(args->properties.begin()->second->value);
+			IValuePtr sleep(IValuePtr args, IEnvironment* env) {
+				if (!args->getProperties().empty()) {
+					if (args->getProperties().begin()->second->getType() == Type::INT) {
+						int seconds = std::stoi(args->getProperties().begin()->second->getValue());
 						std::this_thread::sleep_for(std::chrono::seconds(seconds));
 					}
 					else {
@@ -55,23 +56,23 @@ namespace Coda {
 				return nullptr;
 			}
 
-			ValuePtr parseInt(ValuePtr args, Environment env) {
-				std::string stringValuePtr = args->properties.begin()->second->value;
+			IValuePtr parseInt(IValuePtr args, IEnvironment* env) {
+				std::string stringValuePtr = args->getProperties().begin()->second->getValue();
 				return std::make_shared<Value>(Type::INT, stringValuePtr);
 			}
 
-			ValuePtr parseFloat(ValuePtr args, Environment env) {
-				std::string stringValuePtr = args->properties.begin()->second->value;
+			IValuePtr parseFloat(IValuePtr args, IEnvironment* env) {
+				std::string stringValuePtr = args->getProperties().begin()->second->getValue();
 				return std::make_shared<Value>(Type::FLOAT, stringValuePtr);
 			}
 
-			ValuePtr parseDouble(ValuePtr args, Environment env) {
-				std::string stringValuePtr = args->properties.begin()->second->value;
+			IValuePtr parseDouble(IValuePtr args, IEnvironment* env) {
+				std::string stringValuePtr = args->getProperties().begin()->second->getValue();
 				return std::make_shared<Value>(Type::DOUBLE, stringValuePtr);
 			}
 
-			ValuePtr parseBool(ValuePtr args, Environment env) {
-				std::string stringValuePtr = args->properties.begin()->second->value;
+			IValuePtr parseBool(IValuePtr args, IEnvironment* env) {
+				std::string stringValuePtr = args->getProperties().begin()->second->getValue();
 				if (stringValuePtr == "1" || stringValuePtr == "0") {
 					return std::make_shared<Value>(Type::BOOL, stringValuePtr);
 				}
@@ -81,18 +82,18 @@ namespace Coda {
 				}
 			}
 
-			ValuePtr parseByte(ValuePtr args, Environment env) {
-				std::string stringValuePtr = args->properties.begin()->second->value;
+			IValuePtr parseByte(IValuePtr args, IEnvironment* env) {
+				std::string stringValuePtr = args->getProperties().begin()->second->getValue();
 				return std::make_shared<Value>(Type::BYTE, stringValuePtr);
 			}
 
 
-			ValuePtr quit(ValuePtr args, Environment env) {
+			IValuePtr quit(IValuePtr args, IEnvironment* env) {
 				int exitCode = 0;
-				if (!args->properties.empty()) {
-					exitCode = std::stoi(args->properties.begin()->second->value);
-					if (args->properties.begin()->second->type == Type::INT)
-						Error::Runtime::raise("Invalid exit status code. Received '" + args->properties.begin()->second->value + "' expected <int>.", args->endPosition);
+				if (!args->getProperties().empty()) {
+					exitCode = std::stoi(args->getProperties().begin()->second->getValue());
+					if (args->getProperties().begin()->second->getType() == Type::INT)
+						Error::Runtime::raise("Invalid exit status code. Received '" + args->getProperties().begin()->second->getValue() + "' expected <int>.", args->getEndPosition());
 				}
 				std::exit(exitCode); // terminated by user
 				return nullptr;

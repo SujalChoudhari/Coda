@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 #include <tuple>
+#include "../../FFI/IEnvironment.h"
 #include "../../Error/Error.h"
 #include "../RuntimeValue/Value.h"
 #include "../../Frontend/Node/Node.h"
@@ -19,10 +20,10 @@ namespace Coda {
 			Environment is responsible for variable lookup and assignment.
 		*/
 
-		class Environment {
+		class Environment :public IEnvironment {
 			// A function is a callable object.
 		public:
-			typedef std::function<ValuePtr(ValuePtr value, Environment scope)> Function;
+			typedef std::function<IValuePtr(IValuePtr value, IEnvironment* scope)> Function;
 
 			// <name, declaration environment, body (AST)>
 			typedef std::tuple<std::string, Coda::Runtime::Environment, Coda::Frontend::Node> UserDefinedFunction;
@@ -37,7 +38,7 @@ namespace Coda {
 			// Generate a new environment with the root environment as its parent.
 			static Environment root();
 
-			ValuePtr declareFunctionParameter(const std::string name, const ValuePtr& value);
+			virtual IValuePtr declareFunctionParameter(const std::string name, const IValuePtr& value) override;
 
 			/*
 				Declares a new variable or assigns a value to an existing variable.
@@ -47,12 +48,12 @@ namespace Coda {
 				@param isConstant - Whether the variable is constant or not.
 				@return - The value of the variable.
 			*/
-			ValuePtr declareOrAssignVariable(const std::string& name, const ValuePtr& value, bool isConstant = false);
+			virtual IValuePtr declareOrAssignVariable(const std::string& name, const IValuePtr& value, bool isConstant = false) override;
 
 			/*
 				Overload of declareOrAssignVariable(const std::string&, const Value&, bool).
 			*/
-			ValuePtr declareOrAssignVariable(const Frontend::Node& name, const ValuePtr& value, bool isConstant = false);
+			IValuePtr declareOrAssignVariable(const Frontend::Node& name, const IValuePtr& value, bool isConstant = false);
 
 			/*
 				Declare native function.
@@ -60,7 +61,7 @@ namespace Coda {
 				@param function - The function.
 				@return - The value of the function.
 			*/
-			ValuePtr declareNativeFunction(const std::string& name, Function function);
+			virtual IValuePtr declareNativeFunction(const std::string& name, IEnvironment::Function function) override;
 
 			/*
 				Declare a user defined function.
@@ -68,7 +69,7 @@ namespace Coda {
 				@param astNode - The AST of the function which will be evaluated when the function is called.
 				@return - The value of the function.
 			*/
-			ValuePtr declareUserDefinedFunction(const std::string& name, Frontend::Node astNode);
+			virtual IValuePtr declareUserDefinedFunction(const std::string& name, const INode& astNode) override;
 
 			/*
 				call a UserDefinedFunction.
@@ -77,7 +78,7 @@ namespace Coda {
 				@param env - The environment in which the function will be called.
 				@return - The last evaluated value of the function.
 			*/
-			ValuePtr callFunction(const std::string& name, const ValuePtr& args, Environment& env);
+			virtual IValuePtr callFunction(const std::string& name, IValuePtr args, IEnvironment& env) override;
 
 			/*
 				looks for the given symbol in the current environment and its parents.
@@ -86,7 +87,7 @@ namespace Coda {
 				@param varname - The name of the symbol.
 				@return - The value of the symbol.
 			*/
-			ValuePtr lookupSymbol(std::string varname);
+			virtual IValuePtr lookupSymbol(std::string varname) override;
 
 			/*
 				Looks for the user defined function with the given name.
@@ -128,14 +129,14 @@ namespace Coda {
 			Environment* mParent;
 
 			// variables declared in this scope
-			std::map<std::string, ValuePtr> mSymbols;
+			std::map<std::string, IValuePtr> mSymbols;
 
 			// functions declared in this scope
 			std::map<std::string, Function> mFunctions;
 
 			// constants declared in this scope
 			std::set<std::string> mConstants;
-			
+
 			// user defined functions declared in this scope
 			std::vector<UserDefinedFunction> mUserDefinedFunctions;
 

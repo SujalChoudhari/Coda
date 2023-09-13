@@ -8,20 +8,20 @@ namespace Coda {
 			Environment ifEnviron = Environment(&env);
 			ValuePtr ifCondition = interpret(*astNode.left.get(), ifEnviron);
 
-			if (Value::isTruthy(ifCondition)) {
+			if (Value::isTruthy(*(std::shared_ptr<IValue>)ifCondition)) {
 				return interpret(*astNode.right.get(), ifEnviron);
 			}
 
 			for (auto it = astNode.properties.begin(); it != astNode.properties.end(); it++) {
 				if (it->second != nullptr) {
-					Frontend::Node elifExpression = *it->second.get();
-					if (elifExpression.left == nullptr) {
-						return interpret(*elifExpression.right.get(), ifEnviron);
+					std::shared_ptr<Node> elifExpression = std::dynamic_pointer_cast<Node>(it->second);
+					if (elifExpression->left == nullptr) {
+						return interpret(*elifExpression->right.get(), ifEnviron);
 					}
 
-					ValuePtr elifCondition = interpret(*elifExpression.left.get(), ifEnviron);
-					if (Value::isTruthy(elifCondition)) {
-						return interpret(*elifExpression.right.get(), ifEnviron);
+					ValuePtr elifCondition = interpret(*elifExpression->left.get(), ifEnviron);
+					if (Value::isTruthy(*(std::shared_ptr<IValue>)elifCondition)) {
+						return interpret(*elifExpression->right.get(), ifEnviron);
 					}
 				}
 				else {
@@ -40,15 +40,15 @@ namespace Coda {
 			ValuePtr init = interpret(*astNode.left.get(), forEnv);
 			env.declareOrAssignVariable(astNode.left->value, init, false);
 			Frontend::Node condition = *astNode.right.get();
-			Frontend::Node body = *astNode.properties.at("body").get();
-			Frontend::Node increment = *astNode.properties.at("increment").get();
+			Frontend::Node body = *(std::dynamic_pointer_cast<Node>(astNode.properties.at("body"))).get();
+			Frontend::Node increment = *(std::dynamic_pointer_cast<Node>(astNode.properties.at("increment"))).get();
 			ValuePtr result = std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
 
 			IF_ERROR_RETURN_VALUE_PTR;
 
 			while (1) {
 				ValuePtr conditionValue = interpret(condition, forEnv);
-				if (!Value::isTruthy(conditionValue)) {
+				if (!Value::isTruthy(*(std::shared_ptr<IValue>)conditionValue)) {
 					break;
 				}
 				result = interpret(body, forEnv);
@@ -58,7 +58,7 @@ namespace Coda {
 					if (result->value == "break")
 						break;
 					else if (result->value == "return")
-						return result->properties.at("returnable");
+						return std::dynamic_pointer_cast<Value>(result->properties.at("returnable"));
 				}
 
 				interpret(increment, forEnv);
@@ -77,7 +77,7 @@ namespace Coda {
 
 			while (1) {
 				ValuePtr conditionValue = interpret(condition, whileEnv);
-				if (!Value::isTruthy(conditionValue)) {
+				if (!Value::isTruthy(*(std::shared_ptr<IValue>)conditionValue)) {
 					break;
 				}
 
@@ -90,7 +90,7 @@ namespace Coda {
 					else if (result->value == "continue")
 						continue;
 					else if (result->value == "return")
-						return result->properties.at("returnable");
+						return std::dynamic_pointer_cast<Value>(result->properties.at("returnable"));
 				}
 			}
 
@@ -110,7 +110,7 @@ namespace Coda {
 				result = interpret(body, whileEnv);
 
 				ValuePtr conditionValue = interpret(condition, whileEnv);
-				if (!Value::isTruthy(conditionValue)) {
+				if (!Value::isTruthy(*(std::shared_ptr<IValue>)conditionValue)) {
 					break;
 				}
 
@@ -120,7 +120,7 @@ namespace Coda {
 					else if (result->value == "continue")
 						continue;
 					else if (result->value == "return")
-						return result->properties.at("returnable");
+						return std::dynamic_pointer_cast<Value>(result->properties.at("returnable"));
 				}
 			}
 

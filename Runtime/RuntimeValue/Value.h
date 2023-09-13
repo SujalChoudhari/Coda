@@ -4,7 +4,9 @@
 #include <ostream>
 #include <map>
 #include "Type.h"
+#include "../../FFI/IValue.h"
 #include "../../Error/Position.h"
+
 
 namespace Coda {
 	namespace Runtime {
@@ -12,7 +14,7 @@ namespace Coda {
 			A value represents a variable or a object or a function.
 			I.e. a storable value.
 		*/
-		class Value {
+		class Value :public IValue {
 		public:
 			// The type of the value.
 			Type type = Type::NONE;
@@ -27,7 +29,7 @@ namespace Coda {
 			Error::Position endPosition;
 
 			// The properties of the value.
-			std::map<std::string, std::shared_ptr<Value>> properties = {};
+			std::map<std::string, std::shared_ptr<IValue>> properties = {};
 
 		public:
 			Value() = default;
@@ -38,15 +40,23 @@ namespace Coda {
 			Value(Type type, std::string value = "", Error::Position start = Error::Position(), Error::Position end = Error::Position())
 				: type(type), value(value), startPosition(start), endPosition(end) {}
 			Value(const Value& other) = default;
-
+			Value(const IValuePtr& ivalue);
 			Value copy() const;
-
+		public:
+			// Inherited via IValue
+			virtual Type getType() const override;
+			virtual void setType(Type type) override;
+			virtual std::string getValue() const override;
+			virtual void setType(std::string value) override;
+			virtual std::map<std::string, std::shared_ptr<IValue>> getProperties() const override;
+			virtual Error::Position getStartPosition() const override;
+			virtual Error::Position getEndPosition() const override;
 		public:
 			/*
 				Check if the given value is truthy.
 				"1", true, non zero string are truthy
 			*/
-			static bool isTruthy(const Value& value);
+			static bool isTruthy(const IValue& value);
 
 			/*
 				Converts the type to a string.

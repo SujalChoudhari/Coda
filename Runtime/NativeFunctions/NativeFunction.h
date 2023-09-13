@@ -2,7 +2,7 @@
 #include "../Runtime.h"
 
 // Create a native function with the given name, arguments and env remains same
-#define NATIVE_FUNCTION(x) ValuePtr x(ValuePtr argument, Environment env)
+#define NATIVE_FUNCTION(x) IValuePtr x(IValuePtr args, IEnvironment* env)
 
 namespace Coda {
 	namespace Runtime {

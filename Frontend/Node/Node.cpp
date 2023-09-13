@@ -66,5 +66,33 @@ namespace Coda {
 			properties = other.properties;
 
 		}
+		NodeType Node::getType() const
+		{
+			return this->type;
+		}
+		std::string Node::getValue() const
+		{
+			return this->value;
+		}
+		std::shared_ptr<INode> Node::getLeft() const
+		{
+			return this->left;
+		}
+		std::shared_ptr<INode> Node::getRight() const
+		{
+			return this->right;
+		}
+		std::map<std::string, std::shared_ptr<INode>> Node::getProperties() const
+		{
+			return properties;
+		}
+		Position Node::getStartPosition() const
+		{
+			return startPosition;
+		}
+		Position Node::getEndPosition() const
+		{
+			return endPosition;
+		}
 	}
 }

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "../../FFI/INode.h"
 #include "NodeType.h"
 #include "../../Error/Position.h"
 
@@ -16,7 +17,7 @@ namespace Coda {
 			Nodes are used to generate the AST.
 			Nodes are arranged into a binary tree to represent the Abstract Syntax Tree.
 		*/
-		class Node {
+		class Node : public INode {
 		public:
 			// The type of the node.
 			NodeType type;
@@ -37,7 +38,7 @@ namespace Coda {
 			Error::Position endPosition;
 			
 			// The properties of the node, used to store additional information.
-			std::map<std::string, std::shared_ptr<Node>> properties;
+			std::map<std::string, std::shared_ptr<INode>> properties;
 			
 		public:
 			// Cretae a new node with the given information.
@@ -59,6 +60,17 @@ namespace Coda {
 			Node(const Node& other);
 
 			friend std::ostream& operator<<(std::ostream& os, const Node& node);
+
+			// Inherited via INode
+			virtual NodeType getType() const override;
+			virtual std::string getValue() const override;
+			virtual std::shared_ptr<INode> getLeft() const override;
+			virtual std::shared_ptr<INode> getRight() const override;
+			virtual std::map<std::string, std::shared_ptr<INode>> getProperties() const override;
+
+			// Inherited via INode
+			virtual Position getStartPosition() const override;
+			virtual Position getEndPosition() const override;
 		};
 	} // namespace Frontend
 } // namespace Coda

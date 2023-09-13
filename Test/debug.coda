@@ -1,1 +1,6 @@
-let x = "Hello \" I am sujal "
+let int x = 100;
+
+
+let int y = parseInt(input("Enter a number: "));
+
+println("Y^2 is :",y * y);

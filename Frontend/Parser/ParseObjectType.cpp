@@ -22,8 +22,8 @@ namespace Coda {
 			IF_ERROR_RETURN_NODE;
 
 			for (auto it : params.properties) {
-				if (it.second->type != NodeType::IDENTIFIER) {
-					Error::Parser::raise("Expected an identifier for function argument", it.second->startPosition);
+				if (it.second->getType() != NodeType::IDENTIFIER) {
+					Error::Parser::raise("Expected an identifier for function argument",it.second->getEndPosition());
 					return Node();
 				}
 			}
