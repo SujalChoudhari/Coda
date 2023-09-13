@@ -4,13 +4,6 @@
 #include <unordered_map>
 
 
-/*
-	Flags:
-	-h : Prints the help message.
-	-w : Waits for the user to press key before exiting.
-
-*/
-
 namespace Coda {
 	namespace Utils {
 		/*
@@ -73,8 +66,6 @@ namespace Coda {
 			std::vector<std::string> mStandaloneValues;
 			std::unordered_map<std::string, std::string> mValues;
 			std::unordered_map<std::string, bool> mFlags;
-
 		};
-
 	} // namespace Utils
 } // namespace Coda

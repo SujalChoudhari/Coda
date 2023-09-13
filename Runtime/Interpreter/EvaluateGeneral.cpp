@@ -43,7 +43,14 @@ namespace Coda {
 				return std::make_shared<Value>(Type::STRING, Value::getTypeAsString(value->type), value->startPosition, value->endPosition);
 			}
 			else if (unaryOperator == "sizeof") {
-				return std::make_shared<Value>(Type::INT, std::to_string(value->value.size()), value->startPosition, value->endPosition);
+				int length = 0;
+				if (value->type == Type::LIST || value->type == Type::OBJECT) {
+					length = value->properties.size();
+				}
+				else {
+					length = value->value.size();
+				}
+				return std::make_shared<Value>(Type::INT, std::to_string(length), value->startPosition, value->endPosition);
 			}
 			else if (unaryOperator == "delete") {
 				env.remove(value->value);
@@ -51,6 +58,7 @@ namespace Coda {
 			}
 			else {
 				Error::Runtime::raise("Unrecognized unary operator '" + unaryOperator + "'");
+				return nullptr;
 			}
 		}
 

@@ -280,6 +280,8 @@ namespace Coda {
 					return env;
 				}
 			}
+
+			return nullptr;
 		}
 
 		std::shared_ptr<Environment> Environment::getScope(const std::string& name) {

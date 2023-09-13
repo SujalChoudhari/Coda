@@ -54,14 +54,14 @@ namespace Coda {
 			return std::make_shared<Value>(listValue);
 		}
 
-		ValuePtr Interpreter::evaluateCallExpression(const Frontend::Node& callexp, Environment& env)
+		ValuePtr Interpreter::evaluateCallExpression(const Frontend::Node& callExpression, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
 			Value args = Value();
-			ValuePtr name = interpret(*callexp.left.get(), env);
+			ValuePtr name = interpret(*callExpression.left.get(), env);
 
 			unsigned int argCount = 1;
-			for (auto& arg : callexp.properties) {
+			for (auto& arg : callExpression.properties) {
 				ValuePtr value = interpret(*std::dynamic_pointer_cast<Node>(arg.second).get(), env);
 				IF_ERROR_RETURN_VALUE_PTR;
 				args.properties.insert({ std::to_string(argCount), value });
@@ -116,7 +116,14 @@ namespace Coda {
 				res = interpret(*astNode.right.get(), scope);
 			}
 			else if (left != nullptr) {
-				res = std::dynamic_pointer_cast<Value>(left->properties[astNode.right->value]);
+				auto it = left->properties.find(astNode.right->value);
+				if (it != left->properties.end()) { // if it is in the object return it
+					res = std::dynamic_pointer_cast<Value>(left->properties[astNode.right->value]);
+				}
+				else { // its not in object, check if env has such variable
+					ValuePtr location = interpret(*astNode.right.get(), env);
+					res = std::dynamic_pointer_cast<Value>(left->properties[location->value]);
+				}
 			}
 			return res;
 		}
