@@ -1,5 +1,5 @@
 def add(x,y){
-	return native filename function_name(x,y);
+	return native Maths add(x,y);
 }
 
-add(9,0);
+println(typeof add(9,3));

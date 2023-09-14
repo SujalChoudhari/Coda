@@ -93,6 +93,9 @@
     <ClCompile Include="Runtime\Interpreter\EvaluateGeneral.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FFI\FFI.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tokens\TokenType.h">
