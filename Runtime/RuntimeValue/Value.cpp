@@ -52,6 +52,22 @@ namespace Coda {
 			};
 			return types[(int)type];
 		}
+		void Value::setValue(std::string value)
+		{
+			this->value = value;
+		}
+		void Value::setProperties(std::map<std::string, std::shared_ptr<IValue>> props)
+		{
+			this->properties = props;
+		}
+		void Value::setStartPosition(Coda::Error::Position pos)
+		{
+			this->startPosition = pos;
+		}
+		void Value::setEndPosition(Coda::Error::Position pos)
+		{
+			this->endPosition = pos;
+		}
 		Type Value::getType() const
 		{
 			return type;
@@ -63,10 +79,6 @@ namespace Coda {
 		std::string Value::getValue() const
 		{
 			return this->value;
-		}
-		void Value::setType(std::string value)
-		{
-			this->value = value;
 		}
 		std::map<std::string, std::shared_ptr<IValue>> Value::getProperties() const
 		{

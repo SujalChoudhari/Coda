@@ -1,4 +1,10 @@
 #include "Interpreter.h"
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <dlcfn.h>
+#endif // _WIN32
+
 
 namespace Coda {
 	namespace Runtime {
@@ -107,7 +113,7 @@ namespace Coda {
 
 		ValuePtr Interpreter::evaluateNativeCallExpression(const Frontend::Node& callExpression, Environment& env)
 		{
-			
+
 			std::string dllFilename = callExpression.left->value;
 			std::string functionName = callExpression.right->left->value;
 
@@ -120,19 +126,55 @@ namespace Coda {
 				argCount++;
 			}
 
-			/*
-				TODO: 
-				1. Load dll file with name `dllFilename`.
-				2. Get function pointer to the `functionName` function
-				3. Call function inside try-catch with args same as `/Runtime/NativeFunctions`.
-					using IValue and IEnvironment Interfaces inside FFI
-				4. Return the generated response.
-			*/
-			
-			return ValuePtr();
+			typedef void (*FunctionType) (IValuePtr, IValuePtr, IEnvironment*);
+
+#ifdef _WIN32
+			dllFilename += ".dll";
+			std::wstring s(dllFilename.begin(), dllFilename.end());
+			HMODULE lib = LoadLibrary(s.c_str());
+#else
+			dllFilename += ".so";
+			void* lib = dlopen(dllFilename, RTLD_LAZY);
+#endif
+
+
+			if (!lib) {
+				Error::Runtime::raise("Cannot find " + dllFilename + " at, ", callExpression.endPosition);
+				return nullptr;
+			}
+
+			FunctionType myFunction;
+#ifdef _WIN32
+			//myFunction = (FunctionType)GetProcAddress(lib, functionName.c_str());
+			myFunction = (FunctionType)GetProcAddress(lib, "add");
+#else
+			myFunction = (FunctionType)dlsym(lib, functionName.c_str());
+#endif
+
+			if (!myFunction) {
+				Error::Runtime::raise("Cannot find function " + functionName + " at, ", callExpression.endPosition);
+#ifdef _WIN32
+				FreeLibrary(lib);
+#else
+				dlclose(lib);
+#endif
+				return nullptr;
+			}
+
+			// Call the function
+			IValuePtr result = std::make_shared<Value>(Type::NONE);
+			myFunction(result, std::dynamic_pointer_cast<IValue>(std::make_shared<Value>(args)), &env);
+
+			// Unload the library
+#ifdef _WIN32
+			FreeLibrary(lib);
+#else
+			dlclose(lib);
+#endif	
+			return std::dynamic_pointer_cast<Value>(result);
 		}
 
-			
+
 		ValuePtr Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;

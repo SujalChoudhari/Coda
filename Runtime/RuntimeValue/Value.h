@@ -47,10 +47,13 @@ namespace Coda {
 			virtual Type getType() const override;
 			virtual void setType(Type type) override;
 			virtual std::string getValue() const override;
-			virtual void setType(std::string value) override;
 			virtual std::map<std::string, std::shared_ptr<IValue>> getProperties() const override;
 			virtual Error::Position getStartPosition() const override;
 			virtual Error::Position getEndPosition() const override;
+			virtual void setValue(std::string value) override;
+			virtual void setProperties(std::map<std::string, std::shared_ptr<IValue>> props) override;
+			virtual void setStartPosition(Coda::Error::Position pos)  override;
+			virtual void setEndPosition(Coda::Error::Position pos)  override;
 		public:
 			/*
 				Check if the given value is truthy.
@@ -65,6 +68,8 @@ namespace Coda {
 
 		public:
 			friend std::ostream& operator<<(std::ostream& os, const Value& value);
+
+
 		};
 
 		typedef std::shared_ptr<Value> ValuePtr;
