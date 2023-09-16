@@ -215,7 +215,7 @@
     <None Include="LICENSE" />
     <None Include="README.md" />
     <None Include="Test\debug.coda" />
-    <None Include="Test\dir\func.coda" />
+    <None Include="Test\dir\Maths.coda" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

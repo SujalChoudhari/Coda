@@ -222,7 +222,7 @@ namespace Coda {
 
 		ValuePtr Environment::addFunction(const std::string& name, const Frontend::Node& astNode, Environment& env)
 		{
-			mUserDefinedFunctions.push_back(UserDefinedFunction(astNode.value, env, astNode));
+			mUserDefinedFunctions.push_back(UserDefinedFunction(astNode.value, &env, astNode));
 			return std::dynamic_pointer_cast<Value>(env.declareUserDefinedFunction(astNode.value, astNode));
 		}
 

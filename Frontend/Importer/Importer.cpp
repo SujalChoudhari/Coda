@@ -8,7 +8,7 @@ namespace Coda {
 			Coda::Utils::FileReader fileReader(filepath);
 			std::string sourceCode = fileReader.readToString();
 			if (!Error::Manager::isSafe()) {
-				Error::Importer::raise("Import failed, either file doesnot exist or circular import detected.");
+				Error::Importer::raise("Import failed, either file does not exist or circular import detected.");
 			}
 			sourceCode += "\n";
 

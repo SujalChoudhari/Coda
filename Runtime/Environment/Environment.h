@@ -26,7 +26,7 @@ namespace Coda {
 			typedef std::function<IValuePtr(IValuePtr value, IEnvironment* scope)> Function;
 
 			// <name, declaration environment, body (AST)>
-			typedef std::tuple<std::string, Coda::Runtime::Environment, Coda::Frontend::Node> UserDefinedFunction;
+			typedef std::tuple<std::string, Coda::Runtime::Environment*, Coda::Frontend::Node> UserDefinedFunction;
 
 
 

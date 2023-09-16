@@ -212,7 +212,7 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="CHANGELOG.md" />
-    <None Include="Test\dir\func.coda" />
+    <None Include="Test\dir\Maths.coda" />
     <None Include="Test\debug.coda" />
     <None Include="LICENSE" />
     <None Include="CODE_OF_CONDUCT.md" />

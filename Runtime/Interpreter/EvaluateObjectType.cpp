@@ -122,7 +122,7 @@ namespace Coda {
 			for (auto& arg : callExpression.right->properties) {
 				ValuePtr value = interpret(*std::dynamic_pointer_cast<Node>(arg.second).get(), env);
 				IF_ERROR_RETURN_VALUE_PTR;
-				args.properties.insert({ std::to_string(argCount), value });
+				args.properties.insert({ arg.second->getValue(), value });
 				argCount++;
 			}
 
@@ -145,8 +145,7 @@ namespace Coda {
 
 			FunctionType myFunction;
 #ifdef _WIN32
-			//myFunction = (FunctionType)GetProcAddress(lib, functionName.c_str());
-			myFunction = (FunctionType)GetProcAddress(lib, "add");
+			myFunction = (FunctionType)GetProcAddress(lib, functionName.c_str());
 #else
 			myFunction = (FunctionType)dlsym(lib, functionName.c_str());
 #endif
