@@ -1,93 +1,96 @@
-def add(first, second) {
-    return native Maths coda_add(first, second);
-}
 
-def sub(first, second) {
-    return native Maths coda_sub(first, second);
-}
+scope Maths{
+    def add(first, second) {
+        return native Maths coda_add(first, second);
+    }
 
-def mul(first, second) {
-    return native Maths coda_mul(first, second);
-}
+    def sub(first, second) {
+        return native Maths coda_sub(first, second);
+    }
 
-def div(first, second) {
-    return native Maths coda_div(first, second);
-}
+    def mul(first, second) {
+        return native Maths coda_mul(first, second);
+    }
 
-def pow(base, exponent) {
-    first = base;
-    second = exponent;
-    return native Maths coda_pow(first, second);
-}
+    def div(first, second) {
+        return native Maths coda_div(first, second);
+    }
 
-def sqrt(number) {
-    return native Maths squareRoot(number);
-}
+    def pow(base, exponent) {
+        first = base;
+        second = exponent;
+        return native Maths coda_pow(first, second);
+    }
 
-def ln(value) {
-    return native Maths naturalLog(value);
-}
+    def sqrt(number) {
+        return native Maths squareRoot(number);
+    }
 
-def log10(value) {
-    return native Maths base10Log(value);
-}
+    def ln(value) {
+        return native Maths naturalLog(value);
+    }
 
-def exp(exponent) {
-    return native Maths exponential(exponent);
-}
+    def log10(value) {
+        return native Maths base10Log(value);
+    }
 
-def abs(number) {
-    return native Maths absoluteValue(number);
-}
+    def exp(exponent) {
+        return native Maths exponential(exponent);
+    }
 
-def round(number) {
-    return native Maths roundToNearest(number);
-}
+    def abs(number) {
+        return native Maths absoluteValue(number);
+    }
 
-def sin(angle) {
-    return native Maths coda_sin(angle);
-}
+    def round(number) {
+        return native Maths roundToNearest(number);
+    }
 
-def cos(angle) {
-    return native Maths coda_cos(angle);
-}
+    def sin(angle) {
+        return native Maths coda_sin(angle);
+    }
 
-def tan(angle) {
-    return native Maths coda_tan(angle);
-}
+    def cos(angle) {
+        return native Maths coda_cos(angle);
+    }
 
-def asin(value) {
-    return native Maths coda_asin(value);
-}
+    def tan(angle) {
+        return native Maths coda_tan(angle);
+    }
 
-def acos(value) {
-    return native Maths coda_acos(value);
-}
+    def asin(value) {
+        return native Maths coda_asin(value);
+    }
 
-def atan(value) {
-    return native Maths coda_atan(value);
-}
+    def acos(value) {
+        return native Maths coda_acos(value);
+    }
 
-def sec(angle) {
-    return native Maths coda_sec(angle);
-}
+    def atan(value) {
+        return native Maths coda_atan(value);
+    }
 
-def csc(angle) {
-    return native Maths coda_csc(angle);
-}
+    def sec(angle) {
+        return native Maths coda_sec(angle);
+    }
 
-def cot(angle) {
-    return native Maths coda_cot(angle);
-}
+    def csc(angle) {
+        return native Maths coda_csc(angle);
+    }
 
-def sinh(angle) {
-    return native Maths coda_sinh(angle);
-}
+    def cot(angle) {
+        return native Maths coda_cot(angle);
+    }
 
-def cosh(angle) {
-    return native Maths coda_cosh(angle);
-}
+    def sinh(angle) {
+        return native Maths coda_sinh(angle);
+    }
 
-def tanh(angle) {
-    return native Maths coda_tanh(angle);
+    def cosh(angle) {
+        return native Maths coda_cosh(angle);
+    }
+
+    def tanh(angle) {
+        return native Maths coda_tanh(angle);
+    }
 }

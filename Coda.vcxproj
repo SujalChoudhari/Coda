@@ -210,13 +210,13 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="bin\Debug\x64\Maths.coda" />
+    <None Include="bin\Release\x64\Maths.coda" />
     <None Include="CHANGELOG.md" />
     <None Include="CODE_OF_CONDUCT.md" />
     <None Include="CppProperties.json" />
     <None Include="LICENSE" />
     <None Include="README.md" />
     <None Include="Test\debug.coda" />
-    <None Include="Test\dir\Maths.coda" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
