@@ -44,6 +44,15 @@ namespace Coda {
 				convert an import statement into an actual, absolute path
 			*/
 			std::string getAbsImportPath(const std::string& filename, std::string& importString);
+
+			/*
+				get the path to the executable
+			*/
+			std::string getExecutablePath();
+			/*
+				check if file exists or nots
+			*/
+			bool fileExists(const std::string& filePath);
 		};
 	} // namespace Frontend
 } // namespace Coda

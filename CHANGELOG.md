@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `IValue`, `INode` and `IEnvironment` added as abstraction for `Value`, `Node` and `Environment` respectively.
 - `native` keyword added for calling functions from dll.
+- Trigonometry, Basic Functions to `Maths.coda` package.
 
 ### Changed
 - `sizeof` returns length of `list` and `objects` instead of a unrelated number.
+- Importer first looks in `cwd` if failed to find required file, checks the directory of the `executable` file.
 
 ## [0.1.1] - 29-8-2023
 

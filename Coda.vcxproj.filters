@@ -216,5 +216,6 @@
     <None Include="Test\debug.coda" />
     <None Include="LICENSE" />
     <None Include="CODE_OF_CONDUCT.md" />
+    <None Include="bin\Debug\x64\Maths.coda" />
   </ItemGroup>
 </Project>
