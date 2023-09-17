@@ -14,6 +14,7 @@ T getValue(const std::string& str)
 		return (T)std::stod(str);
 	}
 }
+
 template<typename T>
 std::string handleArithmeticOperation(const std::string& left, const std::string& functor, const std::string& right)
 {

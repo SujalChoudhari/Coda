@@ -217,5 +217,9 @@
     <None Include="CODE_OF_CONDUCT.md" />
     <None Include="bin\Debug\x64\Maths.coda" />
     <None Include="bin\Release\x64\Maths.coda" />
+    <None Include="bin\Debug\x64\Vector2.coda" />
+    <None Include="Test\builtin.coda" />
+    <None Include="Test\indll.coda" />
+    <None Include="bin\Release\x64\Vector2.coda" />
   </ItemGroup>
 </Project>

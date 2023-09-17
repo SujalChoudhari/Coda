@@ -1,5 +1,3 @@
-
-
 #include "../../FFI/FFI.h"
 #include <iostream>
 #include <cmath>

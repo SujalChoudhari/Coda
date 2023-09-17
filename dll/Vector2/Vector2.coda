@@ -1,0 +1,18 @@
+scope Vector2 {
+	
+	def add(first,second){
+		return native Vector2 coda_add(first,second);
+	}
+
+	def sub(first,second){
+		return native Vector2 coda_sub(first,second);
+	}
+
+	def mul(first,second){
+		return native Vector2 coda_mul(first,second);
+	}
+
+	def div(first,second){
+		return native Vector2 coda_div(first,second);
+	}
+}

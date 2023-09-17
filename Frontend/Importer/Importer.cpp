@@ -6,10 +6,8 @@
 #else
 #include <unistd.h>
 #include <linux/limits.h>
-#endif // 
+#endif
 
-
-#include <filesystem>
 #include "../../Error/Error.h"
 
 namespace Coda {

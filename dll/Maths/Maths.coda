@@ -1,5 +1,7 @@
-
 scope Maths{
+    const double PI = 3.14159_26535;
+    const double E =  2.71828_18284;
+
     def add(first, second) {
         return native Maths coda_add(first, second);
     }

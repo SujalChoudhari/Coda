@@ -1,3 +1,2 @@
-import Maths
 
-println(Maths.sin(3.142));
+import indll;import builtin;
