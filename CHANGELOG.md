@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added 
 - `FileSystem` package.
 
+### Changed
+- `import` statements will work in `repl` environment.
+- `print` will print an entire list (when given)
+
 ## [0.2.0] - 16-9-2023
 
 ### Added
