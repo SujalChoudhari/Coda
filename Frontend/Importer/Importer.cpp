@@ -13,13 +13,20 @@
 namespace Coda {
 	namespace Frontend {
 		std::string Importer::import(const std::string& filepath) {
+			std::string sourceCode;
 
-			Coda::Utils::FileReader fileReader(filepath);
-			std::string sourceCode = fileReader.readToString();
-			if (!Error::Manager::isSafe()) {
-				Error::Importer::raise("Import failed, either file does not exist or circular import detected.");
+			if (fileExists(filepath)) {
+				Coda::Utils::FileReader fileReader(filepath);
+				sourceCode = fileReader.readToString();
+				if (!Error::Manager::isSafe()) {
+					Error::Importer::raise("Import failed, either file does not exist or circular import detected.");
+				}
+				sourceCode += "\n";
 			}
-			sourceCode += "\n";
+			else {
+				sourceCode = filepath;
+			}
+
 
 			size_t importIndex = findNextImport(sourceCode, 0);
 			while (importIndex != std::string::npos) {
@@ -59,9 +66,7 @@ namespace Coda {
 
 		std::string Importer::getAbsImportPath(const std::string& filename, std::string& importString) {
 			size_t lastSlashIndex = filename.rfind("/");
-			if (lastSlashIndex == std::string::npos) {
-				Error::Importer::raise("Invalid file path: " + filename);
-			}
+
 			for (int i = 0; i < importString.size(); i++) {
 				if (importString[i] == '.') {
 					importString[i] = '/';
