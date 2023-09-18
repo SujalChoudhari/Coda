@@ -1,0 +1,29 @@
+scope fs {
+    def createFile(dirPath, fileName, content) {
+        return native FileSystem coda_create_file(dirPath, fileName, content);
+    }
+
+    def deleteFile(filePath) {
+        return native FileSystem coda_delete_file(filePath);
+    }
+
+    def createDirectory(dirPath) {
+        return native FileSystem coda_create_directory(dirPath);
+    }
+
+    def deleteDirectory(dirPath) {
+        return native FileSystem coda_delete_directory(dirPath);
+    }
+
+    def fileExists(filePath) {
+        return native FileSystem coda_file_exists(filePath);
+    }
+
+    def renameFileOrDirectory(oldPath, newPath) {
+        return native FileSystem coda_rename(oldPath, newPath);
+    }
+
+    def listFiles(dirPath) {
+        return native FileSystem coda_list_files(dirPath);
+    }
+}
