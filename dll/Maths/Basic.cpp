@@ -4,17 +4,6 @@
 #include <string>
 
 
-template <typename T>
-T getValue(const std::string& str)
-{
-	if (std::is_same_v<T, unsigned char>) {
-		return static_cast<T>(str[0]);
-	}
-	else {
-		return (T)std::stod(str);
-	}
-}
-
 template<typename T>
 std::string handleArithmeticOperation(const std::string& left, const std::string& functor, const std::string& right)
 {
@@ -78,24 +67,24 @@ void evaluate(IValuePtr args, std::string functor, IValuePtr resultValue) {
 
 
 
-extern "C" __declspec(dllexport) void coda_add(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_add(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	evaluate(args, "+", res);
 }
 
-extern "C" __declspec(dllexport) void coda_sub(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_sub(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	evaluate(args, "-", res);
 }
 
 
-extern "C" __declspec(dllexport) void coda_mul(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_mul(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	evaluate(args, "*", res);
 }
 
-extern "C" __declspec(dllexport) void coda_div(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_div(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	evaluate(args, "/", res);
 }
 
-extern "C" __declspec(dllexport) void mod(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void mod(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	if (args->getProperties()["first"]->getType() == Coda::Runtime::Type::INT
 		&& args->getProperties()["second"]->getType() == Coda::Runtime::Type::INT) {
 		int value = std::stoi(args->getProperties()["first"]->getValue()) % std::stoi(args->getProperties()["second"]->getValue());
@@ -109,7 +98,7 @@ extern "C" __declspec(dllexport) void mod(IValuePtr res, IValuePtr args, IEnviro
 	}
 }
 
-extern "C" __declspec(dllexport) void coda_pow(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_pow(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	double value = std::pow(std::stod(args->getProperties()["first"]->getValue()), std::stoi(args->getProperties()["second"]->getValue()));
 
 	res->setValue(std::to_string(value));

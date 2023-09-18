@@ -75,18 +75,18 @@ void evaluate(IValuePtr args, std::string functor, IValuePtr resultValue) {
 	resultValue->setProperties(resProps);
 }
 
-extern "C" __declspec(dllexport) void coda_add(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_add(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	evaluate(args, "+", res);
 }
 
-extern "C" __declspec(dllexport) void coda_sub(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_sub(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	evaluate(args, "-", res);
 }
 
-extern "C" __declspec(dllexport) void coda_mul(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_mul(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	evaluate(args, "*", res);
 }
 
-extern "C" __declspec(dllexport) void coda_div(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_div(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	evaluate(args, "/", res);
 }

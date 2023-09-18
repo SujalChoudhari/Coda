@@ -23,6 +23,9 @@ As you delve into the world of Coda, remember that your journey is part of a vib
 ### Contributing
 
 Join the ranks of passionate contributors shaping the future of Coda. If you encounter issues or have innovative suggestions, don't hesitate to engage with us. Open an issue or submit a pull request on the official [Coda GitHub repository](https://github.com/SujalChoudhari/Coda) to play your part in refining the language.
+```bash
+g++ -g $(find . -type f -iregex ".*\.cpp") -o Coda.out
+```
 
 ### Stay Up-to-Date
 

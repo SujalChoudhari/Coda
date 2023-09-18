@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cmath>
 
-extern "C" __declspec(dllexport) void squareRoot(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void squareRoot(IValuePtr res, IValuePtr args, IEnvironment * env) {
     double number = std::stod(args->getProperties()["number"]->getValue());
 
     if (number < 0) {
@@ -17,7 +17,7 @@ extern "C" __declspec(dllexport) void squareRoot(IValuePtr res, IValuePtr args, 
     }
 }
 
-extern "C" __declspec(dllexport) void naturalLog(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void naturalLog(IValuePtr res, IValuePtr args, IEnvironment * env) {
     double value = std::stod(args->getProperties()["value"]->getValue());
 
     if (value <= 0) {
@@ -30,7 +30,7 @@ extern "C" __declspec(dllexport) void naturalLog(IValuePtr res, IValuePtr args, 
     }
 }
 
-extern "C" __declspec(dllexport) void base10Log(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void base10Log(IValuePtr res, IValuePtr args, IEnvironment * env) {
     double value = std::stod(args->getProperties()["value"]->getValue());
 
     if (value <= 0) {
@@ -43,7 +43,7 @@ extern "C" __declspec(dllexport) void base10Log(IValuePtr res, IValuePtr args, I
     }
 }
 
-extern "C" __declspec(dllexport) void exponential(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void exponential(IValuePtr res, IValuePtr args, IEnvironment * env) {
     double exponent = std::stod(args->getProperties()["exponent"]->getValue());
 
     double result = std::exp(exponent);
@@ -51,7 +51,7 @@ extern "C" __declspec(dllexport) void exponential(IValuePtr res, IValuePtr args,
     res->setValue(std::to_string(result));
 }
 
-extern "C" __declspec(dllexport) void absoluteValue(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void absoluteValue(IValuePtr res, IValuePtr args, IEnvironment * env) {
     double number = std::stod(args->getProperties()["number"]->getValue());
 
     double result = std::abs(number);
@@ -59,7 +59,7 @@ extern "C" __declspec(dllexport) void absoluteValue(IValuePtr res, IValuePtr arg
     res->setValue(std::to_string(result));
 }
 
-extern "C" __declspec(dllexport) void roundToNearest(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void roundToNearest(IValuePtr res, IValuePtr args, IEnvironment * env) {
     double number = std::stod(args->getProperties()["number"]->getValue());
 
     double result = std::round(number);
