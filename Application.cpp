@@ -28,13 +28,7 @@ namespace Coda {
 		std::string subCommand = argParser.getSubCommand();
 
 #if _DEBUG
-		mMainFileName = "./Test/debug.coda";
-		Frontend::Importer importer = Frontend::Importer();
-		std::string source = importer.import(mMainFileName);
-
-		Runtime::Environment env = Runtime::Environment::root();
-		execute(source, env);
-		return EXIT_SUCCESS;
+		return repl();
 
 #else
 		if (subCommand == "run") {
@@ -83,6 +77,8 @@ namespace Coda {
 			if (source == ":q" || source == "exit" || source == "quit" || source == "e" || source == "q") break;
 
 			std::cout << Utils::Colors::SUCCESS;
+			Frontend::Importer importer = Frontend::Importer();
+			source = importer.import(source);
 			execute(source, env);
 			std::cout << Utils::Colors::RESET;
 		}

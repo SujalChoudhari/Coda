@@ -52,6 +52,12 @@ namespace Coda {
 			};
 			return types[(int)type];
 		}
+		IValuePtr Value::createNewValue(Coda::Runtime::Type type, std::string value)
+		{
+			Value newValue = Value(type, value);
+			ValuePtr ptr = std::make_shared<Value>(newValue);
+			return std::dynamic_pointer_cast<IValue>(ptr);
+		}
 		void Value::setValue(std::string value)
 		{
 			this->value = value;

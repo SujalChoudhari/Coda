@@ -22,10 +22,25 @@ namespace Coda {
 						else std::cout << "true ";
 					}
 					else if (it.second->getType() == Type::CHAR) {
-						std::cout << (char)std::stoi(it.second->getValue()) << " ";
+						std::cout << "'" << (char)std::stoi(it.second->getValue()) << "' ";
+					}
+					else if (it.second->getType() == Type::STRING) {
+						std::cout << "\"" << it.second->getValue() << "\" ";
+					}
+					else if (it.second->getType() == Type::LIST) {
+						std::cout << "[";
+						print(it.second, env);
+						std::cout << "]\n";
 					}
 					else {
-						std::cout << it.second->getValue() << " ";
+						std::cout << it.second->getValue();
+						if (args->getType() == Type::LIST)
+							std::cout << ", ";
+						else if (args->getType() == Type::OBJECT)
+							std::cout << ",\n";
+						else
+							std::cout << " ";
+
 					}
 				}
 				return args;

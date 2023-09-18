@@ -70,6 +70,10 @@ namespace Coda {
 			friend std::ostream& operator<<(std::ostream& os, const Value& value);
 
 
+
+			// Inherited via IValue
+			virtual IValuePtr createNewValue(Coda::Runtime::Type type, std::string value) override;
+
 		};
 
 		typedef std::shared_ptr<Value> ValuePtr;
