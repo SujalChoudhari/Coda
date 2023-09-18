@@ -1,6 +1,6 @@
 scope Maths{
-    const double PI = 3.14159_26535;
-    const double E =  2.71828_18284;
+    const double PI = 3.1415926535;
+    const double E =  2.7182818284;
 
     def add(first, second) {
         return native Maths coda_add(first, second);
@@ -27,6 +27,11 @@ scope Maths{
     def sqrt(number) {
         return native Maths squareRoot(number);
     }
+
+    def mod(number) {
+        return native Maths coda_mod(number);
+    }
+
 
     def ln(value) {
         return native Maths naturalLog(value);

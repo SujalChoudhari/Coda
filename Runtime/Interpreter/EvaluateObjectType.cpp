@@ -162,7 +162,12 @@ namespace Coda {
 
 			// Call the function
 			IValuePtr result = std::make_shared<Value>(Type::NONE);
-			myFunction(result, std::dynamic_pointer_cast<IValue>(std::make_shared<Value>(args)), &env);
+			try {
+				myFunction(result, std::dynamic_pointer_cast<IValue>(std::make_shared<Value>(args)), &env);
+			}
+			catch (std::string s) {
+				Error::Runtime::raise("Error in running '" + functionName + "': " + s);
+			}
 
 			// Unload the library
 #ifdef _WIN32
@@ -171,7 +176,7 @@ namespace Coda {
 			dlclose(lib);
 #endif	
 			return std::dynamic_pointer_cast<Value>(result);
-		}
+			}
 
 
 		ValuePtr Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
@@ -218,5 +223,5 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE_PTR;
 			return env.addFunction(astNode.value, astNode, env);
 		}
-	} // namespace Runtime
-} // namespace Coda
+		} // namespace Runtime
+	} // namespace Coda

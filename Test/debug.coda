@@ -1,2 +1,4 @@
+import Maths
 
-import indll;import builtin;
+
+println(Maths.mod("hello"));

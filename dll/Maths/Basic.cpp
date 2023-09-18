@@ -60,6 +60,12 @@ void evaluate(IValuePtr args, std::string functor, IValuePtr resultValue) {
 	else if (suggestedType == Coda::Runtime::Type::DOUBLE) {
 		result = handleArithmeticOperation<double>(arg1->getValue(), functor, arg2->getValue());
 	}
+	else if (suggestedType == Coda::Runtime::Type::STRING && functor == "+") {
+		result = arg1->getValue() + arg2->getValue();
+	}
+	else {
+		throw "Unsupported type of '" + arg2->getValue() + "'";
+	}
 
 	resultValue->setType(suggestedType);
 	resultValue->setValue(result);
@@ -84,7 +90,7 @@ extern "C" EXPORT void coda_div(IValuePtr res, IValuePtr args, IEnvironment * en
 	evaluate(args, "/", res);
 }
 
-extern "C" EXPORT void mod(IValuePtr res, IValuePtr args, IEnvironment * env) {
+extern "C" EXPORT void coda_mod(IValuePtr res, IValuePtr args, IEnvironment * env) {
 	if (args->getProperties()["first"]->getType() == Coda::Runtime::Type::INT
 		&& args->getProperties()["second"]->getType() == Coda::Runtime::Type::INT) {
 		int value = std::stoi(args->getProperties()["first"]->getValue()) % std::stoi(args->getProperties()["second"]->getValue());
