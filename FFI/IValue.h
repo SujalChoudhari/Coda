@@ -56,6 +56,7 @@ public:
 	virtual void setStartPosition(Coda::Error::Position pos) = 0;
 	virtual Coda::Error::Position getEndPosition() const = 0;
 	virtual void setEndPosition(Coda::Error::Position pos) = 0;
+	virtual std::shared_ptr<IValue> createNewValue(Coda::Runtime::Type type, std::string value) = 0;
 
 public:
 	static bool isTruthy(const IValue& value);
