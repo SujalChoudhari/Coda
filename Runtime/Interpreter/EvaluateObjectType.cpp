@@ -88,12 +88,13 @@ namespace Coda {
 				}
 				Environment scope = Environment(&env);
 
-				// create variables for each parameter
+				// check sizes of arguments and parameter list
 				if (std::get<2>(*functionContent).left->properties.size() != args.properties.size()) {
 					Error::Runtime::raise("Function " + name->value + " expects " + std::to_string(std::get<2>(*functionContent).left->properties.size()) + " arguments, but " + std::to_string(args.properties.size()) + " were given.");
 					IF_ERROR_RETURN_VALUE_PTR;
 				}
 
+				// create variables for each parameter
 				for (int i = 0; i < std::get<2>(*functionContent).left->properties.size(); i++) {
 					auto& it = std::get<2>(*functionContent).left->properties[std::to_string(i)];
 					const std::string& name = it->getValue();

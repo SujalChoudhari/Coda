@@ -95,6 +95,7 @@ namespace Coda {
 				@return - The function.
 			*/
 			UserDefinedFunction* getFunction(const std::string& name);
+			UserDefinedFunction* getFunctionInScope(const std::string& name);
 
 			/*
 				Add a user defined function to the environment.
@@ -117,6 +118,11 @@ namespace Coda {
 				Gets a Scope with the given name
 			*/
 			std::shared_ptr<Environment> getScope(const std::string& name);
+
+			/*
+				Gets a Scope with the given name
+			*/
+			std::shared_ptr<Environment> getScopeInScope(const std::string& name);
 
 			/*
 				Gets the scope which contains the given function name

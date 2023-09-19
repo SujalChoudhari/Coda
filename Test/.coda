@@ -1,3 +1,5 @@
+import OS
+
 def start(port){
     println("Server Starting on Port", parseInt(port));
 }
@@ -12,4 +14,8 @@ def push(msg){
     // git commit -m msg
     // git push
     println(msg, "Pushed");
+}
+
+def echo(msg){
+    os.run("echo "+ msg);
 }

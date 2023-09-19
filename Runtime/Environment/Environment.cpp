@@ -207,7 +207,7 @@ namespace Coda {
 			}
 
 			for (auto& it : mScopes) {
-				Environment::UserDefinedFunction* func = it.second->getFunction(name);
+				Environment::UserDefinedFunction* func = it.second->getFunctionInScope(name);
 				if (func != nullptr)
 					return func;
 			}
@@ -217,6 +217,25 @@ namespace Coda {
 				return func;
 			}
 			Error::Runtime::raise("Function '" + name + "' does not exist");
+			return nullptr;
+		}
+
+		Environment::UserDefinedFunction* Environment::getFunctionInScope(const std::string& name)
+		{
+			auto it = std::find_if(mUserDefinedFunctions.begin(), mUserDefinedFunctions.end(),
+				[&](auto func) {
+					return std::get<0>(func) == name;
+				});
+
+			if (it != mUserDefinedFunctions.end()) {
+				return &(*it);
+			}
+
+			for (auto& it : mScopes) {
+				Environment::UserDefinedFunction* func = it.second->getFunctionInScope(name);
+				if (func != nullptr)
+					return func;
+			}
 			return nullptr;
 		}
 
@@ -295,7 +314,30 @@ namespace Coda {
 
 			for(auto& scope : mScopes)
 			{
-				auto env = scope.second->getScope(name);
+				auto env = scope.second->getScopeInScope(name);
+				if (env != nullptr)
+					return env;
+			}
+
+			if (mParent != nullptr) {
+				return mParent->getScope(name);
+			}
+			// If the scope doesn't exist in current or parent, return nullptr
+			return nullptr;
+		}
+
+		std::shared_ptr<Environment> Environment::getScopeInScope(const std::string& name)
+		{
+			std::shared_ptr<Environment> env;
+			auto it = mScopes.find(name);
+			if (it != mScopes.end()) {
+				env = it->second;
+				return env;
+			}
+
+			for (auto& scope : mScopes)
+			{
+				auto env = scope.second->getScopeInScope(name);
 				if (env != nullptr)
 					return env;
 			}

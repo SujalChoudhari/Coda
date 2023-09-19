@@ -1,8 +1,5 @@
-import FileSystem
+import os
 
-let files = fs.listFiles(".");
+def lll(){os.run("echo 1i");}
 
-println(files)
-
-fs.createFile(".","demo.txt", "Hello::");
-fs.createDirectory("hellohi/lol");
+lll();
