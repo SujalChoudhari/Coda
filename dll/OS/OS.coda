@@ -1,3 +1,4 @@
+
 scope fs {
     def createFile(dirPath, fileName, content) {
         return native OS coda_create_file(dirPath, fileName, content);
@@ -23,10 +24,27 @@ scope fs {
         return native OS coda_rename(oldPath, newPath);
     }
 
-    def listFiles(dirPath) {
+    def listAll(dirPath) {
         return native OS coda_list_files(dirPath);
     }
+
+    def readFile(filePath) {
+        return native OS coda_read_file(filePath);
+    }
+
+    def copyFile(sourcePath, destinationPath) {
+        return native OS coda_copy_file(sourcePath, destinationPath);
+    }
+
+    def pathExists(path) {
+        return native OS coda_path_exists(path);
+    }
+
+    def getFileSize(filePath) {
+        return native OS coda_get_file_size(filePath);
+    }
 }
+
 
 
 scope os {

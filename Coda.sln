@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Coda", "Coda.vcxproj", "{7A
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Maths", "dll\Maths\Maths.vcxproj", "{C9E09E90-96FB-40D7-9150-7E97C72E35F4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileSystem", "dll\FileSystem\FileSystem.vcxproj", "{124A9A00-7214-4C06-A4CD-9CCE6702AEDE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OS", "dll\OS\OS.vcxproj", "{124A9A00-7214-4C06-A4CD-9CCE6702AEDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

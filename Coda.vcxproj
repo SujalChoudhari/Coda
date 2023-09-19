@@ -148,6 +148,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="dll\OS\FileSystem.cpp" />
+    <ClCompile Include="dll\OS\OS.cpp" />
     <ClCompile Include="Error\Raiser.cpp" />
     <ClCompile Include="Error\Manager.cpp" />
     <ClCompile Include="FFI\FFI.h" />
@@ -211,15 +213,16 @@
     <ClInclude Include="Utils\FileReader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".coda" />
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="bin\Debug\x64\Maths.coda" />
     <None Include="bin\Debug\x64\OS.coda" />
-    <None Include="bin\Release\x64\Maths.coda" />
     <None Include="bin\Release\x64\OS.coda" />
     <None Include="CHANGELOG.md" />
     <None Include="CODE_OF_CONDUCT.md" />
     <None Include="CppProperties.json" />
+    <None Include="dll\OS\OS.coda" />
     <None Include="LICENSE" />
     <None Include="README.md" />
     <None Include="Test\builtin.coda" />

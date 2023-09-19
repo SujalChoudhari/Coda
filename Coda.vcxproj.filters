@@ -96,6 +96,12 @@
     <ClCompile Include="FFI\FFI.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dll\OS\FileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dll\OS\OS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tokens\TokenType.h">
@@ -217,9 +223,10 @@
     <None Include="CODE_OF_CONDUCT.md" />
     <None Include="Test\builtin.coda" />
     <None Include="Test\indll.coda" />
-    <None Include="bin\Release\x64\OS.coda" />
-    <None Include="bin\Release\x64\Maths.coda" />
     <None Include="bin\Debug\x64\Maths.coda" />
     <None Include="bin\Debug\x64\OS.coda" />
+    <None Include=".coda" />
+    <None Include="dll\OS\OS.coda" />
+    <None Include="bin\Release\x64\OS.coda" />
   </ItemGroup>
 </Project>

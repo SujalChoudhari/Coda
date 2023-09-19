@@ -1,0 +1,18 @@
+import os
+
+def build(config){
+	os.run("msbuild .\Coda.sln -property:Configuration=" + config);
+	let modules = fs.listAll("./dll/");
+	for(let i = 0; i < sizeof modules; i++){
+		fs.copyFile("./dll/" + modules[i] + "/" + modules[i] + ".coda","./bin/"+ config +"/x64/");
+	}
+}
+
+def rb(){
+	build("Release");
+}
+
+def db(){
+	build("Debug");
+}
+
