@@ -1,1 +1,8 @@
 import FileSystem
+
+let files = fs.listFiles(".");
+
+println(files)
+
+fs.createFile(".","demo.txt", "Hello::");
+fs.createDirectory("hellohi/lol");

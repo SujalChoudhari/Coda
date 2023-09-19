@@ -215,6 +215,7 @@
     <None Include=".gitignore" />
     <None Include="bin\Debug\x64\FileSystem.coda" />
     <None Include="bin\Debug\x64\Maths.coda" />
+    <None Include="bin\Release\x64\FileSystem.coda" />
     <None Include="bin\Release\x64\Maths.coda" />
     <None Include="bin\Release\x64\Vector2.coda" />
     <None Include="CHANGELOG.md" />

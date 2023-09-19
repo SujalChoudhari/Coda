@@ -14,7 +14,6 @@ namespace Coda {
 	namespace Frontend {
 		std::string Importer::import(const std::string& filepath) {
 			std::string sourceCode;
-
 			if (fileExists(filepath)) {
 				Coda::Utils::FileReader fileReader(filepath);
 				sourceCode = fileReader.readToString();

@@ -1,0 +1,15 @@
+def start(port){
+    println("Server Starting on Port", parseInt(port));
+}
+
+def build(loc){
+    println("Build Complete!");
+    println("Saved at", loc);
+}
+
+def push(msg){
+    // git add -A
+    // git commit -m msg
+    // git push
+    println(msg, "Pushed");
+}

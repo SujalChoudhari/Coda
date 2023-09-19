@@ -56,6 +56,11 @@ std::string Coda::Utils::ArgParser::getStandaloneValueAt(int i)
 	return mStandaloneValues.at(i);
 }
 
+std::vector<std::string>* Coda::Utils::ArgParser::getAllStandaloneValues()
+{
+	return &mStandaloneValues;
+}
+
 std::string Coda::Utils::ArgParser::getSubCommand()
 {
 	return mSubCommand.empty() ? "none" : mSubCommand;

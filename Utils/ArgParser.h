@@ -54,6 +54,12 @@ namespace Coda {
 
 			*/
 			std::string getStandaloneValueAt(int index);
+
+			/*
+				Get all the standalone values passed in the command.
+				@return A list of all the standalone values
+			*/
+			std::vector<std::string>* getAllStandaloneValues();
 			
 			/*
 				Get the sub command from the cli input.

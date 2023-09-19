@@ -1,3 +1,0 @@
-import Maths
-
-println(Maths.add(10,20));

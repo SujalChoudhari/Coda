@@ -10,7 +10,7 @@ namespace Coda {
 			return runnable(argc, argv);
 		}
 		catch (const std::exception& e) {
-			std::cerr << Utils::Colors::ACCENT << "[CODA ]: \033[0;31mA fatal error occurred in the interpreter.\n" << Utils::Colors::RESET << e.what() << std::endl;
+			std::cerr << Utils::Colors::ACCENT << "[CODA ]: \033[0;31mA fatal error occurred in the interpreter.\n"  << e.what() << Utils::Colors::RESET << std::endl;
 			result = EXIT_FAILURE;
 		}
 		catch (...) {
@@ -31,21 +31,8 @@ namespace Coda {
 		return repl();
 
 #else
-		if (subCommand == "run") {
-			mMainFileName = argParser.getStandaloneValueAt(0);
-			Frontend::Importer importer = Frontend::Importer();
-			std::string source = importer.import(mMainFileName);
 
-			Runtime::Environment env = Runtime::Environment::root();
-			execute(source, env);
-
-			if (argParser.getFlag("-w")) {
-				std::cout << std::endl << "Press any key to continue...";
-				std::cin.get();
-			}
-			return EXIT_SUCCESS;
-		}
-		else if (subCommand == "repl") {
+		if (subCommand == "repl") {
 			return repl();
 		}
 		else if (subCommand == "help" || subCommand == "none") {
@@ -56,6 +43,39 @@ namespace Coda {
 		else if (subCommand == "commands") {
 			printCommandMessage();
 			std::cin.get();
+			return EXIT_SUCCESS;
+		}
+		else {
+			Frontend::Importer importer = Frontend::Importer();
+			std::string source;
+			if (subCommand == "run") {
+				mMainFileName = argParser.getStandaloneValueAt(0);
+				mMainFileName = mMainFileName.empty() ? "./.coda" : mMainFileName;
+				source = importer.import(mMainFileName);
+
+			}
+			else {
+				mMainFileName = "./.coda";
+				source = importer.import(mMainFileName);
+
+				source += "\n" + subCommand + "(";
+				std::vector<std::string>* parameters = argParser.getAllStandaloneValues();
+				if (parameters->size() != 0) {
+					for (int i = 0; i < parameters->size() - 1; i++) {
+						source += "\"" + parameters->at(i) + "\",";
+					}
+					source += "\"" + parameters->at(parameters->size() - 1) + "\"";
+				}
+				source += ");\n";
+			}
+
+			Runtime::Environment env = Runtime::Environment::root();
+			execute(source, env);
+
+			if (argParser.getFlag("-w")) {
+				std::cout << std::endl << "Press any key to continue...";
+				std::cin.get();
+			}
 			return EXIT_SUCCESS;
 		}
 #endif
