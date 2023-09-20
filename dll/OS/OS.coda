@@ -45,8 +45,6 @@ scope fs {
     }
 }
 
-
-
 scope os {
     def run(command) {
         return native OS coda_run_command(command);

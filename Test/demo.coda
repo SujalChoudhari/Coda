@@ -1,0 +1,86 @@
+import Maths 
+// Comment
+// Comments can be closed by a semi colon;
+let int X = 30; // this would run;
+// this would also run; let float y = 40.0
+
+// this is how you define functions
+def function_name (param1,param2){
+    // code goes here
+    return 0;
+}
+
+// we have SCOPES!!
+
+scope scopename {
+    let string x = "Hello World";
+    const int PI = 3.14; // consts cannot be changed
+
+    def fuc(param){
+        return 3;
+    }
+}
+
+
+
+// to use SCOPES
+// we use the dot operator
+println(scopename.x); // and yes semicolon is optional
+
+
+
+// here is the list of keywords we use in this language, it is keyword -> purpose
+// let -> LET
+// const -> CONST
+// def -> DEF
+// if -> IF
+// elif -> ELIF
+// else -> ELSE
+// for -> FOR
+// while -> WHILE
+// break -> JUMP
+// return -> JUMP
+// scope -> SCOPE
+// continue -> JUMP
+// typeof -> UNARY_OPERATOR
+// sizeof -> UNARY_OPERATOR
+// do -> DO
+// in -> IN
+// native -> NATIVE
+// int -> TYPE
+// bool -> TYPE
+// byte -> TYPE
+// float -> TYPE
+// list -> TYPE
+// object -> TYPE
+// double -> TYPE
+// string -> TYPE
+// long -> TYPE
+
+// We have objects!!
+
+let obj = {
+    x: 30,
+    y: 50,
+    func: def(param1,para2){
+        // yes there are funcs in objects as well...
+    }
+}
+
+while(let x < 0){
+    x++;
+}
+
+
+
+// lists in our language
+const list abc = [1,2,4,5];
+
+//Types
+// (int|bool|byte|float|list|object|double|string|long)
+
+// Keywords 
+//(let|const|def|if|elif|else|for|while|break|return|scope|continue|typeof|sizeof|do|in|native)
+
+// BuiltIn Functions
+// (print|println|sleep|input|parseInt|parseFloat|parseDouble|parseByte|parseBool|quit|exit)

@@ -15,23 +15,23 @@ namespace Coda {
 
 	public:
 		const std::string title = "\033[1;96m\n\
-                                                  dddddddd                 \n\
-        CCCCCCCCCCCCC                             d::::::d                  \n\
-     CCC::::::::::::C                             d::::::d                  \n\
-   CC:::::::::::::::C                             d::::::d          \033[0mv0.2\033[1;96m        \n\
-  C:::::CCCCCCCC::::C                             d:::::d                   \n\
- C:::::C       CCCCCC   ooooooooooo       ddddddddd:::::d   aaaaaaaaaaaaa   \n\
-C:::::C               oo:::::::::::oo   dd::::::::::::::d   a::::::::::::a  \n\
-C:::::C              o:::::::::::::::o d::::::::::::::::d   aaaaaaaaa:::::a \n\
-C:::::C              o:::::ooooo:::::od:::::::ddddd:::::d            a::::a \n\
-C:::::C              o::::o     o::::od::::::d    d:::::d     aaaaaaa:::::a \n\
-C:::::C              o::::o     o::::od:::::d     d:::::d   aa::::::::::::a \n\
-C:::::C              o::::o     o::::od:::::d     d:::::d  a::::aaaa::::::a \n\
- C:::::C       CCCCCCo::::o     o::::od:::::d     d:::::d a::::a    a:::::a \n\
-  C:::::CCCCCCCC::::Co:::::ooooo:::::od::::::ddddd::::::dda::::a    a:::::a \n\
-   CC:::::::::::::::Co:::::::::::::::o d:::::::::::::::::da:::::aaaa::::::a \n\
-     CCC::::::::::::C oo:::::::::::oo   d:::::::::ddd::::d a::::::::::aa:::a\n\
-        CCCCCCCCCCCCC   ooooooooooo      ddddddddd   ddddd  aaaaaaaaaa  aaaa\033[0m";
+                                                    dddddddd                  \n\
+        CCCCCCCCCCCCC                               d::::::d                   \n\
+     CCC::::::::::::C                               d::::::d                   \n\
+   CC:::::::::::::::C                               d::::::d           \033[0mv0.2\033[1;96m        \n\
+  C:::::CCCCCCCC::::C                               d:::::d                    \n\
+ C:::::C       CCCCCC    ooooooooooo        ddddddddd:::::d    aaaaaaaaaaaaa   \n\
+C:::::C                oo:::::::::::oo    dd::::::::::::::d    a::::::::::::a  \n\
+C:::::C               o:::::::::::::::o  d::::::::::::::::d    aaaaaaaaa:::::a \n\
+C:::::C               o:::::ooooo:::::o d:::::::ddddd:::::d             a::::a \n\
+C:::::C               o::::o     o::::o d::::::d    d:::::d      aaaaaaa:::::a \n\
+C:::::C               o::::o     o::::o d:::::d     d:::::d    aa::::::::::::a \n\
+C:::::C               o::::o     o::::o d:::::d     d:::::d   a::::aaaa::::::a \n\
+ C:::::C       CCCCCC o::::o     o::::o d:::::d     d:::::d  a::::a    a:::::a \n\
+  C:::::CCCCCCCC::::C o:::::ooooo:::::o d::::::ddddd::::::dd a::::a    a:::::a \n\
+   CC:::::::::::::::C o:::::::::::::::o  d:::::::::::::::::d a:::::aaaa::::::a \n\
+     CCC::::::::::::C  oo:::::::::::oo    d:::::::::ddd::::d  a::::::::::aa:::a\n\
+        CCCCCCCCCCCCC    ooooooooooo       ddddddddd   ddddd   aaaaaaaaaa  aaaa\033[0m";
 
 		const std::string helpMessage = "\033[0;33m\n\
 ========================================\n\

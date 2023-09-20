@@ -1,5 +1,12 @@
-import os
+let float x = 200;
 
-def lll(){os.run("echo 1i");}
+def takeInput() {
+    const inp = input("Enter a number");
+    return 0;
+}
 
-lll();
+for (let i = 0;i < 100 ;i++) {
+    println(parseInt(takeInput()));
+}
+
+quit(0);

@@ -10,7 +10,7 @@ namespace Coda {
 			return runnable(argc, argv);
 		}
 		catch (const std::exception& e) {
-			std::cerr << Utils::Colors::ACCENT << "[CODA ]: \033[0;31mA fatal error occurred in the interpreter.\n"  << e.what() << Utils::Colors::RESET << std::endl;
+			std::cerr << Utils::Colors::ACCENT << "[CODA ]: \033[0;31mA fatal error occurred in the interpreter.\n" << e.what() << Utils::Colors::RESET << std::endl;
 			result = EXIT_FAILURE;
 		}
 		catch (...) {
@@ -54,7 +54,12 @@ namespace Coda {
 				source = importer.import(mMainFileName);
 
 			}
+			else if (importer.fileExists(subCommand)) {
+				mMainFileName = subCommand;
+				source = importer.import(mMainFileName);
+			}
 			else {
+
 				mMainFileName = "./.coda";
 				source = importer.import(mMainFileName);
 
