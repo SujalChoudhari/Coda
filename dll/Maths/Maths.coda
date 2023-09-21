@@ -1,4 +1,4 @@
-scope Maths{
+scope maths{
     const double PI = 3.1415926535;
     const double E =  2.7182818284;
 
@@ -25,7 +25,7 @@ scope Maths{
     }
 
     def sqrt(number) {
-        return native Maths squareRoot(number);
+        return native Maths coda_sqrt(number);
     }
 
     def mod(number) {
@@ -34,23 +34,23 @@ scope Maths{
 
 
     def ln(value) {
-        return native Maths naturalLog(value);
+        return native Maths coda_ln(value);
     }
 
     def log10(value) {
-        return native Maths base10Log(value);
+        return native Maths coda_log10(value);
     }
 
     def exp(exponent) {
-        return native Maths exponential(exponent);
+        return native Maths coda_exp(exponent);
     }
 
     def abs(number) {
-        return native Maths absoluteValue(number);
+        return native Maths coda_abs(number);
     }
 
     def round(number) {
-        return native Maths roundToNearest(number);
+        return native Maths coda_round(number);
     }
 
     def sin(angle) {

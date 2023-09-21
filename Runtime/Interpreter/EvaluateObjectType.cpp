@@ -166,7 +166,7 @@ namespace Coda {
 			try {
 				myFunction(result, std::dynamic_pointer_cast<IValue>(std::make_shared<Value>(args)), &env);
 			}
-			catch (std::string s) {
+			catch (const char* s) {
 				Error::Runtime::raise("Error in running '" + functionName + "': " + s);
 			}
 
