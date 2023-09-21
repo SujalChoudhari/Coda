@@ -38,7 +38,7 @@ namespace Coda {
 		std::string FIRST_VALID_DIGITS = DIGITS + ".";
 		std::string DIGITS_EXTRA = "_iIfFdDlLbB" + FIRST_VALID_DIGITS;
 
-		const std::unordered_map<char, TokenType> DIGIT_EXTENTIONS = {
+		const std::unordered_map<char, TokenType> DIGIT_EXTENSIONS = {
 			{'f', TokenType::FLOAT},
 			{'F', TokenType::FLOAT},
 			{'d', TokenType::DOUBLE},

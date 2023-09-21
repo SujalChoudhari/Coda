@@ -307,7 +307,7 @@ namespace Coda {
 				res = "\\";
 				break;
 			default:
-				res =  "\\" + std::string(1, mCurrentChar);
+				res = "\\" + std::string(1, mCurrentChar);
 			}
 			advance();
 			return res;
@@ -323,26 +323,27 @@ namespace Coda {
 					type = TokenType::DOUBLE;
 					num.push_back(mCurrentChar);
 				}
-				else if ((mCurrentChar == '-' || mCurrentChar == '+') && (num.empty() || (num.back() == 'e' || num.back() == 'E'))) {
+				else if ((mCurrentChar == '-' || mCurrentChar == '+')
+					&& (num.empty() || (num.back() == 'e' || num.back() == 'E'))) {
 					num.push_back(mCurrentChar);
 				}
 				else {
-					num += handleDigitOrExtension();
+					num += handleDigit();
 				}
+				advance();
+			}
+
+			auto it = DIGIT_EXTENSIONS.find(mCurrentChar);
+			if (it != DIGIT_EXTENSIONS.end()) {
+				type = it->second;
 				advance();
 			}
 
 			mTokens.emplace_back(type, num, start, mCurrentPosition);
 		}
 
-		std::string Lexer::handleDigitOrExtension() {
-			if (isdigit(mCurrentChar)) {
-				return std::string(1, mCurrentChar);
-			}
-			else {
-				auto it = DIGIT_EXTENTIONS.find(mCurrentChar);
-				return (it != DIGIT_EXTENTIONS.end()) ? std::string(1, static_cast<char>(it->second)) : "";
-			}
+		std::string Lexer::handleDigit() {
+			return std::string(1, mCurrentChar);
 		}
 
 		void Lexer::handleIdentifiers()

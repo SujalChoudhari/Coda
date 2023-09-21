@@ -1,12 +1,1 @@
-let float x = 200;
-
-def takeInput() {
-    const inp = input("Enter a number");
-    return 0;
-}
-
-for (let i = 0;i < 100 ;i++) {
-    println(parseInt(takeInput()));
-}
-
-quit(0);
+import Maths;

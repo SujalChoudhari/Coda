@@ -20,6 +20,6 @@ namespace Coda {
         extern std::string DIGITS_EXTRA;
         
         // The extra chacters which are used to diffrentiate between a native types.
-        extern const std::unordered_map<char, TokenType> DIGIT_EXTENTIONS;
+        extern const std::unordered_map<char, TokenType> DIGIT_EXTENSIONS;
     } // namespace Frontend
 } // namespace Coda

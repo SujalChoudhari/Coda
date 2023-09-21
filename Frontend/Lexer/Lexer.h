@@ -72,7 +72,7 @@ namespace Coda {
 			void handlePipe();
 			void handleAmpersand();
 			void handleNumbers();
-			std::string handleDigitOrExtension();
+			std::string handleDigit();
 			void handleIdentifiers();
 			void handleIllegalCharacter();
 
