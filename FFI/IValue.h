@@ -19,6 +19,7 @@ namespace Coda {
 			FLOAT,
 			DOUBLE,
 			STRING,
+			POINTER,
 
 			SCOPE,
 			OBJECT,

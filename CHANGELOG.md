@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.0] - 21-09-2023
 
+### Added
+- `pointer` datatype, inaccessible for coda users (used for creating connection between dll functions);
+- 
 ### Changed
 - scope `Maths` renamed to `maths`
 
 ### Fixed
-- `package` generated errors are accurately catched
+- `package` generated errors are accurately caught
 - number extensions
 
 

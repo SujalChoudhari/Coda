@@ -185,9 +185,11 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE_PTR;
 			ValuePtr res;
 			ValuePtr left = interpret(*astNode.left.get(), env);
+			IF_ERROR_RETURN_VALUE_PTR;
 			if (left->type == Type::SCOPE) {
 				Environment& scope = *env.getScope(left->value).get();
 				res = interpret(*astNode.right.get(), scope);
+				IF_ERROR_RETURN_VALUE_PTR;
 			}
 			else if (left != nullptr) {
 				auto it = left->properties.find(astNode.right->value);

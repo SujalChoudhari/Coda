@@ -43,6 +43,7 @@ namespace Coda {
 				"<float>",
 				"<double>",
 				"<string>",
+				"<pointer>",
 				"<scope>",
 				"<object>",
 				"<list>",

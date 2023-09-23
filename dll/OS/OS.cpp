@@ -35,3 +35,19 @@ extern "C" EXPORT void coda_set_env(IValuePtr res, IValuePtr args, IEnvironment 
 	res->setType(Coda::Runtime::Type::BOOL);
 	res->setValue("1");
 }
+
+// Functions for pointer handling
+void* getPointer(IValuePtr value) {
+	void* ptr = reinterpret_cast<void*>(std::stoull(value->getValue()));
+	return ptr;
+}
+
+void createValueOfTypePointer(IValuePtr res, void* pointer) {
+	res->setType(Coda::Runtime::Type::POINTER);
+	res->setValue(std::to_string(reinterpret_cast<unsigned long long>(pointer)));
+}
+
+void freePointer(IValuePtr value) {
+	void* ptr = reinterpret_cast<void*>(std::stoull(value->getValue()));
+	delete ptr;
+}
