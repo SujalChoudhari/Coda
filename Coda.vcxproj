@@ -147,7 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="dll\OS\FileSystem.cpp" />
     <ClCompile Include="dll\OS\OS.cpp" />
     <ClCompile Include="Error\Raiser.cpp" />
@@ -178,7 +178,7 @@
     <ClCompile Include="Utils\FileReader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
+    <ClInclude Include="Application\Application.h" />
     <ClInclude Include="Error\Error.h" />
     <ClInclude Include="Error\Raiser.h" />
     <ClInclude Include="Error\Manager.h" />
@@ -193,7 +193,7 @@
     <ClInclude Include="Frontend\Node\NodeType.h" />
     <ClInclude Include="Frontend\Node\Program.h" />
     <ClInclude Include="Frontend\Parser\Parser.h" />
-    <ClInclude Include="Coda.h" />
+    <ClInclude Include="Application\Coda.h" />
     <ClInclude Include="Frontend\Tokens\Constants.h" />
     <ClInclude Include="Frontend\Tokens\Token.h" />
     <ClInclude Include="Frontend\Tokens\TokenType.h" />

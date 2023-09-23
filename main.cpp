@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "Coda.h"
-#include "Application.h"
+#include "./Application/Application.h"
+#include "Application/Coda.h"
 
 int main(int argc, char** argv) {
 	Coda::Application app = Coda::Application();

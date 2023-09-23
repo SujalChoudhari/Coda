@@ -48,16 +48,10 @@
     <ClCompile Include="Frontend\Tokens\Constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\FileReader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Runtime\NativeFunctions\NativeFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\ArgParser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Application.cpp">
+    <ClCompile Include="Application\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Frontend\Importer\Importer.cpp">
@@ -100,6 +94,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dll\OS\OS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\ArgParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\FileReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -170,10 +170,7 @@
     <ClInclude Include="Runtime\Runtime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Coda.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\FileReader.h">
+    <ClInclude Include="Application\Coda.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Frontend\Node\Program.h">
@@ -182,16 +179,10 @@
     <ClInclude Include="Runtime\NativeFunctions\NativeFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\ArgParser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Application.h">
+    <ClInclude Include="Application\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Frontend\Importer\Importer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\Colors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FFI\IValue.h">
@@ -201,6 +192,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FFI\INode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\ArgParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Colors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\FileReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

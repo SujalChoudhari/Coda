@@ -1,7 +1,8 @@
 ﻿#pragma once
+
 #include "Coda.h"
-#include "Utils/FileReader.h"
-#include"Utils/ArgParser.h"
+#include "../Utils/FileReader.h"
+#include "../Utils/ArgParser.h"
 #include <iostream>
 
 /*
