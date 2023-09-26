@@ -228,5 +228,6 @@
     <None Include=".coda" />
     <None Include="dll\OS\OS.coda" />
     <None Include="bin\Release\x64\OS.coda" />
+    <None Include="CONTRIBUTING.md" />
   </ItemGroup>
 </Project>

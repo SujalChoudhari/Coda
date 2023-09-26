@@ -8,10 +8,12 @@ def build(config){
 	}
 }
 
+// copies content for x64 builds
 def rb(){
 	build("Release");
 }
 
+// copies content for x64 builds
 def db(){
 	build("Debug");
 }

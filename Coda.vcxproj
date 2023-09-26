@@ -221,6 +221,7 @@
     <None Include="bin\Release\x64\OS.coda" />
     <None Include="CHANGELOG.md" />
     <None Include="CODE_OF_CONDUCT.md" />
+    <None Include="CONTRIBUTING.md" />
     <None Include="CppProperties.json" />
     <None Include="dll\OS\OS.coda" />
     <None Include="LICENSE" />
