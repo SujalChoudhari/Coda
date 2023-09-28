@@ -18,33 +18,34 @@ namespace Coda {
 				for (auto& it : args->getProperties()) {
 					if (it.second->getType() == Type::BOOL) {
 						if (it.second->getValue() == "0" || it.second->getValue() == "false")
-							std::cout << "false ";
-						else std::cout << "true ";
+							std::cout << "\033[30mfalse \033[0m"; // black
+						else std::cout << "\033[30mtrue \033[0m"; // black
 					}
 					else if (it.second->getType() == Type::CHAR) {
-						std::cout << "'" << it.second->getValue()[0] << "' ";
+						std::cout << "\033[35m'" << it.second->getValue()[0] << "' \033[0m"; // magenta
 					}
 					else if (it.second->getType() == Type::STRING) {
-						std::cout << "\"" << it.second->getValue() << "\" ";
+						std::cout << "\033[34m\"" << it.second->getValue() << "\" \033[0m"; // blue
 					}
 					else if (it.second->getType() == Type::LIST) {
-						std::cout << "[";
+						std::cout << "\033[37m[\033[0m"; // white
 						print(it.second, env);
-						std::cout << "]\n";
+						std::cout << "\033[37m]\n\033[0m"; // white
 					}
 					else {
-						std::cout << it.second->getValue();
+						std::cout << "\033[36m" << it.second->getValue(); // cyan
 						if (args->getType() == Type::LIST)
 							std::cout << ", ";
 						else if (args->getType() == Type::OBJECT)
 							std::cout << ",\n";
 						else
 							std::cout << " ";
-
+						std::cout << "\033[0m";
 					}
 				}
 				return args;
 			}
+
 
 			IValuePtr input(IValuePtr args, IEnvironment* env) {
 				print(args, env);
