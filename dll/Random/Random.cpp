@@ -2,7 +2,7 @@
 #include <cstdlib> // For rand_r() and srand()
 #include <ctime>   // For srand() seed
 
-unsigned int seed;
+unsigned int seed = static_cast<unsigned int>(time(nullptr))^ static_cast<unsigned int>(pthread_self());
 
 // Seed the random number generator (usually done once at the start of your program)
 void coda_setup()
@@ -10,7 +10,6 @@ void coda_setup()
     static bool seeded = false;
     if (!seeded)
     {
-        unsigned int seed = static_cast<unsigned int>(time(nullptr))^ static_cast<unsigned int>(pthread_self());
         srand(seed);
         seeded = true;
     }
