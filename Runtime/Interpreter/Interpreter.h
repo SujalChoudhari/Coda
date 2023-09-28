@@ -2,7 +2,7 @@
 
 #include <tuple>
 #include <string>
-
+#include <stack>
 
 #include "../../Error/Error.h"
 #include "../Environment/Environment.h"
@@ -24,6 +24,12 @@ namespace Coda {
 
 		class Interpreter {
 		public:
+			// Call stack for traceback and error handling
+			static std::stack<Coda::Error::Position> callStack;
+
+		public:
+			Interpreter();
+
 			/*
 				interpret the AST.
 				@param astNode - the root node of the AST.
@@ -39,6 +45,8 @@ namespace Coda {
 				@return - the value of the program.
 			*/
 			ValuePtr evaluateProgram(const Frontend::Program& program, Environment& env);
+
+
 
 		private:
 			/*

@@ -47,7 +47,7 @@ namespace Coda {
 		IValuePtr Environment::declareFunctionParameter(const std::string name, const IValuePtr& value) {
 			auto symbolIt = mSymbols.find(name);
 			if (symbolIt != mSymbols.end()) { // Prameters cannot exist with same name
-				Error::Runtime::raise("Parameter with same name already exists, at ", value->getEndPosition());
+				Error::Runtime::raise("Parameter with same name already exists, ",Interpreter::callStack,value->getStartPosition(), value->getEndPosition());
 				return nullptr;
 			}
 			else {
@@ -63,12 +63,12 @@ namespace Coda {
 			if (symbolIt != mSymbols.end()) {
 				// Variable already exists, assign to it
 				if (isConstant) {
-					Error::Runtime::raise("Reassignment of constant is not allowed, at ", value->getEndPosition());
+					Error::Runtime::raise("Reassignment of constant is not allowed, ", Interpreter::callStack, value->getStartPosition(), value->getEndPosition());
 					return nullptr;
 				}
 				else if (mConstants.find(name) != mConstants.end()) {
 					// Trying to assign to a constant variable
-					Error::Runtime::raise("Assignment to constant variable is not allowed, at ", value->getEndPosition());
+					Error::Runtime::raise("Assignment to constant variable is not allowed, ", Interpreter::callStack, value->getStartPosition(), value->getEndPosition());
 					return nullptr;
 				}
 				symbolIt->second = std::dynamic_pointer_cast<Value>(value);

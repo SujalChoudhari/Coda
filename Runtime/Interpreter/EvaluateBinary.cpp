@@ -113,7 +113,7 @@ namespace Coda {
 			}
 			else if (functor == "/") {
 				if (typeRight == 0) {
-					Error::Runtime::raise("Division by Zero at, ", right->startPosition);
+					Error::Runtime::raise("Division by Zero at, ", Interpreter::callStack, right->startPosition,right->endPosition);
 					return;
 				}
 				result->value = std::to_string(typeLeft / typeRight);

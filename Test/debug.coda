@@ -1,1 +1,20 @@
-import Maths;
+const x = 20;
+
+l = {
+	x:20,
+	y:def(m){
+		func2();
+	}
+}
+
+def func(){
+	x = 30;
+}
+
+def func2(){
+	func();
+}
+
+//func2();
+
+l.y(20);

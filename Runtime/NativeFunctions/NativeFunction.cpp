@@ -108,7 +108,7 @@ namespace Coda {
 				if (!args->getProperties().empty()) {
 					exitCode = std::stoi(args->getProperties().begin()->second->getValue());
 					if (args->getProperties().begin()->second->getType() == Type::INT)
-						Error::Runtime::raise("Invalid exit status code. Received '" + args->getProperties().begin()->second->getValue() + "' expected <int>.", args->getEndPosition());
+						Error::Runtime::raise("Invalid exit status code. Received '" + args->getProperties().begin()->second->getValue() + "' expected <int>.", Interpreter::callStack, args->getStartPosition(),args->getEndPosition());
 				}
 				std::exit(exitCode); // terminated by user
 				return nullptr;

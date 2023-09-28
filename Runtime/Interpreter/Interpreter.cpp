@@ -1,7 +1,13 @@
 #include "Interpreter.h"
 
+
+std::stack<Coda::Error::Position> Coda::Runtime::Interpreter::callStack;
 namespace Coda {
 	namespace Runtime {
+		Interpreter::Interpreter() {
+			Interpreter::callStack = std::stack<Position>();
+		}
+
 		ValuePtr Interpreter::interpret(const Frontend::Node& astNode, Environment& env)
 		{
 			IF_ERROR_RETURN_VALUE_PTR;
@@ -52,10 +58,16 @@ namespace Coda {
 				return evaluateListExpression(astNode, env);
 			}
 			else if (astNode.type == Frontend::NodeType::CALL_EXPRESSION) {
-				return evaluateCallExpression(astNode, env);
+				auto res = evaluateCallExpression(astNode, env);
+				if (Error::Manager::isSafe())
+					Interpreter::callStack.pop();
+				return res;
 			}
 			else if (astNode.type == Frontend::NodeType::NATIVE_CALL_EXPRESSION) {
-				return evaluateNativeCallExpression(astNode, env);
+				auto res = evaluateNativeCallExpression(astNode, env);
+				if (Error::Manager::isSafe())
+					Interpreter::callStack.pop();
+				return res;
 			}
 			else if (astNode.type == Frontend::NodeType::BLOCK_STATEMENT) {
 				return evaluateBlockExpression(astNode, env);
@@ -67,7 +79,10 @@ namespace Coda {
 				return evaluateBinaryExpression(astNode, env);
 			}
 			else if (astNode.type == Frontend::NodeType::MEMBER_EXPRESSION) {
-				return evaluateMemberExpression(astNode, env);
+				auto res = evaluateMemberExpression(astNode, env);
+				if (Error::Manager::isSafe())
+					Interpreter::callStack.pop();
+				return res;
 			}
 			else if (astNode.type == Frontend::NodeType::VARIABLE_DECLARATION) {
 				return evaluateVariableDeclaration(astNode, env);

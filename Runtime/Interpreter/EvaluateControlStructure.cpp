@@ -150,7 +150,7 @@ namespace Coda {
 				return std::make_shared<Value>(value);
 			}
 			else {
-				Error::Runtime::raise("Not a valid jump statement, at: ", astNode.endPosition);
+				Error::Runtime::raise("Not a valid jump statement, at: ", Interpreter::callStack, astNode.startPosition, astNode.endPosition);
 				return std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
 			}
 		}

@@ -162,7 +162,7 @@ namespace Coda {
 
 	std::vector<Coda::Frontend::Token> Application::tokenize(std::string source) {
 		IF_ERROR_RETURN(std::vector<Coda::Frontend::Token>());
-		Coda::Frontend::Lexer lexer = Coda::Frontend::Lexer();
+		Coda::Frontend::Lexer lexer = Coda::Frontend::Lexer(mMainFileName.empty() ? "<repl>" : mMainFileName);
 		return lexer.tokenize(source);
 	}
 
@@ -176,6 +176,7 @@ namespace Coda {
 	Runtime::ValuePtr Application::interpret(Frontend::Program& program, Runtime::Environment& env) {
 		IF_ERROR_RETURN_VALUE_PTR;
 		Coda::Runtime::Interpreter inter = Coda::Runtime::Interpreter();
+		inter.callStack.push(Position(0, 0, "", mMainFileName.empty() ? "<repl>" : mMainFileName));
 		return inter.evaluateProgram(program, env);
 	}
 }

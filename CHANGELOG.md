@@ -5,13 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.0] - 21-09-2023
+## [0.4.0] - 28-09-2023
 
 ### Added
 - `pointer` datatype, inaccessible for coda users (used for creating connection between dll functions);
-- 
+- traceback for errors 
+
 ### Changed
 - scope `Maths` renamed to `maths`
+- error format when displayed
 
 ### Fixed
 - `package` generated errors are accurately caught

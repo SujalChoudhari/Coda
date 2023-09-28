@@ -3,7 +3,7 @@
 
 namespace Coda {
 	namespace Error {
-		
+
 		/*
 			A position of a specific character/token/astNode in the source code.
 			Keeps track of the source code line, line number and the character index.
@@ -18,6 +18,9 @@ namespace Coda {
 
 			// The text of the line the character is on.
 			std::string lineText;
+
+			// The scope/file from which the code is running.
+			std::string scope;
 
 		public:
 			/*
@@ -34,10 +37,16 @@ namespace Coda {
 				:character(index), line(line), lineText("") {}
 
 			/*
-				Create a new Position with the all the information.
+				Create a new Position with the all the information except scope
 			*/
 			Position(unsigned int index, unsigned int line, std::string lineText)
 				:character(index), line(line), lineText(lineText) {}
+
+			/*
+				Create a new Position with the all the information.
+			*/
+			Position(unsigned int index, unsigned int line, std::string lineText, const std::string filename)
+				:character(index), line(line), lineText(lineText), scope(filename) {}
 
 
 			friend std::ostream& operator<<(std::ostream& os, const Position& pos);

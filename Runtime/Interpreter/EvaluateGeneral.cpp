@@ -113,7 +113,7 @@ namespace Coda {
 					}
 				}
 				else {
-					Error::Runtime::raise("Invalid Assignment Operation, at ", astNode.endPosition);
+					Error::Runtime::raise("Invalid Assignment Operation, at ", Interpreter::callStack, astNode.startPosition, astNode.endPosition);
 					return nullptr;
 				}
 			}

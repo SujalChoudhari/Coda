@@ -2,12 +2,13 @@
 
 namespace Coda {
 	namespace Frontend {
-		Lexer::Lexer()
+		Lexer::Lexer(const std::string& scopeName)
 		{
 			mTokens = std::vector<Token>();
 			mSourceCode = "";
 			mCurrentIndex = -1;
 			mCurrentPosition = Position(0, 1, "");
+			mScopeName = scopeName;
 		}
 
 		void Lexer::advance()
@@ -32,8 +33,12 @@ namespace Coda {
 				mCurrentPosition.character = 1;
 			}
 			else {
+				if (mCurrentIndex > 0 && mSourceCode[mCurrentIndex - 1] == '\n') {
+					mCurrentPosition.lineText = "";
+				}
 				mCurrentPosition.lineText += mCurrentChar;
 			}
+			mCurrentPosition.scope = mScopeName;
 		}
 
 		std::vector<Token> Lexer::tokenize(std::string sourceCode)
