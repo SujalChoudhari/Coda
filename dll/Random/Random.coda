@@ -1,0 +1,17 @@
+scope random {
+        def setup() {
+            return native Random coda_setup();
+        }
+
+        def float randomFloat() {
+            return native Random coda_math_random_float();
+        }
+
+        def int randomInt() {
+            return native Random coda_math_random_int();
+        }
+
+        def long randomLong() {
+            return native Random coda_math_random_long();
+        }
+    }
