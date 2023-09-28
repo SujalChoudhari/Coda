@@ -102,6 +102,9 @@ namespace Coda {
 			else if (astNode.type == Frontend::NodeType::FOR_EXPRESSION) {
 				return evaluateForExpression(astNode, env);
 			}
+			else if (astNode.type == Frontend::NodeType::FOR_IN_EXPRESSION) {
+				return evaluateForInExpression(astNode, env);
+			}
 			else if (astNode.type == Frontend::NodeType::WHILE_EXPRESSION) {
 				return evaluateWhileExpression(astNode, env);
 			}

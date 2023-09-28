@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `pointer` datatype, inaccessible for coda users (used for creating connection between dll functions);
 - traceback for errors 
+- `random` package.
 
 ### Changed
 - scope `Maths` renamed to `maths`
 - error format when displayed
+- repl shows all the evaluated results.
 
 ### Fixed
 - `package` generated errors are accurately caught
