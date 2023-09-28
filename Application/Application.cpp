@@ -124,8 +124,12 @@ namespace Coda {
 		Coda::Frontend::Program program = parse(tokens);
 
 		IF_ERROR_RETURN(1);
-		interpret(program, env);
+		auto res = interpret(program, env);
+		IF_ERROR_RETURN(EXIT_FAILURE);
 
+		if (mMainFileName.empty() && !res->getValue().empty()) {
+			std::cout << res->getValue() << std::endl;
+		}
 
 		return result;
 	}
