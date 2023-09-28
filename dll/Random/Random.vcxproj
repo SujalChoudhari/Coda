@@ -21,32 +21,32 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7acff384-1772-436f-90f5-bbb319470101}</ProjectGuid>
-    <RootNamespace>Coda</RootNamespace>
+    <ProjectGuid>{62a79001-6821-440a-b33b-e4240b6a52c8}</ProjectGuid>
+    <RootNamespace>Random</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -72,19 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)bin\intermediate\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)bin\intermediate\$(ProjectName)\$(Configuration)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)bin\intermediate\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)bin\intermediate\$(ProjectName)\$(Configuration)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)bin\intermediate\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)bin\intermediate\$(ProjectName)\$(Configuration)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)bin\intermediate\$(Configuration)\$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)bin\intermediate\$(ProjectName)\$(Configuration)</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -147,90 +147,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application\Application.cpp" />
-    <ClCompile Include="dll\OS\FileSystem.cpp" />
-    <ClCompile Include="dll\OS\OS.cpp" />
-    <ClCompile Include="dll\Random\Random.cpp" />
-    <ClCompile Include="Error\Raiser.cpp" />
-    <ClCompile Include="Error\Manager.cpp" />
-    <ClCompile Include="FFI\FFI.h" />
-    <ClCompile Include="Frontend\Importer\Importer.cpp" />
-    <ClCompile Include="Frontend\Lexer\Handlers.cpp" />
-    <ClCompile Include="Frontend\Node\Node.cpp" />
-    <ClCompile Include="Frontend\Lexer\Lexer.cpp" />
-    <ClCompile Include="Frontend\Parser\ParseBinary.cpp" />
-    <ClCompile Include="Frontend\Parser\ParseControlStatement.cpp" />
-    <ClCompile Include="Frontend\Parser\ParseGeneral.cpp" />
-    <ClCompile Include="Frontend\Parser\ParseObjectType.cpp" />
-    <ClCompile Include="Frontend\Parser\Parser.cpp" />
-    <ClCompile Include="Frontend\Tokens\Constants.cpp" />
-    <ClCompile Include="Frontend\Tokens\Token.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Runtime\Environment\Environment.cpp" />
-    <ClCompile Include="Runtime\Interpreter\EvaluateBinary.cpp" />
-    <ClCompile Include="Runtime\Interpreter\EvaluateControlStructure.cpp" />
-    <ClCompile Include="Runtime\Interpreter\EvaluateGeneral.cpp" />
-    <ClCompile Include="Runtime\Interpreter\EvaluateObjectType.cpp" />
-    <ClCompile Include="Runtime\Interpreter\Handler.cpp" />
-    <ClCompile Include="Runtime\Interpreter\Interpreter.cpp" />
-    <ClCompile Include="Runtime\NativeFunctions\NativeFunction.cpp" />
-    <ClCompile Include="Runtime\RuntimeValue\Value.cpp" />
-    <ClCompile Include="Utils\ArgParser.cpp" />
-    <ClCompile Include="Utils\FileReader.cpp" />
+    <ClCompile Include="Random.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application\Application.h" />
-    <ClInclude Include="Error\Error.h" />
-    <ClInclude Include="Error\Raiser.h" />
-    <ClInclude Include="Error\Manager.h" />
-    <ClInclude Include="Error\Position.h" />
-    <ClInclude Include="FFI\IEnvironment.h" />
-    <ClInclude Include="FFI\INode.h" />
-    <ClInclude Include="FFI\IValue.h" />
-    <ClInclude Include="Frontend\Frontend.h" />
-    <ClInclude Include="Frontend\Importer\Importer.h" />
-    <ClInclude Include="Frontend\Lexer\Lexer.h" />
-    <ClInclude Include="Frontend\Node\Node.h" />
-    <ClInclude Include="Frontend\Node\NodeType.h" />
-    <ClInclude Include="Frontend\Node\Program.h" />
-    <ClInclude Include="Frontend\Parser\Parser.h" />
-    <ClInclude Include="Application\Coda.h" />
-    <ClInclude Include="Frontend\Tokens\Constants.h" />
-    <ClInclude Include="Frontend\Tokens\Token.h" />
-    <ClInclude Include="Frontend\Tokens\TokenType.h" />
-    <ClInclude Include="Lexer\Lexer.h" />
-    <ClInclude Include="Parser\Parser.h" />
-    <ClInclude Include="Runtime\Environment\Environment.h" />
-    <ClInclude Include="Runtime\Interpreter\Interpreter.h" />
-    <ClInclude Include="Runtime\NativeFunctions\NativeFunction.h" />
-    <ClInclude Include="Runtime\Runtime.h" />
-    <ClInclude Include="Runtime\RuntimeValue\Type.h" />
-    <ClInclude Include="Runtime\RuntimeValue\Value.h" />
-    <ClInclude Include="Tokens\Keywords.h" />
-    <ClInclude Include="Tokens\Token.h" />
-    <ClInclude Include="Tokens\TokenType.h" />
-    <ClInclude Include="Utils\ArgParser.h" />
-    <ClInclude Include="Utils\Colors.h" />
-    <ClInclude Include="Utils\FileReader.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".coda" />
-    <None Include=".gitattributes" />
-    <None Include=".gitignore" />
-    <None Include="bin\Debug\x64\Maths.coda" />
-    <None Include="bin\Debug\x64\OS.coda" />
-    <None Include="bin\Release\x64\OS.coda" />
-    <None Include="CHANGELOG.md" />
-    <None Include="CODE_OF_CONDUCT.md" />
-    <None Include="CONTRIBUTING.md" />
-    <None Include="CppProperties.json" />
-    <None Include="dll\OS\OS.coda" />
-    <None Include="dll\Random\Random.coda" />
-    <None Include="LICENSE" />
-    <None Include="README.md" />
-    <None Include="Test\builtin.coda" />
-    <None Include="Test\debug.coda" />
-    <None Include="Test\indll.coda" />
+    <None Include="Random.coda" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

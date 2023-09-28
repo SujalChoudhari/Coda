@@ -64,7 +64,7 @@ namespace Coda {
 			/*
 				Converts the type to a string.
 			*/
-			static std::string getTypeAsString(Type type);
+			virtual std::string getTypeAsString(Type type) override;
 
 		public:
 			friend std::ostream& operator<<(std::ostream& os, const Value& value);

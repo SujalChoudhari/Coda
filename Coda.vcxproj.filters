@@ -102,6 +102,9 @@
     <ClCompile Include="Utils\FileReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dll\Random\Random.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tokens\TokenType.h">
@@ -229,5 +232,6 @@
     <None Include="dll\OS\OS.coda" />
     <None Include="bin\Release\x64\OS.coda" />
     <None Include="CONTRIBUTING.md" />
+    <None Include="dll\Random\Random.coda" />
   </ItemGroup>
 </Project>

@@ -61,6 +61,6 @@ public:
 
 public:
 	static bool isTruthy(const IValue& value);
-	static std::string getTypeAsString(Coda::Runtime::Type type);
+	virtual std::string getTypeAsString(Coda::Runtime::Type type) = 0;
 };
 typedef std::shared_ptr<IValue> IValuePtr;

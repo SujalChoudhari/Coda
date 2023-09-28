@@ -40,7 +40,7 @@ namespace Coda {
 				return value;
 			}
 			else if (unaryOperator == "typeof") {
-				return std::make_shared<Value>(Type::STRING, Value::getTypeAsString(value->type), value->startPosition, value->endPosition);
+				return std::make_shared<Value>(Type::STRING, value->getTypeAsString(value->type), value->startPosition, value->endPosition);
 			}
 			else if (unaryOperator == "sizeof") {
 				int length = 0;
