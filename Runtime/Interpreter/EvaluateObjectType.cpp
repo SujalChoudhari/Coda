@@ -65,6 +65,10 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE_PTR;
 			Value args = Value();
 			ValuePtr name = interpret(*callExpression.left.get(), env);
+			
+			Position pos = callExpression.left->endPosition;
+			pos.scope = name->value;
+			Interpreter::callStack.push(pos);
 
 			unsigned int argCount = 1;
 			for (auto& arg : callExpression.properties) {
@@ -118,6 +122,10 @@ namespace Coda {
 			std::string dllFilename = callExpression.left->value;
 			std::string functionName = callExpression.right->left->value;
 
+			Position pos = callExpression.left->endPosition;
+			pos.scope = functionName;
+			Interpreter::callStack.push(pos);
+
 			Value args = Value();
 			unsigned int argCount = 1;
 			for (auto& arg : callExpression.right->properties) {
@@ -140,7 +148,7 @@ namespace Coda {
 
 
 			if (!lib) {
-				Error::Runtime::raise("Cannot find " + dllFilename + " at, ", callExpression.endPosition);
+				Error::Runtime::raise("Cannot find " + dllFilename + " at, ", Interpreter::callStack, callExpression.startPosition, callExpression.endPosition);
 				return nullptr;
 			}
 
@@ -152,7 +160,7 @@ namespace Coda {
 #endif
 
 			if (!myFunction) {
-				Error::Runtime::raise("Cannot find function " + functionName + " at, ", callExpression.endPosition);
+				Error::Runtime::raise("Cannot find function " + functionName + " at, ", Interpreter::callStack, callExpression.startPosition, callExpression.endPosition);
 #ifdef _WIN32
 				FreeLibrary(lib);
 #else
@@ -185,6 +193,9 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE_PTR;
 			ValuePtr res;
 			ValuePtr left = interpret(*astNode.left.get(), env);
+			Position pos = astNode.left->endPosition;
+			Interpreter::callStack.push(pos);
+
 			IF_ERROR_RETURN_VALUE_PTR;
 			if (left->type == Type::SCOPE) {
 				Environment& scope = *env.getScope(left->value).get();

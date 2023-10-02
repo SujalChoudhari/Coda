@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Maths", "dll\Maths\Maths.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OS", "dll\OS\OS.vcxproj", "{124A9A00-7214-4C06-A4CD-9CCE6702AEDE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Random", "dll\Random\Random.vcxproj", "{62A79001-6821-440A-B33B-E4240B6A52C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -45,6 +47,14 @@ Global
 		{124A9A00-7214-4C06-A4CD-9CCE6702AEDE}.Release|x64.Build.0 = Release|x64
 		{124A9A00-7214-4C06-A4CD-9CCE6702AEDE}.Release|x86.ActiveCfg = Release|Win32
 		{124A9A00-7214-4C06-A4CD-9CCE6702AEDE}.Release|x86.Build.0 = Release|Win32
+		{62A79001-6821-440A-B33B-E4240B6A52C8}.Debug|x64.ActiveCfg = Debug|x64
+		{62A79001-6821-440A-B33B-E4240B6A52C8}.Debug|x64.Build.0 = Debug|x64
+		{62A79001-6821-440A-B33B-E4240B6A52C8}.Debug|x86.ActiveCfg = Debug|Win32
+		{62A79001-6821-440A-B33B-E4240B6A52C8}.Debug|x86.Build.0 = Debug|Win32
+		{62A79001-6821-440A-B33B-E4240B6A52C8}.Release|x64.ActiveCfg = Release|x64
+		{62A79001-6821-440A-B33B-E4240B6A52C8}.Release|x64.Build.0 = Release|x64
+		{62A79001-6821-440A-B33B-E4240B6A52C8}.Release|x86.ActiveCfg = Release|Win32
+		{62A79001-6821-440A-B33B-E4240B6A52C8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

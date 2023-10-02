@@ -5,18 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.0] - 21-09-2023
+## [1.0] - 02-10-2023
 
 ### Added
 - `pointer` datatype, inaccessible for coda users (used for creating connection between dll functions);
-- 
+- traceback for errors 
+- `random` package.
+- enhanced for loop added `for(let x in y){}`
+- `in` added as binary operator. for string,list and objects.
+
 ### Changed
 - scope `Maths` renamed to `maths`
+- error format when displayed
+- repl shows all the evaluated results.
+- color-coded types in print statement.
 
 ### Fixed
 - `package` generated errors are accurately caught
 - number extensions
-
+- character dislay correctly
 
 ## [0.3.0] - 20-09-2023
 

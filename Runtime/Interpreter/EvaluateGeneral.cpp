@@ -40,7 +40,7 @@ namespace Coda {
 				return value;
 			}
 			else if (unaryOperator == "typeof") {
-				return std::make_shared<Value>(Type::STRING, Value::getTypeAsString(value->type), value->startPosition, value->endPosition);
+				return std::make_shared<Value>(Type::STRING, value->getTypeAsString(value->type), value->startPosition, value->endPosition);
 			}
 			else if (unaryOperator == "sizeof") {
 				int length = 0;
@@ -113,7 +113,7 @@ namespace Coda {
 					}
 				}
 				else {
-					Error::Runtime::raise("Invalid Assignment Operation, at ", astNode.endPosition);
+					Error::Runtime::raise("Invalid Assignment Operation, at ", Interpreter::callStack, astNode.startPosition, astNode.endPosition);
 					return nullptr;
 				}
 			}

@@ -14,6 +14,23 @@ namespace Coda {
 			if (isLogical(binop.value)) {
 				return handleLogicalOperation(lhs, binop.value, rhs);
 			}
+			else if (binop.value == "in") {
+				Value val = Value(Type::BOOL, "0");
+				if (rhs->type == Type::LIST || rhs->type == Type::OBJECT) {
+
+					for (const auto& kv : rhs->properties) {
+						if (kv.second->getValue() == lhs->value) {
+							val.value = "1";
+							break;
+						}
+					}
+				}
+				else {
+					auto it = rhs->value.find(lhs->value);
+					val.value = it == std::string::npos ? "0" : "1";
+				}
+				return std::make_shared<Value>(val);
+			}
 			else if (isNumericType(lhs->type) && isNumericType(rhs->type)) {
 				return evaluateNumericBinaryExpression(lhs, binop.value, rhs);
 			}
@@ -113,7 +130,7 @@ namespace Coda {
 			}
 			else if (functor == "/") {
 				if (typeRight == 0) {
-					Error::Runtime::raise("Division by Zero at, ", right->startPosition);
+					Error::Runtime::raise("Division by Zero at, ", Interpreter::callStack, right->startPosition, right->endPosition);
 					return;
 				}
 				result->value = std::to_string(typeLeft / typeRight);

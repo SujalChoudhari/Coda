@@ -34,7 +34,7 @@ namespace Coda {
 		Token Parser::expect(TokenType type, std::string error)
 		{
 			if (mCurrentToken->type != type) {
-				Error::Parser::raise(error + ", at: ", mCurrentToken->endPosition);
+				Error::Parser::raise(error + ", at: ", mCurrentToken->startPosition,mCurrentToken->endPosition);
 				return Token(TokenType::INVALID, "<invalid>", mCurrentToken->endPosition);
 			}
 			advance();

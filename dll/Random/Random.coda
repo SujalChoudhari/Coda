@@ -1,0 +1,17 @@
+scope random {
+        def rand() {
+            return native Random coda_random_float();
+        }
+
+        def choice(iterable) {
+            return native Random coda_random_choice(iterable);
+        }
+
+        def randInt(min,max) {
+            return native Random coda_random_int(min,max);
+        }
+
+        def randLong(min,max) {
+            return native Random coda_random_long(min,max);
+        }
+}

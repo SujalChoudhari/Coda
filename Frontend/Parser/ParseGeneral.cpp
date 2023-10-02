@@ -52,7 +52,7 @@ namespace Coda {
 					advance();
 
 					if (mCurrentToken->value == "sizeof" || mCurrentToken->value == "typeof") {
-						Error::Parser::raise("Cannot postfix operator " + mCurrentToken->value + ". Use as prefixed operator", mCurrentToken->startPosition);
+						Error::Parser::raise("Cannot postfix operator " + mCurrentToken->value + ". Use as prefixed operator", mCurrentToken->startPosition,mCurrentToken->endPosition);
 					}
 
 					unaryExpression.type = NodeType::UNARY_EXPRESSION;
@@ -85,7 +85,7 @@ namespace Coda {
 				type = mCurrentToken->value;
 				advance();
 				if (mCurrentToken->type != TokenType::IDENTIFIER) {
-					Error::Lexer::raise("Invalid type '" + mCurrentToken->value + "' at ", mCurrentToken->startPosition);
+					Error::Lexer::raise("Invalid type '" + mCurrentToken->value + "' at ", mCurrentToken->startPosition,mCurrentToken->endPosition);
 				}
 			}
 
@@ -113,7 +113,7 @@ namespace Coda {
 			else
 			{
 				if (isConstant) {
-					Error::Runtime::raise("Expected an '=' in a 'const' definition at, ", mCurrentToken->endPosition);
+					Error::Parser::raise("Expected an '=' in a 'const' definition at, ", mCurrentToken->startPosition, mCurrentToken->endPosition);
 					return declaration;
 				}
 
@@ -215,7 +215,7 @@ namespace Coda {
 		void Parser::handleInvalidToken() {
 			Node expression;
 			expression.type = NodeType::INVALID;
-			Coda::Error::Parser::raise("Invalid Token '" + mCurrentToken->value + "' was found at, ", mCurrentToken->startPosition);
+			Coda::Error::Parser::raise("Invalid Token '" + mCurrentToken->value + "' was found at, ", mCurrentToken->startPosition,mCurrentToken->endPosition);
 		}
 
 		bool Parser::isBinaryOperatorToken(const std::string& op) {

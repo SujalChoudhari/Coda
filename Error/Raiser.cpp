@@ -1,51 +1,69 @@
 #include "Error.h"
 #include "../Utils/Colors.h"
+#include "../Runtime/Interpreter/Interpreter.h"
+
 namespace Coda {
-	namespace Error {
-		std::ostream& operator<<(std::ostream& os, const Position& pos) {
-			os << Utils::Colors::WARNING << "Line: " << pos.line
-				<< " Character: " << pos.character << Utils::Colors::ERROR << std::endl;
+    namespace Error {
+        std::string formatPosition(const Position& pos) {
+            std::string positionInfo = "Line: " + std::to_string(pos.line) +
+                ", Char: " + std::to_string(pos.character);
+            if (!pos.scope.empty()) {
+                positionInfo += ", Scope: " + pos.scope;
+            }
+            return positionInfo;
+        }
 
+        std::string formatLineWithPointer(const Position& startPos, const Position& endPos) {
+            std::string lineInfo;
+            if (!startPos.lineText.empty()) {
+                lineInfo = endPos.lineText + "\n";
+                lineInfo += std::string(startPos.character - 1, '-') + "^";
+                if (endPos.character - startPos.character > 2) {
+                    lineInfo += std::string(endPos.character - startPos.character - 2, '~') + "^";
+                }
+            }
+            return lineInfo;
+        }
 
-			if (pos.lineText.empty())
-				return os;
+        void printError(const std::string& prefix, const std::string& error) {
+            std::cout << Utils::Colors::ACCENT << "[" << prefix << "]: " <<
+                Utils::Colors::ERROR << error << Utils::Colors::RESET << std::endl;
+        }
 
-			// Print the line of text
-			os << pos.lineText << std::endl;
+        void Importer::raise(std::string error) {
+            Manager::raiseError();
+            printError("IMPTR", error);
+        }
 
-			// Print the arrows pointing to the location of the error
-			for (unsigned int i = 0; i < pos.character - 1; i++) {
-				os << "~";
-			}
-			os << "^" << Utils::Colors::RESET;
+        void Lexer::raise(std::string error, const Position& startPos, const Position& endPos) {
+            Manager::raiseError();
+            printError("LEXER", error);
+            std::cout << Utils::Colors::WARNING << formatPosition(startPos) << Utils::Colors::RESET << std::endl;
+            std::cout << formatLineWithPointer(startPos, endPos) << std::endl;
+        }
 
-			return os;
-		}
+        void Parser::raise(std::string error, const Position& startPos, const Position& endPos) {
+            Manager::raiseError();
+            printError("PARSER", error);
+            std::cout << formatLineWithPointer(startPos, endPos) << Utils::Colors::RESET << std::endl;
+        }
 
-		void Importer::raise(std::string error) {
-			Manager::raiseError();
-			std::cout << Utils::Colors::ACCENT << "[IMPTR]: " << Utils::Colors::ERROR << error << Utils::Colors::RESET << std::endl;
-		}
+        void Runtime::raise(std::string error, std::stack<Position>& callStack, const Position& startPos, const Position& endPos) {
+            Manager::raiseError();
 
-		void Lexer::raise(std::string error, const Position& pos) {
-			Manager::raiseError();
-			std::cout << Utils::Colors::ACCENT << "[LEXER]: " << Utils::Colors::ERROR << error << Utils::Colors::WARNING << Utils::Colors::WARNING<< pos << Utils::Colors::RESET << std::endl;
-		}
+            std::cout << "\nTrackback:\n";
+            while (!callStack.empty()) {
+                std::cout << formatPosition(callStack.top()) << std::endl;
+                callStack.pop();
+            }
+            std::cout << formatLineWithPointer(startPos, endPos) << Utils::Colors::RESET << std::endl;
+            printError("RNTIME", error);
 
-		void Parser::raise(std::string error, const Position& pos) {
-			Manager::raiseError();
-			std::cout << Utils::Colors::ACCENT << "[PARSER]: " << Utils::Colors::ERROR << error << Utils::Colors::WARNING << pos << Utils::Colors::RESET << std::endl;
-		}
+        }
 
-		void Runtime::raise(std::string error, const Position& pos) {
-			Manager::raiseError();
-			std::cout << Utils::Colors::ACCENT << "[RNTIME]: " << Utils::Colors::ERROR << error << Utils::Colors::WARNING << pos << Utils::Colors::RESET << std::endl;
-		}
-		void Runtime::raise(std::string error) {
-			Manager::raiseError();
-			std::cout << Utils::Colors::ACCENT << "[RNTIME]: " << Utils::Colors::ERROR << error << Utils::Colors::RESET << std::endl;
-		}
-
-
-	}
+        void Runtime::raise(std::string error) {
+            Manager::raiseError();
+            printError("RNTIME", error);
+        }
+    }
 }

@@ -11,12 +11,13 @@ namespace Coda {
 		}
 
 		void Lexer::handleCharacter() {
+			Position startPos = mCurrentPosition;
 			advance(); // skip the quote
 			mTokens.emplace_back(TokenType::CHAR, std::to_string(mCurrentChar), mCurrentPosition);
 			advance();
 			if (mCurrentChar != '\'')
 			{
-				Error::Lexer::raise("Unterminated character literal at ", mCurrentPosition);
+				Error::Lexer::raise("Unterminated character literal ", startPos, mCurrentPosition);
 			}
 			advance();
 		}
@@ -168,7 +169,7 @@ namespace Coda {
 				advance();
 			}
 			else {
-				Error::Lexer::raise("Bitwise OR (|) is not supported at ", mCurrentPosition);
+				Error::Lexer::raise("Bitwise OR (|) is not supported", mCurrentPosition, mCurrentPosition);
 			}
 			// TODO: Handle Bitwise OR (|)
 		}
@@ -180,13 +181,13 @@ namespace Coda {
 				advance();
 			}
 			else {
-				Error::Lexer::raise("Bitwise AND (&) is not supported at ", mCurrentPosition);
+				Error::Lexer::raise("Bitwise AND (&) is not supported", mCurrentPosition, mCurrentPosition);
 			}
 			// TODO: Handle Bitwise AND (&)
 		}
 
 		void Lexer::handleIllegalCharacter() {
-			Coda::Error::Lexer::raise("Illegal Character '" + std::to_string((char)mCurrentChar) + "' found at ", mCurrentPosition);
+			Coda::Error::Lexer::raise("Illegal Character '" + std::to_string((char)mCurrentChar) + "' found", mCurrentPosition, mCurrentPosition);
 			advance();
 		}
 
@@ -271,7 +272,7 @@ namespace Coda {
 				advance(); // Skip the closing double quote
 			}
 			else {
-				Error::Lexer::raise("Unterminated string literal at ", startPosition);
+				Error::Lexer::raise("Unterminated string literal", startPosition, mCurrentPosition);
 			}
 		}
 

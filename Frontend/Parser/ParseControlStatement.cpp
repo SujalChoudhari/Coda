@@ -38,20 +38,36 @@ namespace Coda {
 			advance();
 			expect(TokenType::OPEN_PAREN, "Expected an '(' after for");
 			Node initializer = parseStatement();
-			Node condition = parseExpression();
-			Node increment = parseStatement();
-			expect(TokenType::CLOSE_PAREN, "Expected an ')' after for");
+			mCurrentToken;
+			if (mCurrentToken->type == TokenType::IN) {
+				forExpressionNode.type = NodeType::FOR_IN_EXPRESSION;
+				forExpressionNode.value = "<for-in>";
+				advance();
+				Node iterable = parseExpression();
+				expect(TokenType::CLOSE_PAREN, "Expected an ')' after for");
+				Node forBlock = parseBlockExpression();
 
-			Node forBlock = parseBlockExpression();
+				forExpressionNode.left = std::make_shared<Node>(initializer);
+				forExpressionNode.right = std::make_shared<Node>(iterable);
+				forExpressionNode.properties.insert({ "body", std::make_shared<Node>(forBlock) });
+				forExpressionNode.startPosition = initializer.startPosition;
+				forExpressionNode.endPosition = forBlock.endPosition;
+			}
+			else {
+				Node condition = parseExpression();
+				Node increment = parseExpression();
+				expect(TokenType::CLOSE_PAREN, "Expected an ')' after for");
 
-			forExpressionNode.left = std::make_shared<Node>(initializer);
-			forExpressionNode.right = std::make_shared<Node>(condition);
-			forExpressionNode.properties.insert({ "increment", std::make_shared<Node>(increment) });
-			forExpressionNode.properties.insert({ "body", std::make_shared<Node>(forBlock) });
+				Node forBlock = parseBlockExpression();
 
-			forExpressionNode.startPosition = initializer.startPosition;
-			forExpressionNode.endPosition = forBlock.endPosition;
+				forExpressionNode.left = std::make_shared<Node>(initializer);
+				forExpressionNode.right = std::make_shared<Node>(condition);
+				forExpressionNode.properties.insert({ "increment", std::make_shared<Node>(increment) });
+				forExpressionNode.properties.insert({ "body", std::make_shared<Node>(forBlock) });
+				forExpressionNode.startPosition = initializer.startPosition;
+				forExpressionNode.endPosition = forBlock.endPosition;
 
+			}
 			return forExpressionNode;
 		}
 

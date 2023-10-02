@@ -67,6 +67,62 @@ namespace Coda {
 			return result;
 		}
 
+		ValuePtr Interpreter::evaluateForInExpression(const Frontend::Node& astNode, Environment& env)
+		{
+			IF_ERROR_RETURN_VALUE_PTR;
+			Environment forEnv(&env);
+			ValuePtr iterator = interpret(*astNode.left.get(), forEnv); // the value which changes
+			env.declareOrAssignVariable(astNode.left->value, iterator, false);
+			ValuePtr iterable = interpret(*astNode.right.get(), forEnv); // the value which can work with for-in
+			Frontend::Node body = *(std::dynamic_pointer_cast<Node>(astNode.properties.at("body"))).get();
+			ValuePtr result = std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
+
+			IF_ERROR_RETURN_VALUE_PTR;
+			if (iterable->getType() == Type::LIST) {
+
+				for (int i = 0; i < iterable->getProperties().size(); i++) {
+					auto newValue = iterable->getProperties()[std::to_string(i)];
+					iterator->value = newValue->getValue();
+					iterator->type = newValue->getType();
+					iterator->properties = newValue->getProperties();
+					iterator->startPosition = newValue->getStartPosition();
+					iterator->endPosition = newValue->getEndPosition();
+
+					result = interpret(body, forEnv);
+					IF_ERROR_RETURN_VALUE_PTR;
+
+					if (result->type == Type::JUMP) {
+						if (result->value == "break")
+							break;
+						else if (result->value == "return")
+							return std::dynamic_pointer_cast<Value>(result->properties.at("returnable"));
+					}
+				}
+
+			}
+			else if (iterable->getType() == Type::STRING) {
+				for (int i = 0; i < iterable->getValue().size(); i++) {
+					char newValue = iterable->getValue()[i];
+					iterator->value = std::string(1, newValue);
+					iterator->type = Type::CHAR;
+
+					result = interpret(body, forEnv);
+					IF_ERROR_RETURN_VALUE_PTR;
+
+					if (result->type == Type::JUMP) {
+						if (result->value == "break")
+							break;
+						else if (result->value == "return")
+							return std::dynamic_pointer_cast<Value>(result->properties.at("returnable"));
+					}
+				}
+			}
+			else {
+				Error::Runtime::raise("Cannot iterate over a non iterable value '" + iterable->getValue() + "'", Interpreter::callStack, astNode.startPosition, astNode.endPosition);
+			}
+			return result;
+		}
+
 		ValuePtr Interpreter::evaluateWhileExpression(const Frontend::Node& astNode, Environment& env)
 		{
 			Environment whileEnv(&env);
@@ -150,7 +206,7 @@ namespace Coda {
 				return std::make_shared<Value>(value);
 			}
 			else {
-				Error::Runtime::raise("Not a valid jump statement, at: ", astNode.endPosition);
+				Error::Runtime::raise("Not a valid jump statement, at: ", Interpreter::callStack, astNode.startPosition, astNode.endPosition);
 				return std::make_shared<Value>(Type::NONE, "None", astNode.startPosition, astNode.endPosition);
 			}
 		}

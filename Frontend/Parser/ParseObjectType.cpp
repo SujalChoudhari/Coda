@@ -23,7 +23,7 @@ namespace Coda {
 
 			for (auto it : params.properties) {
 				if (it.second->getType() != NodeType::IDENTIFIER) {
-					Error::Parser::raise("Expected an identifier for function argument",it.second->getEndPosition());
+					Error::Parser::raise("Expected an identifier for function argument", it.second->getStartPosition(),it.second->getEndPosition());
 					return Node();
 				}
 			}
@@ -199,7 +199,7 @@ namespace Coda {
 				return argList;
 			}
 			else {
-				Error::Parser::raise("Expected a ')' at, ", mCurrentToken->startPosition);
+				Error::Parser::raise("Expected a ')' at, ", mCurrentToken->startPosition,mCurrentToken->endPosition);
 				return Node(); // Return an empty Node to indicate the error
 			}
 		}
@@ -242,7 +242,7 @@ namespace Coda {
 					property = parsePrimaryExpression();
 					IF_ERROR_RETURN_NODE;
 					if (property.type != NodeType::IDENTIFIER) {
-						Error::Parser::raise("Cannot use '.' Dot operator without right hand side, at ", functor.endPosition);
+						Error::Parser::raise("Cannot use '.' Dot operator without right hand side, at ",functor.startPosition ,functor.endPosition);
 					}
 					IF_ERROR_RETURN_NODE;
 				}

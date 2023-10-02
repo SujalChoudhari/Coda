@@ -17,7 +17,7 @@ namespace Coda {
 		class Lexer {
 		public:
 			// Create a new Lexer.
-			Lexer();
+			Lexer(const std::string& scopeName);
 
 		public:
 			// Create a new Lexer with the source code.
@@ -39,6 +39,9 @@ namespace Coda {
 
 			// The current line number.
 			Position mCurrentPosition;
+
+			// The scope/file of the code.
+			std::string mScopeName;
 
 		private:
 			/*
