@@ -1,17 +1,7 @@
 const string ma_name = "Sujal";
 const list ma_nums = [10,20.4f,"sus",30,40,[30,50]];
 
-for(let ch in ma_name){
-	print(ch);
-}
-println(true);
 
-for(let num in ma_nums){
-	if(typeof num == "<list>"){
-		for(let li in num){
-			print("sub list:",li);
-		}
-	}else {
-		println(num);
-	}
+for(let y in ma_name){
+	print(y);
 }

@@ -11,16 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `pointer` datatype, inaccessible for coda users (used for creating connection between dll functions);
 - traceback for errors 
 - `random` package.
+- enhanced for loop added `for(let x in y){}`
+- `in` added as binary operator. for string,list and objects.
 
 ### Changed
 - scope `Maths` renamed to `maths`
 - error format when displayed
 - repl shows all the evaluated results.
+- color-coded types in print statement.
 
 ### Fixed
 - `package` generated errors are accurately caught
 - number extensions
-
+- character dislay correctly
 
 ## [0.3.0] - 20-09-2023
 

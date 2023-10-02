@@ -48,7 +48,7 @@ namespace Coda {
 
 		Node Parser::parseRelationalOperatorExpression()
 		{
-			return parseBinaryOperatorExpression(&Parser::parseAdditiveExpression, { "==","!=",">=","<=", "<",">" });
+			return parseBinaryOperatorExpression(&Parser::parseAdditiveExpression, { "==","!=",">=","<=", "<",">","in"});
 		}
 
 		Node Parser::parseAdditiveExpression()
