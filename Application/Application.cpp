@@ -27,11 +27,6 @@ namespace Coda {
 
 		std::string subCommand = argParser.getSubCommand();
 
-#if _DEBUG
-		return repl();
-
-#else
-
 		if (subCommand == "repl") {
 			return repl();
 		}
@@ -83,7 +78,6 @@ namespace Coda {
 			}
 			return EXIT_SUCCESS;
 		}
-#endif
 	}
 
 

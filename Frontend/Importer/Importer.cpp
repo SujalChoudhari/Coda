@@ -1,12 +1,7 @@
 #include "Importer.h"
 #include <algorithm>
-
-#if _WIN32
 #include <Windows.h>
-#else
-#include <unistd.h>
-#include <linux/limits.h>
-#endif
+
 
 #include "../../Error/Error.h"
 
@@ -90,9 +85,6 @@ namespace Coda {
 			Error::Importer::raise("Imported file not found: " + importString);
 		}
 
-
-#if _WIN32 // Check if the platform is Windows
-
 		std::string Importer::getExecutablePath() {
 			wchar_t buffer[MAX_PATH];
 			GetModuleFileNameW(NULL, buffer, MAX_PATH);
@@ -108,37 +100,10 @@ namespace Coda {
 			return narrowExecutablePath;
 		}
 
-#else // Assuming Unix-like system (Linux, macOS, etc.)
-		std::string Importer::getExecutablePath() {
-			char buffer[PATH_MAX];
-			ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
-			if (len != -1) {
-				buffer[len] = '\0';
-				std::string executablePath(buffer);
-				size_t lastSlashIndex = executablePath.rfind("/");
-				if (lastSlashIndex != std::string::npos) {
-					executablePath = executablePath.substr(0, lastSlashIndex + 1);
-				}
-				return executablePath;
-			}
-			else {
-				throw "failed to get path of executable file"
-					return "";
-			}
-		}
-#endif
-
-#if _WIN32
 		bool Importer::fileExists(const std::string& filePath) {
 			std::wstring wideFilePath(filePath.begin(), filePath.end());
 			DWORD fileAttributes = GetFileAttributes(wideFilePath.c_str());
 			return (fileAttributes != INVALID_FILE_ATTRIBUTES && !(fileAttributes & FILE_ATTRIBUTE_DIRECTORY));
 		}
-#else
-		bool fileExists(const std::string& filePath) {
-			std::wstring wideFilePath(filePath.begin(), filePath.end());
-			return access(wideFilePath, F_OK) == 0;
-		}
-#endif
 	}
 }

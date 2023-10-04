@@ -1,9 +1,6 @@
 #include "Interpreter.h"
-#ifdef _WIN32
 #include <Windows.h>
-#else
-#include <dlcfn.h>
-#endif // _WIN32
+
 
 
 namespace Coda {
@@ -65,7 +62,7 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE_PTR;
 			Value args = Value();
 			ValuePtr name = interpret(*callExpression.left.get(), env);
-			
+
 			Position pos = callExpression.left->endPosition;
 			pos.scope = name->value;
 			Interpreter::callStack.push(pos);
@@ -137,14 +134,9 @@ namespace Coda {
 
 			typedef void (*FunctionType) (IValuePtr, IValuePtr, IEnvironment*);
 
-#ifdef _WIN32
 			dllFilename += ".dll";
 			std::wstring s(dllFilename.begin(), dllFilename.end());
 			HMODULE lib = LoadLibrary(s.c_str());
-#else
-			dllFilename += ".so";
-			void* lib = dlopen(dllFilename, RTLD_LAZY);
-#endif
 
 
 			if (!lib) {
@@ -153,19 +145,12 @@ namespace Coda {
 			}
 
 			FunctionType myFunction;
-#ifdef _WIN32
 			myFunction = (FunctionType)GetProcAddress(lib, functionName.c_str());
-#else
-			myFunction = (FunctionType)dlsym(lib, functionName.c_str());
-#endif
+
 
 			if (!myFunction) {
 				Error::Runtime::raise("Cannot find function " + functionName + " at, ", Interpreter::callStack, callExpression.startPosition, callExpression.endPosition);
-#ifdef _WIN32
 				FreeLibrary(lib);
-#else
-				dlclose(lib);
-#endif
 				return nullptr;
 			}
 
@@ -178,14 +163,9 @@ namespace Coda {
 				Error::Runtime::raise("Error in running '" + functionName + "': " + s);
 			}
 
-			// Unload the library
-#ifdef _WIN32
 			FreeLibrary(lib);
-#else
-			dlclose(lib);
-#endif	
 			return std::dynamic_pointer_cast<Value>(result);
-			}
+		}
 
 
 		ValuePtr Interpreter::evaluateMemberExpression(const Frontend::Node& astNode, Environment& env)
@@ -237,5 +217,5 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE_PTR;
 			return env.addFunction(astNode.value, astNode, env);
 		}
-		} // namespace Runtime
-	} // namespace Coda
+	} // namespace Runtime
+} // namespace Coda
