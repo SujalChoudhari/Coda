@@ -108,8 +108,6 @@ namespace Coda {
 							handleIllegalCharacter();
 						}
 				}
-
-
 			}
 
 			mTokens.emplace_back(TokenType::END_OF_FILE, "\\0", mCurrentPosition);
