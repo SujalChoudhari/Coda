@@ -17,106 +17,88 @@ namespace Coda {
 			value.endPosition = astNode.endPosition;
 
 
-			if (astNode.type == Frontend::NodeType::IDENTIFIER) {
-				return evaluateIdentifier(astNode, env);
+			switch (astNode.type) {
+				case Frontend::NodeType::IDENTIFIER:
+					return evaluateIdentifier(astNode, env);
+				case Frontend::NodeType::BYTE_LITERAL:
+					value.type = Type::BYTE;
+					value.value = astNode.value;
+					break;
+				case Frontend::NodeType::INTEGER_LITERAL:
+					value.type = Type::INT;
+					value.value = astNode.value;
+					break;
+				case Frontend::NodeType::LONG_INT_LITERAL:
+					value.type = Type::LONG;
+					value.value = astNode.value;
+					break;
+				case Frontend::NodeType::FLOATING_POINT_LITERAL:
+					value.type = Type::FLOAT;
+					value.value = astNode.value;
+					break;
+				case Frontend::NodeType::DOUBLE_LITERAL:
+					value.type = Type::DOUBLE;
+					value.value = astNode.value;
+					break;
+				case Frontend::NodeType::STRING_LITERAL:
+					value.type = Type::STRING;
+					value.value = astNode.value;
+					break;
+				case Frontend::NodeType::CHARACTER_LITERAL:
+					value.type = Type::CHAR;
+					value.value = astNode.value;
+					break;
+				case Frontend::NodeType::OBJECT_LITERAL:
+					return evaluateObjectExpression(astNode, env);
+				case Frontend::NodeType::SCOPE_LITERAL:
+					return evaluateScopeExpression(astNode, env);
+				case Frontend::NodeType::LIST_LITERAL:
+					return evaluateListExpression(astNode, env);
+				case Frontend::NodeType::CALL_EXPRESSION:
+					auto res = evaluateCallExpression(astNode, env);
+					if (Error::Manager::isSafe())
+						Interpreter::callStack.pop();
+					return res;
+				case Frontend::NodeType::NATIVE_CALL_EXPRESSION:
+					auto res = evaluateNativeCallExpression(astNode, env);
+					if (Error::Manager::isSafe())
+						Interpreter::callStack.pop();
+					return res;
+				case Frontend::NodeType::BLOCK_STATEMENT:
+					return evaluateBlockExpression(astNode, env);
+				case Frontend::NodeType::UNARY_EXPRESSION:
+					return evaluateUnaryExpression(astNode, env);
+				case Frontend::NodeType::BINARY_EXPRESSION:
+					return evaluateBinaryExpression(astNode, env);
+				case Frontend::NodeType::MEMBER_EXPRESSION:
+					auto res = evaluateMemberExpression(astNode, env);
+					if (Error::Manager::isSafe())
+						Interpreter::callStack.pop();
+					return res;
+				case Frontend::NodeType::VARIABLE_DECLARATION:
+					return evaluateVariableDeclaration(astNode, env);
+				case Frontend::NodeType::FUNCTION_LITERAL:
+					return evaluateFunctionDeclaration(astNode, env);
+				case Frontend::NodeType::CONSTANT_DECLARATION:
+					return evaluateVariableDeclaration(astNode, env, true);
+				case Frontend::NodeType::ASSIGNMENT_EXPRESSION:
+					return evaluateAssignmentExpression(astNode, env);
+				case Frontend::NodeType::IF_EXPRESSION:
+					return evaluateIfExpression(astNode, env);
+				case Frontend::NodeType::FOR_EXPRESSION:
+					return evaluateForExpression(astNode, env);
+				case Frontend::NodeType::FOR_IN_EXPRESSION:
+					return evaluateForInExpression(astNode, env);
+				case Frontend::NodeType::WHILE_EXPRESSION:
+					return evaluateWhileExpression(astNode, env);
+				case Frontend::NodeType::DO_WHILE_EXPRESSION:
+					return evaluateDoWhileExpression(astNode, env);
+				case Frontend::NodeType::JUMP_EXPRESSION:
+					return evaluateJumpExpression(astNode, env);
+				default:
+					Error::Runtime::raise("Unrecognized ASTNode '" + astNode.value + "'");
 			}
-			else if (astNode.type == Frontend::NodeType::BYTE_LITERAL) {
-				value.type = Type::BYTE;
-				value.value = astNode.value;
-			}
-			else if (astNode.type == Frontend::NodeType::INTEGER_LITERAL) {
-				value.type = Type::INT;
-				value.value = astNode.value;
-			}
-			else if (astNode.type == Frontend::NodeType::LONG_INT_LITERAL) {
-				value.type = Type::LONG;
-				value.value = astNode.value;
-			}
-			else if (astNode.type == Frontend::NodeType::FLOATING_POINT_LITERAL) {
-				value.type = Type::FLOAT;
-				value.value = astNode.value;
-			}
-			else if (astNode.type == Frontend::NodeType::DOUBLE_LITERAL) {
-				value.type = Type::DOUBLE;
-				value.value = astNode.value;
-			}
-			else if (astNode.type == Frontend::NodeType::STRING_LITERAL) {
-				value.type = Type::STRING;
-				value.value = astNode.value;
-			}
-			else if (astNode.type == Frontend::NodeType::CHARACTER_LITERAL) {
-				value.type = Type::CHAR;
-				value.value = astNode.value;
-			}
-			else if (astNode.type == Frontend::NodeType::OBJECT_LITERAL) {
-				return evaluateObjectExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::SCOPE_LITERAL) {
-				return evaluateScopeExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::LIST_LITERAL) {
-				return evaluateListExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::CALL_EXPRESSION) {
-				auto res = evaluateCallExpression(astNode, env);
-				if (Error::Manager::isSafe())
-					Interpreter::callStack.pop();
-				return res;
-			}
-			else if (astNode.type == Frontend::NodeType::NATIVE_CALL_EXPRESSION) {
-				auto res = evaluateNativeCallExpression(astNode, env);
-				if (Error::Manager::isSafe())
-					Interpreter::callStack.pop();
-				return res;
-			}
-			else if (astNode.type == Frontend::NodeType::BLOCK_STATEMENT) {
-				return evaluateBlockExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::UNARY_EXPRESSION) {
-				return evaluateUnaryExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::BINARY_EXPRESSION) {
-				return evaluateBinaryExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::MEMBER_EXPRESSION) {
-				auto res = evaluateMemberExpression(astNode, env);
-				if (Error::Manager::isSafe())
-					Interpreter::callStack.pop();
-				return res;
-			}
-			else if (astNode.type == Frontend::NodeType::VARIABLE_DECLARATION) {
-				return evaluateVariableDeclaration(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::FUNCTION_LITERAL) {
-				return evaluateFunctionDeclaration(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::CONSTANT_DECLARATION) {
-				return evaluateVariableDeclaration(astNode, env, true);
-			}
-			else if (astNode.type == Frontend::NodeType::ASSIGNMENT_EXPRESSION) {
-				return evaluateAssignmentExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::IF_EXPRESSION) {
-				return evaluateIfExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::FOR_EXPRESSION) {
-				return evaluateForExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::FOR_IN_EXPRESSION) {
-				return evaluateForInExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::WHILE_EXPRESSION) {
-				return evaluateWhileExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::DO_WHILE_EXPRESSION) {
-				return evaluateDoWhileExpression(astNode, env);
-			}
-			else if (astNode.type == Frontend::NodeType::JUMP_EXPRESSION) {
-				return evaluateJumpExpression(astNode, env);
-			}
-			else {
-				Error::Runtime::raise("Unrecognized ASTNode '" + astNode.value + "'");
-			}
+
 			return std::make_shared<Value>(value);
 		}
 
