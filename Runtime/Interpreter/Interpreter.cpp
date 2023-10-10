@@ -16,6 +16,7 @@ namespace Coda {
 			value.startPosition = astNode.startPosition;
 			value.endPosition = astNode.endPosition;
 
+			ValuePtr res;
 
 			switch (astNode.type) {
 				case Frontend::NodeType::IDENTIFIER:
@@ -55,12 +56,12 @@ namespace Coda {
 				case Frontend::NodeType::LIST_LITERAL:
 					return evaluateListExpression(astNode, env);
 				case Frontend::NodeType::CALL_EXPRESSION:
-					auto res = evaluateCallExpression(astNode, env);
+					res = evaluateCallExpression(astNode, env);
 					if (Error::Manager::isSafe())
 						Interpreter::callStack.pop();
 					return res;
 				case Frontend::NodeType::NATIVE_CALL_EXPRESSION:
-					auto res = evaluateNativeCallExpression(astNode, env);
+					res = evaluateNativeCallExpression(astNode, env);
 					if (Error::Manager::isSafe())
 						Interpreter::callStack.pop();
 					return res;
@@ -71,7 +72,7 @@ namespace Coda {
 				case Frontend::NodeType::BINARY_EXPRESSION:
 					return evaluateBinaryExpression(astNode, env);
 				case Frontend::NodeType::MEMBER_EXPRESSION:
-					auto res = evaluateMemberExpression(astNode, env);
+					res = evaluateMemberExpression(astNode, env);
 					if (Error::Manager::isSafe())
 						Interpreter::callStack.pop();
 					return res;
