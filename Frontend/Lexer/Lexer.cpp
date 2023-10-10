@@ -48,62 +48,65 @@ namespace Coda {
 			advance();
 
 			while (mCurrentChar != '\0') {
-				if (mCurrentChar == '\n') {
-					handleNewLine();
-				}
-				else if (isspace(mCurrentChar)) {
-					handleWhitespace();
-				}
-				else if (isLetter(mCurrentChar)) {
-					handleIdentifiers();
-				}
-				else if (isdigit(mCurrentChar)) {
-					handleNumbers();
-				}
-				else if (isSymbolChar(mCurrentChar)) {
-					handleSymbol();
-				}
-				else if (isBinaryOperator(mCurrentChar)) {
-					handleBinaryOperator();
-				}
-				else if (mCurrentChar == '\'') {
-					handleCharacter();
-				}
-				else if (mCurrentChar == '"') {
-					handleStringLiteral();
-				}
-				else if (mCurrentChar == '=') {
-					handleEquals();
-				}
-				else if (mCurrentChar == ';') {
-					handleSemicolon();
-				}
-				else if (mCurrentChar == ':') {
-					handleColon();
-				}
-				else if (mCurrentChar == ',') {
-					handleComma();
-				}
-				else if (mCurrentChar == '.') {
-					handleDot();
-				}
-				else if (mCurrentChar == '!') {
-					handleBang();
-				}
-				else if (mCurrentChar == '<') {
-					handleLeftArrow();
-				}
-				else if (mCurrentChar == '>') {
-					handleRightArrow();
-				}
-				else if (mCurrentChar == '|') {
-					handlePipe();
-				}
-				else if (mCurrentChar == '&') {
-					handleAmpersand();
-				}
-				else {
-					handleIllegalCharacter();
+				switch (mCurrentChar) {
+					case '\n':
+						handleNewLine();
+						break;
+					case ' ':
+					case '\t':
+					case '\r':
+					case '\f':
+					case '\v':
+						handleWhitespace();
+						break;
+					case '\'':
+						handleCharacter();
+						break;
+					case '"':
+						handleStringLiteral();
+						break;
+					case '=':
+						handleEquals();
+						break;
+					case ';':
+						handleSemicolon();
+						break;
+					case ':':
+						handleColon();
+						break;
+					case ',':
+						handleComma();
+						break;
+					case '.':
+						handleDot();
+						break;
+					case '!':
+						handleBang();
+						break;
+					case '<':
+						handleLeftArrow();
+						break;
+					case '>':
+						handleRightArrow();
+						break;
+					case '|':
+						handlePipe();
+						break;
+					case '&':
+						handleAmpersand();
+						break;
+					default:
+						if (isdigit(mCurrentChar)) {
+							handleNumbers();
+						} else if (isLetter(mCurrentChar)) {
+							handleIdentifiers();
+						} else if (isSymbolChar(mCurrentChar)) {
+							handleSymbol();
+						} else if (isBinaryOperator(mCurrentChar)) {
+							handleBinaryOperator();
+						} else {
+							handleIllegalCharacter();
+						}
 				}
 			}
 
