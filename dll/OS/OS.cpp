@@ -1,53 +1,64 @@
 #include "../../FFI/FFI.h"
-
 #include <iostream>
 #include <fstream>
-#include <filesystem>
 #include <vector>
 #include <cstdlib>
 #include <cstdio>
+#include <cstring>
 
 extern "C" EXPORT void coda_run_command(IValuePtr res, IValuePtr args, IEnvironment * env) {
-	const std::string command = args->getProperties()["command"]->getValue();
+    const std::string command = args->getProperties()["command"]->getValue();
 
-	// Use std::system to run the command
-	int result = std::system(command.c_str());
+    // Use std::system to run the command
+    int result = std::system(command.c_str());
 
-	res->setType(Coda::Runtime::Type::INT);
-	res->setValue(std::to_string(result));
+    res->setType(Coda::Runtime::Type::INT);
+    res->setValue(std::to_string(result));
 }
 
-
 extern "C" EXPORT void coda_get_env(IValuePtr res, IValuePtr args, IEnvironment * env) {
-	std::string key = args->getProperties()["key"]->getValue();
-	char* value;
-	size_t len;
-	_dupenv_s(&value, &len, key.c_str());
-	res->setType(Coda::Runtime::Type::STRING);
-	res->setValue(value);
+    std::string key = args->getProperties()["key"]->getValue();
+#ifdef WIN32
+    size_t len;
+    char* value;
+    _dupenv_s(&value, &len, key.c_str());
+#else
+    char* value = std::getenv(key.c_str());
+#endif
+    if (value != nullptr) {
+        res->setType(Coda::Runtime::Type::STRING);
+        res->setValue(value);
+    }
+    else {
+        res->setType(Coda::Runtime::Type::NONE);
+    }
 }
 
 extern "C" EXPORT void coda_set_env(IValuePtr res, IValuePtr args, IEnvironment * env) {
-	std::string key = args->getProperties()["key"]->getValue();
-	std::string value = args->getProperties()["value"]->getValue();
+    std::string key = args->getProperties()["key"]->getValue();
+    std::string value = args->getProperties()["value"]->getValue();
 
-	_putenv_s(key.c_str(), value.c_str());
-	res->setType(Coda::Runtime::Type::BOOL);
-	res->setValue("1");
+#ifdef WIN32
+    _putenv_s(key.c_str(), value.c_str());
+#else
+    setenv(key.c_str(), value.c_str(), 1);
+#endif
+    res->setType(Coda::Runtime::Type::BOOL);
+    res->setValue("1");
 }
 
 // Functions for pointer handling
 void* getPointer(IValuePtr value) {
-	void* ptr = reinterpret_cast<void*>(std::stoull(value->getValue()));
-	return ptr;
+    void* ptr = reinterpret_cast<void*>(std::stoull(value->getValue()));
+    return ptr;
 }
 
 void createValueOfTypePointer(IValuePtr res, void* pointer) {
-	res->setType(Coda::Runtime::Type::POINTER);
-	res->setValue(std::to_string(reinterpret_cast<unsigned long long>(pointer)));
+    res->setType(Coda::Runtime::Type::POINTER);
+    res->setValue(std::to_string(reinterpret_cast<unsigned long long>(pointer)));
 }
 
 void freePointer(IValuePtr value) {
-	void* ptr = reinterpret_cast<void*>(std::stoull(value->getValue()));
-	delete ptr;
+    void* ptr = reinterpret_cast<void*>(std::stoull(value->getValue()));
+    delete ptr;
 }

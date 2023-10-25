@@ -233,5 +233,6 @@
     <None Include="bin\Release\x64\OS.coda" />
     <None Include="CONTRIBUTING.md" />
     <None Include="dll\Random\Random.coda" />
+    <None Include="Makefile" />
   </ItemGroup>
 </Project>

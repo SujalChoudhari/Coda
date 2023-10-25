@@ -1,5 +1,6 @@
 #include "ArgParser.h"
 #include <stdexcept>
+#include <vector>
 
 Coda::Utils::ArgParser::ArgParser()
 {
