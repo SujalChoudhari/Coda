@@ -1,6 +1,18 @@
 #include "Importer.h"
 #include <algorithm>
+
+#ifdef _WIN32
 #include <Windows.h>
+#define PATH_SEPARATOR "\\"
+#else
+#include <unistd.h>
+#include <limits.h>
+#include <sys/stat.h>
+#define MAX_PATH PATH_MAX
+#define PATH_SEPARATOR "/"
+#endif
+
+#include "../../Error/Error.h"
 
 
 #include "../../Error/Error.h"
@@ -85,25 +97,44 @@ namespace Coda {
 			Error::Importer::raise("Imported file not found: " + importString);
 		}
 
-		std::string Importer::getExecutablePath() {
-			wchar_t buffer[MAX_PATH];
-			GetModuleFileNameW(NULL, buffer, MAX_PATH);
-			std::wstring executablePath(buffer);
-			size_t lastSlashIndex = executablePath.rfind(L"\\");
-			if (lastSlashIndex != std::wstring::npos) {
-				executablePath = executablePath.substr(0, lastSlashIndex + 1);
-			}
-
-			// Convert the wide character string to a narrow character string (UTF-8)
-			std::string narrowExecutablePath(executablePath.begin(), executablePath.end());
-
-			return narrowExecutablePath;
+		#ifdef _WIN32
+	// Implementation for Windows platform
+	std::string Importer::getExecutablePath() {
+		wchar_t buffer[MAX_PATH];
+		GetModuleFileNameW(NULL, buffer, MAX_PATH);
+		std::wstring executablePath(buffer);
+		size_t lastSlashIndex = executablePath.rfind(L"\\");
+		if (lastSlashIndex != std::wstring::npos) {
+			executablePath = executablePath.substr(0, lastSlashIndex + 1);
 		}
 
-		bool Importer::fileExists(const std::string& filePath) {
-			std::wstring wideFilePath(filePath.begin(), filePath.end());
-			DWORD fileAttributes = GetFileAttributes(wideFilePath.c_str());
-			return (fileAttributes != INVALID_FILE_ATTRIBUTES && !(fileAttributes & FILE_ATTRIBUTE_DIRECTORY));
+		// Convert the wide character string to a narrow character string (UTF-8)
+		std::string narrowExecutablePath(executablePath.begin(), executablePath.end());
+
+		return narrowExecutablePath;
+	}
+
+	bool Importer::fileExists(const std::string& filePath) {
+		std::wstring wideFilePath(filePath.begin(), filePath.end());
+		DWORD fileAttributes = GetFileAttributesW(wideFilePath.c_str());
+		return (fileAttributes != INVALID_FILE_ATTRIBUTES && !(fileAttributes & FILE_ATTRIBUTE_DIRECTORY));
+	}
+#else
+	// Implementation for Unix-based platforms
+	std::string Importer::getExecutablePath() {
+		char buffer[MAX_PATH];
+		ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
+		if (len != -1) {
+			buffer[len] = '\0';
+			return std::string(buffer);
 		}
+		return "";
+	}
+
+	bool Importer::fileExists(const std::string& filePath) {
+		struct stat buffer;
+		return (stat(filePath.c_str(), &buffer) == 0);
+	}
+#endif
 	}
 }
