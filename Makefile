@@ -1,8 +1,11 @@
 COMPILER = g++
+DEBUG_FLAGS = -g -Wall -Wextra -Wpedantic
+RELEASE_FLAGS = -O3
 COMPILER_FLAGS = -Wl,--no-as-needed -ldl -std=c++17
-DLL_COMPILER_FLAGS =  -shared -fPIC
 
-OUT_FILENAME = Coda.out
+DEBUG_OUT_FILENAME = Coda_debug.out
+RELEASE_OUT_FILENAME = Coda.out
+
 OS_OUT_FILENAME = OS.so
 RANDOM_OUT_FILENAME = Random.so
 MATHS_OUT_FILENAME = Maths.so
@@ -43,15 +46,35 @@ MATHS_PACKAGE = dll/Maths/Basic.cpp\
 	dll/Maths/BasicFunctions.cpp\
 	dll/Maths/Trignometry.cpp
 
-OBJDIR = ./bin/Release/Linux/
+DEBUG_OBJDIR = ./bin/Debug/Linux/
+RELEASE_OBJDIR = ./bin/Release/Linux/
+
+ifeq ($(MODE),debug)
+    OBJDIR = $(DEBUG_OBJDIR)
+    COMPILER_FLAGS += $(DEBUG_FLAGS)
+    OUT_FILENAME = Coda_debug.out
+else
+    OBJDIR = $(RELEASE_OBJDIR)
+    COMPILER_FLAGS += $(RELEASE_FLAGS)
+    OUT_FILENAME = Coda.out
+endif
 
 MAIN_OBJECTS = $(patsubst %.cpp,$(OBJDIR)%.o,$(MAIN_PROJECT))
 OS_OBJECTS = $(patsubst %.cpp,$(OBJDIR)%.o,$(OS_PACKAGE))
 RANDOM_OBJECTS = $(patsubst %.cpp,$(OBJDIR)%.o,$(RANDOM_PACKAGE))
 MATHS_OBJECTS = $(patsubst %.cpp,$(OBJDIR)%.o,$(MATHS_PACKAGE))
 
-all: $(OBJDIR) $(MAIN_OBJECTS)
-	$(COMPILER) $(COMPILER_FLAGS) $(MAIN_OBJECTS) -o $(OBJDIR)$(OUT_FILENAME)
+
+
+# all: $(OBJDIR) $(MAIN_OBJECTS)
+# 	$(COMPILER) $(COMPILER_FLAGS) $(MAIN_OBJECTS) -o $(OBJDIR)$(OUT_FILENAME)
+
+debug: $(OBJDIR) $(MAIN_OBJECTS)
+	$(COMPILER) $(COMPILER_FLAGS) $(DEBUG_FLAGS) $(MAIN_OBJECTS) -o $(OBJDIR)$(DEBUG_OUT_FILENAME)
+
+release: $(OBJDIR) $(MAIN_OBJECTS)
+	$(COMPILER) $(COMPILER_FLAGS) $(RELEASE_FLAGS) $(MAIN_OBJECTS) -o $(OBJDIR)$(RELEASE_OUT_FILENAME)
+
 
 os: $(OBJDIR) $(OS_OBJECTS)
 	$(COMPILER) $(DLL_COMPILER_FLAGS) $(OS_OBJECTS) -o $(OBJDIR)$(OS_OUT_FILENAME)
