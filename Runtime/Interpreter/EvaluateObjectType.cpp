@@ -1,9 +1,23 @@
 #include "Interpreter.h"
+
+#include <algorithm>
+#include <iostream>
+
 #ifdef _WIN32
 #include <Windows.h>
+#define PATH_SEPARATOR "\\"
 #else
+#include <unistd.h>
 #include <dlfcn.h>
+#include <limits.h>
+#include <libgen.h> // Include for dirname
+#include <sys/stat.h>
+#define MAX_PATH PATH_MAX
+#define PATH_SEPARATOR "/"
 #endif
+
+#include "../../Error/Error.h"
+
 
 namespace Coda
 {
@@ -136,10 +150,6 @@ namespace Coda
 			std::string dllFilename = callExpression.left->value;
 			std::string functionName = callExpression.right->left->value;
 
-			Position pos = callExpression.left->endPosition;
-			pos.scope = functionName;
-			Interpreter::callStack.push(pos);
-
 			Value args = Value();
 			unsigned int argCount = 1;
 			for (auto &arg : callExpression.right->properties)
@@ -150,35 +160,50 @@ namespace Coda
 				argCount++;
 			}
 
-			void *lib;
+			typedef void (*FunctionType)(IValuePtr, IValuePtr, IEnvironment *);
 
 #ifdef _WIN32
 			dllFilename += ".dll";
 			std::wstring s(dllFilename.begin(), dllFilename.end());
-			lib = LoadLibrary(s.c_str());
+			HMODULE lib = LoadLibrary(s.c_str());
 #else
-			lib = dlopen(dllFilename.c_str(), RTLD_LAZY);
+			// Unix-based platforms
+			dllFilename += ".so";
+			std::string execDirPath;
+			// Get the path to the directory containing the executable
+			char buf[PATH_MAX];
+			ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+			if (len != -1)
+			{
+				buf[len] = '\0';
+				execDirPath = std::string(dirname(buf));
+			}
+
+			// Construct the absolute path to the shared object file
+			std::string absoluteSOPath = execDirPath + "/" + dllFilename;
+
+			// Load the shared object using the absolute path
+			void *lib = dlopen(absoluteSOPath.c_str(), RTLD_LAZY);
 #endif
 
 			if (!lib)
 			{
-				Error::Runtime::raise("Cannot find " + dllFilename + " at, ", Interpreter::callStack, callExpression.startPosition, callExpression.endPosition);
+				Error::Runtime::raise("Cannot find " + dllFilename);
 				return nullptr;
 			}
 
-			void *myFunction;
-
+			FunctionType myFunction;
 #ifdef _WIN32
-			myFunction = GetProcAddress(lib, functionName.c_str());
+			myFunction = (FunctionType)GetProcAddress(lib, functionName.c_str());
 #else
-			myFunction = dlsym(lib, functionName.c_str());
+			myFunction = (FunctionType)dlsym(lib, functionName.c_str());
 #endif
 
 			if (!myFunction)
 			{
-				Error::Runtime::raise("Cannot find function " + functionName + " at, ", Interpreter::callStack, callExpression.startPosition, callExpression.endPosition);
+				Error::Runtime::raise("Cannot find function " + functionName);
 #ifdef _WIN32
-				FreeLibrary((HMODULE)lib);
+				FreeLibrary(lib);
 #else
 				dlclose(lib);
 #endif
@@ -189,23 +214,16 @@ namespace Coda
 			IValuePtr result = std::make_shared<Value>(Type::NONE);
 			try
 			{
-#ifdef _WIN32
-				typedef void (*FunctionType)(IValuePtr, IValuePtr, IEnvironment *);
-				FunctionType func = reinterpret_cast<FunctionType>(myFunction);
-				func(result, std::dynamic_pointer_cast<IValue>(std::make_shared<Value>(args)), &env);
-#else
-				using FunctionType = void (*)(IValuePtr, IValuePtr, IEnvironment *);
-				auto func = reinterpret_cast<FunctionType>(myFunction);
-				func(result, std::dynamic_pointer_cast<IValue>(std::make_shared<Value>(args)), &env);
-#endif
+				myFunction(result, std::dynamic_pointer_cast<IValue>(std::make_shared<Value>(args)), &env);
 			}
 			catch (const char *s)
 			{
 				Error::Runtime::raise("Error in running '" + functionName + "': " + s);
 			}
 
+			// Unload the library
 #ifdef _WIN32
-			FreeLibrary((HMODULE)lib);
+			FreeLibrary(lib);
 #else
 			dlclose(lib);
 #endif
