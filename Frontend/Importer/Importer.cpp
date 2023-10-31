@@ -4,6 +4,8 @@
 
 #ifdef _WIN32
 #include <Windows.h>
+#include <Shlwapi.h>
+#pragma comment(lib, "Shlwapi.lib")
 #define PATH_SEPARATOR "\\"
 #else
 #include <unistd.h>
@@ -21,7 +23,7 @@ namespace Coda
 {
 	namespace Frontend
 	{
-		std::string Importer::import(const std::string &filepath)
+		std::string Importer::import(const std::string& filepath)
 		{
 			std::string sourceCode;
 			if (fileExists(filepath))
@@ -62,27 +64,27 @@ namespace Coda
 			return sourceCode;
 		}
 
-		size_t Importer::findNextImport(const std::string &sourceCode, size_t startIndex)
+		size_t Importer::findNextImport(const std::string& sourceCode, size_t startIndex)
 		{
 			return sourceCode.find("import", startIndex);
 		}
 
-		size_t Importer::findImportEnd(const std::string &sourceCode, size_t importIndex)
+		size_t Importer::findImportEnd(const std::string& sourceCode, size_t importIndex)
 		{
 			return sourceCode.find_first_of("\n;", importIndex);
 		}
 
-		std::string Importer::extractImportString(const std::string &sourceCode, size_t importIndex, size_t importEndIndex)
+		std::string Importer::extractImportString(const std::string& sourceCode, size_t importIndex, size_t importEndIndex)
 		{
 			return sourceCode.substr(importIndex + 7, importEndIndex - importIndex - 7);
 		}
 
-		void Importer::replaceImport(std::string &sourceCode, size_t importIndex, size_t importEndIndex, const std::string &moduleSource)
+		void Importer::replaceImport(std::string& sourceCode, size_t importIndex, size_t importEndIndex, const std::string& moduleSource)
 		{
 			sourceCode.replace(importIndex, importEndIndex - importIndex + 1, moduleSource);
 		}
 
-		std::string Importer::getAbsImportPath(const std::string &filename, std::string &importString)
+		std::string Importer::getAbsImportPath(const std::string& filename, std::string& importString)
 		{
 			size_t lastSlashIndex = filename.rfind("/");
 
@@ -121,7 +123,7 @@ namespace Coda
 			return std::string(buffer);
 		}
 
-		bool Importer::fileExists(const std::string &filePath)
+		bool Importer::fileExists(const std::string& filePath)
 		{
 			DWORD fileAttributes = GetFileAttributesA(filePath.c_str());
 			return (fileAttributes != INVALID_FILE_ATTRIBUTES && !(fileAttributes & FILE_ATTRIBUTE_DIRECTORY));
@@ -145,7 +147,7 @@ namespace Coda
 			return "";
 		}
 
-		bool Importer::fileExists(const std::string &filePath)
+		bool Importer::fileExists(const std::string& filePath)
 		{
 			struct stat buffer;
 			return (stat(filePath.c_str(), &buffer) == 0);
