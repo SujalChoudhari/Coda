@@ -113,8 +113,8 @@ namespace Coda {
 					value = parseExpression();
 				}
 
-				obj.properties.insert_or_assign(key.value, std::make_shared<Node>(value));
-
+				obj.properties[key.value] = std::make_shared<Node>(value);
+				
 				if (mCurrentToken->type != TokenType::CLOSE_BRACE) {
 					expect(TokenType::COMMA, "Expected a ',' or '}' in object literal");
 					IF_ERROR_RETURN_NODE;

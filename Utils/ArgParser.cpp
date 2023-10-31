@@ -4,10 +4,10 @@
 
 Coda::Utils::ArgParser::ArgParser()
 {
-	mFlags.insert_or_assign("-w", false);
+	mFlags["-w"] = false;
 }
 
-void Coda::Utils::ArgParser::parse(int argc, char** argv)
+void Coda::Utils::ArgParser::parse(int argc, char **argv)
 {
 	while (argc > 1)
 	{
@@ -57,7 +57,7 @@ std::string Coda::Utils::ArgParser::getStandaloneValueAt(int i)
 	return mStandaloneValues.at(i);
 }
 
-std::vector<std::string>* Coda::Utils::ArgParser::getAllStandaloneValues()
+std::vector<std::string> *Coda::Utils::ArgParser::getAllStandaloneValues()
 {
 	return &mStandaloneValues;
 }
