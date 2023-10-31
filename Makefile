@@ -1,5 +1,5 @@
 # Define the version number
-VERSION_NO = 1.1
+VERSION_NO = 1.0.2
 
 # Compiler configurations
 COMPILER = g++
@@ -7,8 +7,8 @@ DEBUG_FLAGS = -g -Wall -Wextra -Wpedantic
 RELEASE_FLAGS = -O3
 COMPILER_FLAGS = -Wl,--no-as-needed -ldl -std=c++17 -fPIC
 DLL_COMPILER_FLAGS = -shared 
-DEBUG_OUT_FILENAME = Coda_debug.out
-RELEASE_OUT_FILENAME = Coda.out
+DEBUG_OUT_FILENAME = Coda_debug
+RELEASE_OUT_FILENAME = Coda
 
 # Output filenames for packages
 OS_OUT_FILENAME = OS.so
@@ -76,11 +76,9 @@ MATHS_OBJECTS = $(patsubst %.cpp,$(OBJDIR)%.o,$(MATHS_PACKAGE))
 
 
 # Build targets
-debug: $(OBJDIR) $(MAIN_OBJECTS)
-	$(COMPILER) $(COMPILER_FLAGS) $(DEBUG_FLAGS) $(MAIN_OBJECTS) -o $(OBJDIR)$(OUT_FILENAME)
+all: $(OBJDIR) $(MAIN_OBJECTS)
+	$(COMPILER) $(COMPILER_FLAGS) $(MAIN_OBJECTS) -o $(OBJDIR)$(OUT_FILENAME)
 
-release: $(OBJDIR) $(MAIN_OBJECTS)
-	$(COMPILER) $(COMPILER_FLAGS) $(RELEASE_FLAGS) $(MAIN_OBJECTS) -o $(OBJDIR)$(OUT_FILENAME)
 
 os: $(OBJDIR) $(OS_OBJECTS)
 	$(COMPILER) $(COMPILER_FLAGS) $(DLL_COMPILER_FLAGS) $(OS_OBJECTS) -o $(OBJDIR)$(OS_OUT_FILENAME)
@@ -104,7 +102,7 @@ $(OBJDIR):
 
 # Target for publishing
 package:
-	make release
+	make MODE=release
 	make random MODE=release
 	make maths MODE=release
 	make os MODE=release
