@@ -114,7 +114,7 @@ namespace Coda {
 			ValuePtr variableValue;
 			variableValue = std::dynamic_pointer_cast<Value>(mSymbols[current->value]);
 
-			for (int i = 0; i < identifierChain.size() - 1; i++) {
+			for (unsigned int i = 0; i < identifierChain.size() - 1; i++) {
 				variableValue = std::dynamic_pointer_cast<Value>(variableValue->properties[identifierChain[i]]);
 			}
 

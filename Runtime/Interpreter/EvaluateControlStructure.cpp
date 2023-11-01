@@ -80,8 +80,8 @@ namespace Coda {
 			IF_ERROR_RETURN_VALUE_PTR;
 			if (iterable->getType() == Type::LIST) {
 
-				for (int i = 0; i < iterable->getProperties().size(); i++) {
-					auto newValue = iterable->getProperties()[std::to_string(i)];
+				for (unsigned int i = 0; i < iterable->getProperties().size(); i++) {
+					auto& newValue = iterable->getProperties()[std::to_string(i)];
 					iterator->value = newValue->getValue();
 					iterator->type = newValue->getType();
 					iterator->properties = newValue->getProperties();
@@ -101,7 +101,7 @@ namespace Coda {
 
 			}
 			else if (iterable->getType() == Type::STRING) {
-				for (int i = 0; i < iterable->getValue().size(); i++) {
+				for (unsigned int i = 0; i < iterable->getValue().size(); i++) {
 					char newValue = iterable->getValue()[i];
 					iterator->value = std::string(1, newValue);
 					iterator->type = Type::CHAR;

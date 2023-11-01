@@ -61,8 +61,10 @@ namespace Coda {
 		std::string Importer::getAbsImportPath(const std::string& filename, std::string& importString) {
 			size_t lastSlashIndex = filename.rfind("/");
 
-			for (int i = 0; i < importString.size(); i++) {
-				if (importString[i] == '.') {
+			for (unsigned int i = 0; i < importString.size(); i++)
+			{
+				if (importString[i] == '.')
+				{
 					importString[i] = '/';
 				}
 			}
@@ -83,6 +85,7 @@ namespace Coda {
 
 			// If the file doesn't exist in either location, raise an error
 			Error::Importer::raise("Imported file not found: " + importString);
+			return "";
 		}
 
 		std::string Importer::getExecutablePath() {

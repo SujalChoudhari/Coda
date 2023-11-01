@@ -96,9 +96,10 @@ namespace Coda {
 				}
 
 				// create variables for each parameter
-				for (int i = 0; i < std::get<2>(*functionContent).left->properties.size(); i++) {
-					auto& it = std::get<2>(*functionContent).left->properties[std::to_string(i)];
-					const std::string& name = it->getValue();
+				for (unsigned int i = 0; i < std::get<2>(*functionContent).left->properties.size(); i++)
+				{
+					auto &it = std::get<2>(*functionContent).left->properties[std::to_string(i)];
+					const std::string &name = it->getValue();
 					scope.declareFunctionParameter(name, std::dynamic_pointer_cast<Value>(args.properties[std::to_string(i + 1)]));
 				}
 

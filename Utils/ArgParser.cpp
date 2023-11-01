@@ -50,7 +50,7 @@ std::string Coda::Utils::ArgParser::getValue(std::string flag) const
 	return mValues.at(flag);
 }
 
-std::string Coda::Utils::ArgParser::getStandaloneValueAt(int i)
+std::string Coda::Utils::ArgParser::getStandaloneValueAt(unsigned int i)
 {
 	if (i >= mStandaloneValues.size())
 		return "";

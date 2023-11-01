@@ -23,7 +23,7 @@ namespace Coda {
 				Error::Importer::raise("File not open.");
 			std::string content;
 			mFile.seekg(0, std::ios::end);
-			content.reserve(mFile.tellg());
+			content.reserve((const unsigned int)mFile.tellg());
 			mFile.seekg(0, std::ios::beg);
 			content.assign((std::istreambuf_iterator<char>(mFile)),
 				std::istreambuf_iterator<char>());
