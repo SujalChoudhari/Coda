@@ -1,8 +1,7 @@
 #pragma once
 
-#include "IEnvironment.h"
-#include "INode.h"
-#include "IValue.h"
+#include <string>
+#include <type_traits>
 
 #if defined(_MSC_VER)
 //  Microsoft 
@@ -16,16 +15,24 @@
 //  do nothing and hope for the best?
 #define EXPORT
 #define IMPORT
-#pragma warning Unknown dynamic link import/export semantics.
+#pragma message ("Unknown dynamic link import/export semantics.")
 #endif
+
+#include "IEnvironment.h"
+#include "INode.h"
+#include "IValue.h"
 
 template <typename T>
 T getValue(const std::string& str)
 {
-	if (std::is_same_v<T, unsigned char>) {
+	if (std::is_same<T, unsigned char>::value) {
 		return static_cast<T>(str[0]);
 	}
 	else {
+		#if defined(_MSC_VER)
 		return (T)std::stod(str);
+		#else
+		return (T)std::stod(str.c_str());
+		#endif
 	}
 }
