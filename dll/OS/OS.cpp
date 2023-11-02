@@ -3,8 +3,11 @@
 #include <fstream>
 #include <vector>
 #include <cstdlib>
+#include <string>
 #include <cstdio>
 #include <cstring>
+
+
 
 extern "C" EXPORT void coda_run_command(IValuePtr res, IValuePtr args, IEnvironment * env) {
     const std::string command = args->getProperties()["command"]->getValue();
@@ -18,7 +21,7 @@ extern "C" EXPORT void coda_run_command(IValuePtr res, IValuePtr args, IEnvironm
 
 extern "C" EXPORT void coda_get_env(IValuePtr res, IValuePtr args, IEnvironment * env) {
     std::string key = args->getProperties()["key"]->getValue();
-#ifdef WIN32
+#ifdef _WIN32 || _WIN64
     size_t len;
     char* value;
     _dupenv_s(&value, &len, key.c_str());
@@ -38,7 +41,7 @@ extern "C" EXPORT void coda_set_env(IValuePtr res, IValuePtr args, IEnvironment 
     std::string key = args->getProperties()["key"]->getValue();
     std::string value = args->getProperties()["value"]->getValue();
 
-#ifdef WIN32
+#ifdef _WIN32 || _WIN64
     _putenv_s(key.c_str(), value.c_str());
 #else
     setenv(key.c_str(), value.c_str(), 1);

@@ -1,5 +1,5 @@
 # Define the version number
-VERSION_NO = 1.0.2
+VERSION_NO = 1.1
 
 # Compiler configurations
 COMPILER = g++

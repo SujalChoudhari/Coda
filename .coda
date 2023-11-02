@@ -2,10 +2,7 @@ import os
 
 def build(config){
 	os.run("msbuild .\Coda.sln -property:Configuration=" + config);
-	let modules = fs.listAll("./dll/");
-	for(let i = 0; i < sizeof modules; i++){
-		fs.copyFile("./dll/" + modules[i] + "/" + modules[i] + ".coda","./bin/"+ config +"/x64/");
-	}
+	cp();
 }
 
 // copies content for x64 builds
@@ -18,3 +15,11 @@ def db(){
 	build("Debug");
 }
 
+
+def cp(config){
+	let modules = fs.listAll("./dll/");
+
+	for(let i = 0; i < sizeof modules; i++){
+		fs.copyFile("./dll/" + modules[i] + "/" + modules[i] + ".coda","./bin/"+ config +"/Win32/");
+	}
+}

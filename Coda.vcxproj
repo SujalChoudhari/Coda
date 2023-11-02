@@ -219,6 +219,9 @@
     <None Include=".gitignore" />
     <None Include="bin\Debug\x64\Maths.coda" />
     <None Include="bin\Debug\x64\OS.coda" />
+    <None Include="bin\Release\Random.coda" />
+    <None Include="bin\Release\Win32\OS.coda" />
+    <None Include="bin\Release\Win32\Random.coda" />
     <None Include="bin\Release\x64\OS.coda" />
     <None Include="CHANGELOG.md" />
     <None Include="CODE_OF_CONDUCT.md" />
