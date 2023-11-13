@@ -3,7 +3,7 @@
 #include <ctime>
 #include <random>
 
-std::mt19937 generator(std::time(nullptr)); // Mersenne Twister PRNG
+std::mt19937 generator((unsigned int)std::time(nullptr)); // Mersenne Twister PRNG
 
 
 extern "C" EXPORT void coda_random_float(IValuePtr res, IValuePtr args, IEnvironment * env)

@@ -2,7 +2,7 @@
 
 #include <string>
 #include <unordered_map>
-
+#include <vector>
 
 namespace Coda {
 	namespace Utils {
@@ -53,7 +53,7 @@ namespace Coda {
 				@return The standalone value at the specified index.
 
 			*/
-			std::string getStandaloneValueAt(int index);
+			std::string getStandaloneValueAt(unsigned int index);
 
 			/*
 				Get all the standalone values passed in the command.

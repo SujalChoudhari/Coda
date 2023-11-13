@@ -1,12 +1,13 @@
 #include "ArgParser.h"
 #include <stdexcept>
+#include <vector>
 
 Coda::Utils::ArgParser::ArgParser()
 {
-	mFlags.insert_or_assign("-w", false);
+	mFlags["-w"] = false;
 }
 
-void Coda::Utils::ArgParser::parse(int argc, char** argv)
+void Coda::Utils::ArgParser::parse(int argc, char **argv)
 {
 	while (argc > 1)
 	{
@@ -49,14 +50,14 @@ std::string Coda::Utils::ArgParser::getValue(std::string flag) const
 	return mValues.at(flag);
 }
 
-std::string Coda::Utils::ArgParser::getStandaloneValueAt(int i)
+std::string Coda::Utils::ArgParser::getStandaloneValueAt(unsigned int i)
 {
 	if (i >= mStandaloneValues.size())
 		return "";
 	return mStandaloneValues.at(i);
 }
 
-std::vector<std::string>* Coda::Utils::ArgParser::getAllStandaloneValues()
+std::vector<std::string> *Coda::Utils::ArgParser::getAllStandaloneValues()
 {
 	return &mStandaloneValues;
 }

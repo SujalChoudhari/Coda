@@ -36,15 +36,9 @@ namespace Coda {
 	}
 }
 
-
 class IValue {
-
 public:
-	IValue() = default;
-	IValue copy() const;
-
-public:
-	virtual  Coda::Runtime::Type getType() const = 0;
+	virtual Coda::Runtime::Type getType() const = 0;
 	virtual void setType(Coda::Runtime::Type type) = 0;
 
 	virtual std::string getValue() const = 0;
@@ -63,4 +57,5 @@ public:
 	static bool isTruthy(const IValue& value);
 	virtual std::string getTypeAsString(Coda::Runtime::Type type) = 0;
 };
+
 typedef std::shared_ptr<IValue> IValuePtr;

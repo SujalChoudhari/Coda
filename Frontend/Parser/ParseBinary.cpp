@@ -1,16 +1,17 @@
 #include "Parser.h"
+#include <algorithm>
+namespace Coda
+{
+	namespace Frontend
+	{
 
-namespace Coda {
-	namespace Frontend {
-
-
-		Node Parser::parseBinaryOperatorExpression(Node(Parser::* parseSubExpression)(), const std::vector<std::string>& operators)
+		Node Parser::parseBinaryOperatorExpression(Node (Parser::*parseSubExpression)(), const std::vector<std::string> &operators)
 		{
 			IF_ERROR_RETURN_NODE;
 			Error::Position currPos = mCurrentToken->startPosition;
 			Node left = (this->*parseSubExpression)();
-
-			while (std::find(operators.begin(), operators.end(), mCurrentToken->value) != operators.end()) {
+			while (std::find(operators.begin(), operators.end(), mCurrentToken->value) != operators.end())
+			{
 				Token operatorToken = *mCurrentToken;
 				advance();
 
@@ -39,26 +40,24 @@ namespace Coda {
 			return left;
 		}
 
-
-
 		Node Parser::parseLogicalOperatorExpression()
 		{
-			return parseBinaryOperatorExpression(&Parser::parseRelationalOperatorExpression, { "&&","||" });
+			return parseBinaryOperatorExpression(&Parser::parseRelationalOperatorExpression, {"&&", "||"});
 		}
 
 		Node Parser::parseRelationalOperatorExpression()
 		{
-			return parseBinaryOperatorExpression(&Parser::parseAdditiveExpression, { "==","!=",">=","<=", "<",">","in"});
+			return parseBinaryOperatorExpression(&Parser::parseAdditiveExpression, {"==", "!=", ">=", "<=", "<", ">", "in"});
 		}
 
 		Node Parser::parseAdditiveExpression()
 		{
-			return parseBinaryOperatorExpression(&Parser::parseMultiplicativeExpression, { "+", "-" });
+			return parseBinaryOperatorExpression(&Parser::parseMultiplicativeExpression, {"+", "-"});
 		}
 
 		Node Parser::parseMultiplicativeExpression()
 		{
-			return parseBinaryOperatorExpression(&Parser::parseUnaryOperatorExpression, { "/", "*", "%" });
+			return parseBinaryOperatorExpression(&Parser::parseUnaryOperatorExpression, {"/", "*", "%"});
 		}
 
 	} // namespace Frontend

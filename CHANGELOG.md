@@ -5,9 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 31-10-2023
+### Added
+- `Linux` Support
+
+
 ## [1.0.1] - 04-10-2023
+### Fixed
 - Code cleaning
-- Removed `Linux` support.
+
+### Removed
+- `Linux` support.
 
 ## [1.0] - 02-10-2023
 
@@ -27,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - `package` generated errors are accurately caught
 - number extensions
-- character dislay correctly
+- character display correctly
 
 ## [0.3.0] - 20-09-2023
 
@@ -87,7 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - function parameters are constants (can't be changed)
-- functions create a seperate scope for themselves, hence variables declared inside a function are not accessible outside the function. Function body `<block>` is a seperate scope.
+- functions create a separate scope for themselves, hence variables declared inside a function are not accessible outside the function. Function body `<block>` is a separate scope.
 - Each imported file is imported only once, hence if a file is imported twice, it will be imported only once.
 
 

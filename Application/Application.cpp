@@ -61,7 +61,7 @@ namespace Coda {
 				source += "\n" + subCommand + "(";
 				std::vector<std::string>* parameters = argParser.getAllStandaloneValues();
 				if (parameters->size() != 0) {
-					for (int i = 0; i < parameters->size() - 1; i++) {
+					for (unsigned int i = 0; i < parameters->size() - 1; i++) {
 						source += "\"" + parameters->at(i) + "\",";
 					}
 					source += "\"" + parameters->at(parameters->size() - 1) + "\"";
